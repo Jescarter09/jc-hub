@@ -2587,7 +2587,6 @@
         "updated_at": 1767951861054,
         "views": 3
       },
-     
       "article-1779706060403": {
         "author_id": "cli-author",
         "author_name": "carterjesdy@gmail.com",
@@ -3777,6 +3776,1566 @@
         ],
         "title": "L'IA va-t-elle remplacer les developpeurs ? La verite que personne ne vous dit",
         "updated_at": 1779734294340,
+        "views": 0
+      },
+      "article-1780061567064": {
+        "author_id": "cli-author",
+        "author_name": "carterjesdy@gmail.com",
+        "category": "Technologie",
+        "content": [
+          {
+            "type": "callout",
+            "content": "En 2026, rester sur des technologies anciennes (JavaScript pur, WordPress seul, PHP sans framework) signifie trouver beaucoup moins d'offres et négocier moins bien ton salaire. Le marché a changé.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "POINT IMPORTANT",
+              "variant": "warning"
+            },
+            "index": 0,
+            "order": 0
+          },
+          {
+            "type": "paragraph",
+            "content": "En réalité, le développement web en 2026 ne demande pas les mêmes compétences qu'il y a 3 ans. Le marché a changé. Les technologies dominantes ont évolué. Et les salaires ont suivi.",
+            "index": 1,
+            "order": 1
+          },
+          {
+            "type": "paragraph",
+            "content": "Pour certains, c'est une opportunité : ceux qui s'adaptent vite peuvent être embauchés en moins de 3 mois avec un salaire supérieur à la moyenne. Pour d'autres, c'est un risque : rester sur des technologies anciennes signifie trouver beaucoup moins d'offres et négocier moins bien son salaire.",
+            "index": 2,
+            "order": 2
+          },
+          {
+            "type": "paragraph",
+            "content": "Le vrai sujet n'est donc pas de savoir si le développement web est encore un bon métier (la réponse est oui), mais plutôt quelles compétences apprendre en priorité pour être embauché rapidement et bien payé.",
+            "index": 3,
+            "order": 3
+          },
+          {
+            "type": "paragraph",
+            "content": "Pourquoi le développement web est le métier le plus recherché en 2026 ?",
+            "index": 4,
+            "order": 4
+          },
+          {
+            "type": "callout",
+            "content": "Le taux de chômage des développeurs web est inférieur à 2 %. La demande dépasse largement l'offre.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "CHIFFRE CLÉ",
+              "variant": "warning"
+            },
+            "index": 5,
+            "order": 5
+          },
+          {
+            "type": "paragraph",
+            "content": "Aujourd'hui, la demande est massive :",
+            "index": 6,
+            "order": 6
+          },
+          {
+            "type": "paragraph",
+            "content": "- 166 000 offres d'emploi par an en France.\n- Taux de chômage inférieur à 2 % pour les développeurs.\n- Salaire médian de 42 000 € brut/an.\n- 8 000 recherches mensuelles pour « développeur web ».\n- La demande dépasse largement l'offre.",
+            "index": 7,
+            "order": 7
+          },
+          {
+            "type": "callout",
+            "content": "- Les entreprises cherchent désespérément des développeurs React/Next.js + TypeScript.\n- Un développeur fullstack compétent peut être embauché en moins de 3 mois.\n- Les salaires ont augmenté de 10-15 % en 2 ans pour les profils à jour.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 8,
+            "order": 8
+          },
+          {
+            "type": "paragraph",
+            "content": "Pour les entreprises, trouver un bon développeur est devenu un défi. Beaucoup de PME recrutent mal parce qu'elles ne savent pas exactement quelles compétences chercher. Pour les développeurs, c'est une opportunité : le marché est en leur faveur.",
+            "index": 9,
+            "order": 9
+          },
+          {
+            "type": "paragraph",
+            "content": "1. TypeScript est devenu le nouveau standard",
+            "index": 10,
+            "order": 10
+          },
+          {
+            "type": "callout",
+            "content": "78 % des projets professionnels utilisent TypeScript en 2026. Si tu ne connais pas TypeScript, tu perds 78 % des offres d'emploi.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "POINT CRITIQUE",
+              "variant": "warning"
+            },
+            "index": 11,
+            "order": 11
+          },
+          {
+            "type": "paragraph",
+            "content": "TypeScript est devenu le nouveau standard.",
+            "index": 12,
+            "order": 12
+          },
+          {
+            "type": "paragraph",
+            "content": "- 78 % des projets professionnels utilisent TypeScript.\n- JavaScript pur = risque de bugs accru.\n- TypeScript réduit les erreurs de production de 35 %.\n- Salaire +10-15 % pour un développeur TypeScript.",
+            "index": 13,
+            "order": 13
+          },
+          {
+            "type": "paragraph",
+            "content": "Pour un développeur, cela signifie qu'apprendre TypeScript n'est plus une option. C'est une obligation si tu veux être compétitif sur le marché.",
+            "index": 14,
+            "order": 14
+          },
+          {
+            "type": "callout",
+            "content": "- TypeScript est facile à apprendre si tu connais JavaScript (2-4 semaines).\n- Les recruteurs filtrent automatiquement les CV sans TypeScript.\n- Les projets open-source majeurs (React, Next.js, Vue) utilisent tous TypeScript.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 15,
+            "order": 15
+          },
+          {
+            "type": "paragraph",
+            "content": "Les compétences clés à maîtriser :",
+            "index": 16,
+            "order": 16
+          },
+          {
+            "type": "paragraph",
+            "content": "- Types de base (string, number, boolean).\n- Interfaces et types génériques.\n- Prisma (ORM TypeScript).\n- React + Next.js.\n- Tailwind CSS.\n- API REST + GraphQL.\n- Git + GitHub.",
+            "index": 17,
+            "order": 17
+          },
+          {
+            "type": "paragraph",
+            "content": "Mais il faut bien comprendre une chose : TypeScript seul ne suffit pas. C'est la combinaison TypeScript + React + Next.js qui fait la différence.",
+            "index": 18,
+            "order": 18
+          },
+          {
+            "type": "paragraph",
+            "content": "2. React + Next.js : la stack la plus demandée",
+            "index": 19,
+            "order": 19
+          },
+          {
+            "type": "callout",
+            "content": "Si tu ne dois apprendre qu'une seule stack en 2026, c'est React + Next.js. C'est celle qui ouvre le plus de portes et qui paie le mieux.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "CONSEIL CRUCIAL",
+              "variant": "warning"
+            },
+            "index": 20,
+            "order": 20
+          },
+          {
+            "type": "paragraph",
+            "content": "Même si TypeScript est fondamental, c'est la stack React/Next.js qui ouvre le plus de portes.",
+            "index": 21,
+            "order": 21
+          },
+          {
+            "type": "paragraph",
+            "content": "- React : 39,5 % des développeurs l'utilisent.\n- Next.js : framework le plus populaire pour React (SSR, SEO, performance).\n- T3 Stack : TypeScript + Next.js + Tailwind + Prisma = stack la plus recherchée.",
+            "index": 22,
+            "order": 22
+          },
+          {
+            "type": "callout",
+            "content": "- La stack T3 (TypeScript + Next.js + Tailwind + Prisma) est la plus demandée par les startups et scale-ups.\n- Les senior React/Next.js sont extrêmement recherchés (parfois 2-3 offres par semaine).\n- En freelance, le TJM pour React/Next.js est 30-40 % supérieur à WordPress/PHP.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 23,
+            "order": 23
+          },
+          {
+            "type": "paragraph",
+            "content": "Les salaires par stack :",
+            "index": 24,
+            "order": 24
+          },
+          {
+            "type": "table",
+            "content": "Stack              | Junior      | Confirmé    | Senior\nReact/Next.js      | 35-42 K€    | 50-60 K€    | 70-95 K€\nWordPress/PHP      | 30-38 K€    | 38-50 K€    | 55-75 K€\nVue.js/Nuxt        | 32-40 K€    | 45-55 K€    | 60-80 K€",
+            "headers": [
+              "Stack",
+              "Junior",
+              "Confirmé",
+              "Senior"
+            ],
+            "rows": [
+              [
+                "React/Next.js",
+                "35-42 K€",
+                "50-60 K€",
+                "70-95 K€"
+              ],
+              [
+                "WordPress/PHP",
+                "30-38 K€",
+                "38-50 K€",
+                "55-75 K€"
+              ],
+              [
+                "Vue.js/Nuxt",
+                "32-40 K€",
+                "45-55 K€",
+                "60-80 K€"
+              ]
+            ],
+            "metadata": {
+              "variant": "compare"
+            },
+            "index": 25,
+            "order": 25
+          },
+          {
+            "type": "callout",
+            "content": "Pour un junior, la stack React/Next.js offre le meilleur rapport salaire/demande. Pour un senior, les possibilités en freelance sont énormes (700-1 100 €/jour).",
+            "metadata": {
+              "label": "CONSEIL",
+              "title": "CONSEIL",
+              "variant": "advice"
+            },
+            "index": 26,
+            "order": 26
+          },
+          {
+            "type": "paragraph",
+            "content": "3. L'IA n'a pas remplacé les développeurs — elle les a rendus 3× plus productifs",
+            "index": 27,
+            "order": 27
+          },
+          {
+            "type": "callout",
+            "content": "L'IA ne va pas remplacer les développeurs. Elle va éliminer les développeurs qui refusent de l'utiliser.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "MYTHE À DÉTRUIRE",
+              "variant": "warning"
+            },
+            "index": 28,
+            "order": 28
+          },
+          {
+            "type": "paragraph",
+            "content": "Les outils IA qui font la différence :",
+            "index": 29,
+            "order": 29
+          },
+          {
+            "type": "table",
+            "content": "Outil                   | Gain de productivité     | Impact salarial\nGitHub Copilot          | +30-40 % temps codage    | +15-20 % salaire\nCursor (éditeur IA)     | +40-50 % tâches complexes| +15-20 % salaire\nChatGPT/Claude          | recherche + debugging    | +10 %",
+            "headers": [
+              "Outil",
+              "Gain de productivité",
+              "Impact salarial"
+            ],
+            "rows": [
+              [
+                "GitHub Copilot",
+                "+30-40 % temps codage",
+                "+15-20 % salaire"
+              ],
+              [
+                "Cursor (éditeur IA)",
+                "+40-50 % tâches complexes",
+                "+15-20 % salaire"
+              ],
+              [
+                "ChatGPT/Claude",
+                "recherche + debugging",
+                "+10 %"
+              ]
+            ],
+            "metadata": {
+              "variant": "compare"
+            },
+            "index": 30,
+            "order": 30
+          },
+          {
+            "type": "callout",
+            "content": "- Les développeurs qui utilisent Copilot/Cursor sont 3× plus productifs.\n- Les recruteurs remarquent les candidats qui maîtrisent l'IA.\n- 30-40 % de temps gagné = tu peux prendre plus de projets ou travailler moins.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 31,
+            "order": 31
+          },
+          {
+            "type": "paragraph",
+            "content": "L'IA est très utile pour accélérer le travail au quotidien. Elle peut aider à :",
+            "index": 32,
+            "order": 32
+          },
+          {
+            "type": "paragraph",
+            "content": "- gagner du temps sur les tâches répétitives,\n- proposer des idées rapidement,\n- générer des prototypes,\n- assister l'apprentissage,\n- améliorer la productivité.",
+            "index": 33,
+            "order": 33
+          },
+          {
+            "type": "paragraph",
+            "content": "Pour un développeur, cela signifie qu'une grande partie du travail peut être faite plus vite. On peut par exemple demander à une IA de générer une base de composant React, d'aider à écrire une fonction TypeScript, ou encore de proposer une première structure de projet.",
+            "index": 34,
+            "order": 34
+          },
+          {
+            "type": "paragraph",
+            "content": "Mais il faut bien comprendre une chose : l'IA est surtout un assistant. Elle augmente la vitesse de production, mais elle ne remplace pas le jugement humain.",
+            "index": 35,
+            "order": 35
+          },
+          {
+            "type": "paragraph",
+            "content": "4. Les limites de l'IA",
+            "index": 36,
+            "order": 36
+          },
+          {
+            "type": "callout",
+            "content": "L'IA peut générer du code qui semble correct mais qui contient des bugs, des failles de sécurité ou des choix d'architecture mauvais. Toujours relire et valider.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "DANGER",
+              "variant": "warning"
+            },
+            "index": 37,
+            "order": 37
+          },
+          {
+            "type": "paragraph",
+            "content": "Même si elle est puissante, l'IA a encore plusieurs limites importantes.",
+            "index": 38,
+            "order": 38
+          },
+          {
+            "type": "paragraph",
+            "content": "Elle ne peut pas :",
+            "index": 39,
+            "order": 39
+          },
+          {
+            "type": "paragraph",
+            "content": "- comprendre parfaitement les besoins d'un client,\n- gérer seule une architecture complexe,\n- faire preuve de vraie créativité stratégique,\n- prendre des décisions produit comme un humain,\n- anticiper tous les contextes métier.",
+            "index": 40,
+            "order": 40
+          },
+          {
+            "type": "paragraph",
+            "content": "Elle peut produire du code correct dans certains cas, mais aussi générer des erreurs, des choix peu optimisés ou des solutions qui ne respectent pas les contraintes réelles du projet. Un développeur doit donc toujours relire, adapter et valider ce que l'IA propose.",
+            "index": 41,
+            "order": 41
+          },
+          {
+            "type": "callout",
+            "content": "- L'IA est excellente pour le code répétitif (CRUD, composants UI, tests).\n- L'IA est mauvaise pour l'architecture complexe et la sécurité.\n- Le développeur doit rester le décideur final.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 42,
+            "order": 42
+          },
+          {
+            "type": "paragraph",
+            "content": "C'est là que la différence se fait : l'IA exécute vite, mais le développeur comprend, décide et construit intelligemment.",
+            "index": 43,
+            "order": 43
+          },
+          {
+            "type": "paragraph",
+            "content": "5. Tailwind CSS : le framework CSS le plus utilisé",
+            "index": 44,
+            "order": 44
+          },
+          {
+            "type": "callout",
+            "content": "Si tu passes plus de 2 heures à écrire du CSS pur, tu perds du temps. Tailwind te fait gagner 2× plus de temps.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "CONSEIL PRATIQUE",
+              "variant": "warning"
+            },
+            "index": 45,
+            "order": 45
+          },
+          {
+            "type": "paragraph",
+            "content": "Pourquoi Tailwind domine :",
+            "index": 46,
+            "order": 46
+          },
+          {
+            "type": "paragraph",
+            "content": "- Rapidité de développement : 2× plus vite que CSS pur.\n- Uniformité : plus de confusion sur les couleurs et espacements.\n- Communauté massive : 70 % des nouveaux projets React utilisent Tailwind.",
+            "index": 47,
+            "order": 47
+          },
+          {
+            "type": "callout",
+            "content": "- 2-3 semaines suffisent pour maîtriser Tailwind.\n- Le ROI est immédiat : tu gagnes du temps dès le premier projet.\n- Les recruteurs remarquent les projets avec Tailwind (signe de modernité).",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 48,
+            "order": 48
+          },
+          {
+            "type": "paragraph",
+            "content": "Tailwind n'est pas obligatoire, mais c'est un gain de temps énorme. Si tu veux développer vite et bien, c'est un investissement de 2-3 semaines qui se rembourse en 1 mois de travail.",
+            "index": 49,
+            "order": 49
+          },
+          {
+            "type": "paragraph",
+            "content": "6. Le freelance : TJM réels en 2026",
+            "index": 50,
+            "order": 50
+          },
+          {
+            "type": "callout",
+            "content": "Le freelance n'est pas pour les débutants. Il faut au moins 2-3 ans d'expérience et un réseau de clients pour bien gagner sa vie.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "RÉALITÉ DU MARCHÉ",
+              "variant": "warning"
+            },
+            "index": 51,
+            "order": 51
+          },
+          {
+            "type": "table",
+            "content": "Spécialisation        | Junior        | Confirmé      | Senior\nWordPress             | 200-350 €/jour| 350-550 €/jour| 500-800 €/jour\nReact/Next.js         | 350-500 €/jour| 500-750 €/jour| 700-1 100 €/jour\nPython/Django         | 350-500 €/jour| 500-700 €/jour| 650-1 000 €/jour",
+            "headers": [
+              "Spécialisation",
+              "Junior",
+              "Confirmé",
+              "Senior"
+            ],
+            "rows": [
+              [
+                "WordPress",
+                "200-350 €/jour",
+                "350-550 €/jour",
+                "500-800 €/jour"
+              ],
+              [
+                "React/Next.js",
+                "350-500 €/jour",
+                "500-750 €/jour",
+                "700-1 100 €/jour"
+              ],
+              [
+                "Python/Django",
+                "350-500 €/jour",
+                "500-700 €/jour",
+                "650-1 000 €/jour"
+              ]
+            ],
+            "metadata": {
+              "variant": "compare"
+            },
+            "index": 52,
+            "order": 52
+          },
+          {
+            "type": "callout",
+            "content": "- TJM moyen : 400-800 €/jour.\n- Un freelance confirmé en React/Next.js peut gagner 6 000-8 000 €/mois en travaillant 20-22 jours/mois.\n- Les senior React/Next.js sont parfois sollicités à 1 000 €/jour.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 53,
+            "order": 53
+          },
+          {
+            "type": "callout",
+            "content": "Pour un junior, commence en salarié pour acquérir de l'expérience. Passe en freelance après 2-3 ans quand tu as un réseau et des compétences solides.",
+            "metadata": {
+              "label": "CONSEIL",
+              "title": "CONSEIL",
+              "variant": "advice"
+            },
+            "index": 54,
+            "order": 54
+          },
+          {
+            "type": "paragraph",
+            "content": "7. Comment se former en 2026 (sans se faire arnaquer)",
+            "index": 55,
+            "order": 55
+          },
+          {
+            "type": "callout",
+            "content": "Méfie-toi des bootcamps à 10 000 €+ qui promettent un emploi garanti. Un portfolio de projets vaut plus qu'un diplôme coûteux.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "ARNAQUE À ÉVITER",
+              "variant": "warning"
+            },
+            "index": 56,
+            "order": 56
+          },
+          {
+            "type": "table",
+            "content": "Voie                      | Durée       | Coût              | Meilleur pour\nÉcole d'ingénieur         | 5 ans       | 500-12 000 €/an   | Carrière long terme\nBootcamp intensif         | 3-6 mois    | ~8 000 €          | Reconversion rapide\nAutoformation             | 6-12 mois   | Gratuit           | Budget limité\nBUT/Licence pro           | 3 ans       | 170-600 €/an      | Équilibre coût/qualité",
+            "headers": [
+              "Voie",
+              "Durée",
+              "Coût",
+              "Meilleur pour"
+            ],
+            "rows": [
+              [
+                "École d'ingénieur",
+                "5 ans",
+                "500-12 000 €/an",
+                "Carrière long terme"
+              ],
+              [
+                "Bootcamp intensif",
+                "3-6 mois",
+                "~8 000 €",
+                "Reconversion rapide"
+              ],
+              [
+                "Autoformation",
+                "6-12 mois",
+                "Gratuit",
+                "Budget limité"
+              ],
+              [
+                "BUT/Licence pro",
+                "3 ans",
+                "170-600 €/an",
+                "Équilibre coût/qualité"
+              ]
+            ],
+            "metadata": {
+              "variant": "compare"
+            },
+            "index": 57,
+            "order": 57
+          },
+          {
+            "type": "callout",
+            "content": "- Un portfolio de 3-5 projets GitHub déployés vaut plus qu'un diplôme.\n- 30 % des développeurs professionnels sont autodidactes.\n- Les meilleures ressources gratuites : freeCodeCamp, The Odin Project, documentation officielle.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 58,
+            "order": 58
+          },
+          {
+            "type": "paragraph",
+            "content": "Aujourd'hui, un étudiant motivé peut créer beaucoup plus vite qu'avant :",
+            "index": 59,
+            "order": 59
+          },
+          {
+            "type": "paragraph",
+            "content": "- un réseau social,\n- une plateforme de cours,\n- un site e-commerce,\n- une application mobile,\n- un SaaS rentable.",
+            "index": 60,
+            "order": 60
+          },
+          {
+            "type": "paragraph",
+            "content": "L'IA réduit fortement le temps nécessaire pour démarrer. Cela veut dire qu'il n'est plus obligatoire de tout faire à la main pendant des mois avant de montrer un premier résultat. On peut prototyper, tester et améliorer beaucoup plus vite.",
+            "index": 61,
+            "order": 61
+          },
+          {
+            "type": "paragraph",
+            "content": "Mais attention : lancer un projet ne suffit pas. Il faut aussi comprendre les utilisateurs, corriger les retours, travailler le design, penser au SEO et construire une vraie stratégie de contenu ou de croissance.",
+            "index": 62,
+            "order": 62
+          },
+          {
+            "type": "paragraph",
+            "content": "Les développeurs qui vont dominer le futur",
+            "index": 63,
+            "order": 63
+          },
+          {
+            "type": "callout",
+            "content": "Les développeurs qui refusent l'IA et n'apprennent pas en continu vont se faire dépasser en 2-3 ans.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "VÉRITÉ DÉCAPANTE",
+              "variant": "warning"
+            },
+            "index": 64,
+            "order": 64
+          },
+          {
+            "type": "paragraph",
+            "content": "Les développeurs qui réussiront demain ne seront pas ceux qui refusent l'IA. Ce seront ceux qui savent l'utiliser avec intelligence.",
+            "index": 65,
+            "order": 65
+          },
+          {
+            "type": "paragraph",
+            "content": "Ils auront généralement ces qualités :",
+            "index": 66,
+            "order": 66
+          },
+          {
+            "type": "paragraph",
+            "content": "- ils savent coder correctement,\n- ils savent utiliser les outils d'IA,\n- ils créent rapidement des solutions utiles,\n- ils apprennent en continu,\n- ils savent construire de vrais projets.",
+            "index": 67,
+            "order": 67
+          },
+          {
+            "type": "callout",
+            "content": "- Le profil hybride (technique + produit + design) est le plus recherché.\n- La capacité à apprendre vite est plus importante que de connaître toutes les technologies.\n- Publier des projets concrets (GitHub, portfolio, SaaS) vaut plus que des certifications.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 68,
+            "order": 68
+          },
+          {
+            "type": "paragraph",
+            "content": "Le futur appartient aux profils hybrides : des personnes capables de mélanger technique, vision produit, design et rapidité d'exécution. Un bon développeur ne sera pas seulement quelqu'un qui écrit du code, mais quelqu'un qui sait transformer une idée en solution concrète.",
+            "index": 69,
+            "order": 69
+          },
+          {
+            "type": "paragraph",
+            "content": "La vraie opportunité en 2026",
+            "index": 70,
+            "order": 70
+          },
+          {
+            "type": "callout",
+            "content": "En 2026, la valeur ne vient plus uniquement de la technique. Elle vient de ta capacité à créer des produits utiles et visibles.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "OPPORTUNITÉ À SAISIR",
+              "variant": "warning"
+            },
+            "index": 71,
+            "order": 71
+          },
+          {
+            "type": "paragraph",
+            "content": "Le vrai avantage aujourd'hui n'est plus seulement de savoir coder. Le vrai avantage, c'est de savoir créer rapidement des solutions utiles.",
+            "index": 72,
+            "order": 72
+          },
+          {
+            "type": "paragraph",
+            "content": "Les personnes qui vont réussir sont celles qui savent :",
+            "index": 73,
+            "order": 73
+          },
+          {
+            "type": "paragraph",
+            "content": "- publier des projets concrets,\n- apprendre le design,\n- comprendre les besoins utilisateurs,\n- utiliser l'IA intelligemment,\n- construire une communauté autour de leur travail.",
+            "index": 74,
+            "order": 74
+          },
+          {
+            "type": "callout",
+            "content": "- Publier régulièrement (articles, projets, tutoriels) construit ta réputation.\n- Le design et l'UX sont des compétences qui font la différence.\n- Comprendre les utilisateurs est aussi important que coder proprement.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 75,
+            "order": 75
+          },
+          {
+            "type": "paragraph",
+            "content": "En 2026, la valeur ne vient pas uniquement de la technique brute. Elle vient aussi de la capacité à transformer une idée en produit visible, utile et cohérent. C'est ce mélange entre vitesse, créativité et exécution qui fera la différence.",
+            "index": 76,
+            "order": 76
+          },
+          {
+            "type": "paragraph",
+            "content": "Conclusion",
+            "index": 77,
+            "order": 77
+          },
+          {
+            "type": "callout",
+            "content": "Si tu ne retiens que 3 choses de cet article :",
+            "metadata": {
+              "label": "WARNING",
+              "title": "RÉSUMÉ ESSENTIEL",
+              "variant": "warning"
+            },
+            "index": 78,
+            "order": 78
+          },
+          {
+            "type": "paragraph",
+            "content": "1. Apprends TypeScript en priorité (78 % des projets).\n2. Maîtrise React + Next.js (stack la plus demandée).\n3. Utilise l'IA (Copilot/Cursor) pour accélérer.",
+            "index": 79,
+            "order": 79
+          },
+          {
+            "type": "paragraph",
+            "content": "Le développement web en 2026 ne demande plus les mêmes compétences qu'avant. TypeScript, React/Next.js et l'IA sont devenus essentiels.",
+            "index": 80,
+            "order": 80
+          },
+          {
+            "type": "paragraph",
+            "content": "Ce qui reste essentiel, c'est la créativité, la compréhension du besoin, la vision produit et la capacité à prendre les bonnes décisions. Les technologies changent, mais les fondamentaux restent : construire des solutions utiles, comprendre les utilisateurs et apprendre en continu.",
+            "index": 81,
+            "order": 81
+          },
+          {
+            "type": "callout",
+            "content": "[ ] Apprendre TypeScript (2-4 semaines).\n[ ] Maîtriser React + Next.js (2-3 mois).\n[ ] Installer Copilot/Cursor et les utiliser quotidiennement.\n[ ] Créer un portfolio de 3-5 projets déployés.\n[ ] Optimiser pour E-E-A-T (expérience, expertise, autorité, confiance).",
+            "metadata": {
+              "label": "CHECKLIST À SUIVRE MAINTENANT",
+              "title": "CHECKLIST À SUIVRE MAINTENANT",
+              "variant": "checklist"
+            },
+            "index": 82,
+            "order": 82
+          },
+          {
+            "type": "paragraph",
+            "content": "Le futur appartient à ceux qui savent combiner :",
+            "index": 83,
+            "order": 83
+          },
+          {
+            "type": "paragraph",
+            "content": "- code,\n- intelligence artificielle,\n- créativité,\n- rapidité,\n- et sens du produit.",
+            "index": 84,
+            "order": 84
+          },
+          {
+            "type": "callout",
+            "content": "Et toi, quelle compétence vas-tu apprendre en priorité en 2026 : TypeScript, React/Next.js, ou les outils d'IA ?",
+            "metadata": {
+              "label": "QUESTION POUR TOI",
+              "title": "QUESTION POUR TOI",
+              "variant": "question"
+            },
+            "index": 85,
+            "order": 85
+          }
+        ],
+        "contentBlocks": [
+          {
+            "type": "callout",
+            "content": "En 2026, rester sur des technologies anciennes (JavaScript pur, WordPress seul, PHP sans framework) signifie trouver beaucoup moins d'offres et négocier moins bien ton salaire. Le marché a changé.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "POINT IMPORTANT",
+              "variant": "warning"
+            },
+            "index": 0,
+            "order": 0
+          },
+          {
+            "type": "paragraph",
+            "content": "En réalité, le développement web en 2026 ne demande pas les mêmes compétences qu'il y a 3 ans. Le marché a changé. Les technologies dominantes ont évolué. Et les salaires ont suivi.",
+            "index": 1,
+            "order": 1
+          },
+          {
+            "type": "paragraph",
+            "content": "Pour certains, c'est une opportunité : ceux qui s'adaptent vite peuvent être embauchés en moins de 3 mois avec un salaire supérieur à la moyenne. Pour d'autres, c'est un risque : rester sur des technologies anciennes signifie trouver beaucoup moins d'offres et négocier moins bien son salaire.",
+            "index": 2,
+            "order": 2
+          },
+          {
+            "type": "paragraph",
+            "content": "Le vrai sujet n'est donc pas de savoir si le développement web est encore un bon métier (la réponse est oui), mais plutôt quelles compétences apprendre en priorité pour être embauché rapidement et bien payé.",
+            "index": 3,
+            "order": 3
+          },
+          {
+            "type": "paragraph",
+            "content": "Pourquoi le développement web est le métier le plus recherché en 2026 ?",
+            "index": 4,
+            "order": 4
+          },
+          {
+            "type": "callout",
+            "content": "Le taux de chômage des développeurs web est inférieur à 2 %. La demande dépasse largement l'offre.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "CHIFFRE CLÉ",
+              "variant": "warning"
+            },
+            "index": 5,
+            "order": 5
+          },
+          {
+            "type": "paragraph",
+            "content": "Aujourd'hui, la demande est massive :",
+            "index": 6,
+            "order": 6
+          },
+          {
+            "type": "paragraph",
+            "content": "- 166 000 offres d'emploi par an en France.\n- Taux de chômage inférieur à 2 % pour les développeurs.\n- Salaire médian de 42 000 € brut/an.\n- 8 000 recherches mensuelles pour « développeur web ».\n- La demande dépasse largement l'offre.",
+            "index": 7,
+            "order": 7
+          },
+          {
+            "type": "callout",
+            "content": "- Les entreprises cherchent désespérément des développeurs React/Next.js + TypeScript.\n- Un développeur fullstack compétent peut être embauché en moins de 3 mois.\n- Les salaires ont augmenté de 10-15 % en 2 ans pour les profils à jour.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 8,
+            "order": 8
+          },
+          {
+            "type": "paragraph",
+            "content": "Pour les entreprises, trouver un bon développeur est devenu un défi. Beaucoup de PME recrutent mal parce qu'elles ne savent pas exactement quelles compétences chercher. Pour les développeurs, c'est une opportunité : le marché est en leur faveur.",
+            "index": 9,
+            "order": 9
+          },
+          {
+            "type": "paragraph",
+            "content": "1. TypeScript est devenu le nouveau standard",
+            "index": 10,
+            "order": 10
+          },
+          {
+            "type": "callout",
+            "content": "78 % des projets professionnels utilisent TypeScript en 2026. Si tu ne connais pas TypeScript, tu perds 78 % des offres d'emploi.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "POINT CRITIQUE",
+              "variant": "warning"
+            },
+            "index": 11,
+            "order": 11
+          },
+          {
+            "type": "paragraph",
+            "content": "TypeScript est devenu le nouveau standard.",
+            "index": 12,
+            "order": 12
+          },
+          {
+            "type": "paragraph",
+            "content": "- 78 % des projets professionnels utilisent TypeScript.\n- JavaScript pur = risque de bugs accru.\n- TypeScript réduit les erreurs de production de 35 %.\n- Salaire +10-15 % pour un développeur TypeScript.",
+            "index": 13,
+            "order": 13
+          },
+          {
+            "type": "paragraph",
+            "content": "Pour un développeur, cela signifie qu'apprendre TypeScript n'est plus une option. C'est une obligation si tu veux être compétitif sur le marché.",
+            "index": 14,
+            "order": 14
+          },
+          {
+            "type": "callout",
+            "content": "- TypeScript est facile à apprendre si tu connais JavaScript (2-4 semaines).\n- Les recruteurs filtrent automatiquement les CV sans TypeScript.\n- Les projets open-source majeurs (React, Next.js, Vue) utilisent tous TypeScript.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 15,
+            "order": 15
+          },
+          {
+            "type": "paragraph",
+            "content": "Les compétences clés à maîtriser :",
+            "index": 16,
+            "order": 16
+          },
+          {
+            "type": "paragraph",
+            "content": "- Types de base (string, number, boolean).\n- Interfaces et types génériques.\n- Prisma (ORM TypeScript).\n- React + Next.js.\n- Tailwind CSS.\n- API REST + GraphQL.\n- Git + GitHub.",
+            "index": 17,
+            "order": 17
+          },
+          {
+            "type": "paragraph",
+            "content": "Mais il faut bien comprendre une chose : TypeScript seul ne suffit pas. C'est la combinaison TypeScript + React + Next.js qui fait la différence.",
+            "index": 18,
+            "order": 18
+          },
+          {
+            "type": "paragraph",
+            "content": "2. React + Next.js : la stack la plus demandée",
+            "index": 19,
+            "order": 19
+          },
+          {
+            "type": "callout",
+            "content": "Si tu ne dois apprendre qu'une seule stack en 2026, c'est React + Next.js. C'est celle qui ouvre le plus de portes et qui paie le mieux.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "CONSEIL CRUCIAL",
+              "variant": "warning"
+            },
+            "index": 20,
+            "order": 20
+          },
+          {
+            "type": "paragraph",
+            "content": "Même si TypeScript est fondamental, c'est la stack React/Next.js qui ouvre le plus de portes.",
+            "index": 21,
+            "order": 21
+          },
+          {
+            "type": "paragraph",
+            "content": "- React : 39,5 % des développeurs l'utilisent.\n- Next.js : framework le plus populaire pour React (SSR, SEO, performance).\n- T3 Stack : TypeScript + Next.js + Tailwind + Prisma = stack la plus recherchée.",
+            "index": 22,
+            "order": 22
+          },
+          {
+            "type": "callout",
+            "content": "- La stack T3 (TypeScript + Next.js + Tailwind + Prisma) est la plus demandée par les startups et scale-ups.\n- Les senior React/Next.js sont extrêmement recherchés (parfois 2-3 offres par semaine).\n- En freelance, le TJM pour React/Next.js est 30-40 % supérieur à WordPress/PHP.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 23,
+            "order": 23
+          },
+          {
+            "type": "paragraph",
+            "content": "Les salaires par stack :",
+            "index": 24,
+            "order": 24
+          },
+          {
+            "type": "table",
+            "content": "Stack              | Junior      | Confirmé    | Senior\nReact/Next.js      | 35-42 K€    | 50-60 K€    | 70-95 K€\nWordPress/PHP      | 30-38 K€    | 38-50 K€    | 55-75 K€\nVue.js/Nuxt        | 32-40 K€    | 45-55 K€    | 60-80 K€",
+            "headers": [
+              "Stack",
+              "Junior",
+              "Confirmé",
+              "Senior"
+            ],
+            "rows": [
+              [
+                "React/Next.js",
+                "35-42 K€",
+                "50-60 K€",
+                "70-95 K€"
+              ],
+              [
+                "WordPress/PHP",
+                "30-38 K€",
+                "38-50 K€",
+                "55-75 K€"
+              ],
+              [
+                "Vue.js/Nuxt",
+                "32-40 K€",
+                "45-55 K€",
+                "60-80 K€"
+              ]
+            ],
+            "metadata": {
+              "variant": "compare"
+            },
+            "index": 25,
+            "order": 25
+          },
+          {
+            "type": "callout",
+            "content": "Pour un junior, la stack React/Next.js offre le meilleur rapport salaire/demande. Pour un senior, les possibilités en freelance sont énormes (700-1 100 €/jour).",
+            "metadata": {
+              "label": "CONSEIL",
+              "title": "CONSEIL",
+              "variant": "advice"
+            },
+            "index": 26,
+            "order": 26
+          },
+          {
+            "type": "paragraph",
+            "content": "3. L'IA n'a pas remplacé les développeurs — elle les a rendus 3× plus productifs",
+            "index": 27,
+            "order": 27
+          },
+          {
+            "type": "callout",
+            "content": "L'IA ne va pas remplacer les développeurs. Elle va éliminer les développeurs qui refusent de l'utiliser.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "MYTHE À DÉTRUIRE",
+              "variant": "warning"
+            },
+            "index": 28,
+            "order": 28
+          },
+          {
+            "type": "paragraph",
+            "content": "Les outils IA qui font la différence :",
+            "index": 29,
+            "order": 29
+          },
+          {
+            "type": "table",
+            "content": "Outil                   | Gain de productivité     | Impact salarial\nGitHub Copilot          | +30-40 % temps codage    | +15-20 % salaire\nCursor (éditeur IA)     | +40-50 % tâches complexes| +15-20 % salaire\nChatGPT/Claude          | recherche + debugging    | +10 %",
+            "headers": [
+              "Outil",
+              "Gain de productivité",
+              "Impact salarial"
+            ],
+            "rows": [
+              [
+                "GitHub Copilot",
+                "+30-40 % temps codage",
+                "+15-20 % salaire"
+              ],
+              [
+                "Cursor (éditeur IA)",
+                "+40-50 % tâches complexes",
+                "+15-20 % salaire"
+              ],
+              [
+                "ChatGPT/Claude",
+                "recherche + debugging",
+                "+10 %"
+              ]
+            ],
+            "metadata": {
+              "variant": "compare"
+            },
+            "index": 30,
+            "order": 30
+          },
+          {
+            "type": "callout",
+            "content": "- Les développeurs qui utilisent Copilot/Cursor sont 3× plus productifs.\n- Les recruteurs remarquent les candidats qui maîtrisent l'IA.\n- 30-40 % de temps gagné = tu peux prendre plus de projets ou travailler moins.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 31,
+            "order": 31
+          },
+          {
+            "type": "paragraph",
+            "content": "L'IA est très utile pour accélérer le travail au quotidien. Elle peut aider à :",
+            "index": 32,
+            "order": 32
+          },
+          {
+            "type": "paragraph",
+            "content": "- gagner du temps sur les tâches répétitives,\n- proposer des idées rapidement,\n- générer des prototypes,\n- assister l'apprentissage,\n- améliorer la productivité.",
+            "index": 33,
+            "order": 33
+          },
+          {
+            "type": "paragraph",
+            "content": "Pour un développeur, cela signifie qu'une grande partie du travail peut être faite plus vite. On peut par exemple demander à une IA de générer une base de composant React, d'aider à écrire une fonction TypeScript, ou encore de proposer une première structure de projet.",
+            "index": 34,
+            "order": 34
+          },
+          {
+            "type": "paragraph",
+            "content": "Mais il faut bien comprendre une chose : l'IA est surtout un assistant. Elle augmente la vitesse de production, mais elle ne remplace pas le jugement humain.",
+            "index": 35,
+            "order": 35
+          },
+          {
+            "type": "paragraph",
+            "content": "4. Les limites de l'IA",
+            "index": 36,
+            "order": 36
+          },
+          {
+            "type": "callout",
+            "content": "L'IA peut générer du code qui semble correct mais qui contient des bugs, des failles de sécurité ou des choix d'architecture mauvais. Toujours relire et valider.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "DANGER",
+              "variant": "warning"
+            },
+            "index": 37,
+            "order": 37
+          },
+          {
+            "type": "paragraph",
+            "content": "Même si elle est puissante, l'IA a encore plusieurs limites importantes.",
+            "index": 38,
+            "order": 38
+          },
+          {
+            "type": "paragraph",
+            "content": "Elle ne peut pas :",
+            "index": 39,
+            "order": 39
+          },
+          {
+            "type": "paragraph",
+            "content": "- comprendre parfaitement les besoins d'un client,\n- gérer seule une architecture complexe,\n- faire preuve de vraie créativité stratégique,\n- prendre des décisions produit comme un humain,\n- anticiper tous les contextes métier.",
+            "index": 40,
+            "order": 40
+          },
+          {
+            "type": "paragraph",
+            "content": "Elle peut produire du code correct dans certains cas, mais aussi générer des erreurs, des choix peu optimisés ou des solutions qui ne respectent pas les contraintes réelles du projet. Un développeur doit donc toujours relire, adapter et valider ce que l'IA propose.",
+            "index": 41,
+            "order": 41
+          },
+          {
+            "type": "callout",
+            "content": "- L'IA est excellente pour le code répétitif (CRUD, composants UI, tests).\n- L'IA est mauvaise pour l'architecture complexe et la sécurité.\n- Le développeur doit rester le décideur final.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 42,
+            "order": 42
+          },
+          {
+            "type": "paragraph",
+            "content": "C'est là que la différence se fait : l'IA exécute vite, mais le développeur comprend, décide et construit intelligemment.",
+            "index": 43,
+            "order": 43
+          },
+          {
+            "type": "paragraph",
+            "content": "5. Tailwind CSS : le framework CSS le plus utilisé",
+            "index": 44,
+            "order": 44
+          },
+          {
+            "type": "callout",
+            "content": "Si tu passes plus de 2 heures à écrire du CSS pur, tu perds du temps. Tailwind te fait gagner 2× plus de temps.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "CONSEIL PRATIQUE",
+              "variant": "warning"
+            },
+            "index": 45,
+            "order": 45
+          },
+          {
+            "type": "paragraph",
+            "content": "Pourquoi Tailwind domine :",
+            "index": 46,
+            "order": 46
+          },
+          {
+            "type": "paragraph",
+            "content": "- Rapidité de développement : 2× plus vite que CSS pur.\n- Uniformité : plus de confusion sur les couleurs et espacements.\n- Communauté massive : 70 % des nouveaux projets React utilisent Tailwind.",
+            "index": 47,
+            "order": 47
+          },
+          {
+            "type": "callout",
+            "content": "- 2-3 semaines suffisent pour maîtriser Tailwind.\n- Le ROI est immédiat : tu gagnes du temps dès le premier projet.\n- Les recruteurs remarquent les projets avec Tailwind (signe de modernité).",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 48,
+            "order": 48
+          },
+          {
+            "type": "paragraph",
+            "content": "Tailwind n'est pas obligatoire, mais c'est un gain de temps énorme. Si tu veux développer vite et bien, c'est un investissement de 2-3 semaines qui se rembourse en 1 mois de travail.",
+            "index": 49,
+            "order": 49
+          },
+          {
+            "type": "paragraph",
+            "content": "6. Le freelance : TJM réels en 2026",
+            "index": 50,
+            "order": 50
+          },
+          {
+            "type": "callout",
+            "content": "Le freelance n'est pas pour les débutants. Il faut au moins 2-3 ans d'expérience et un réseau de clients pour bien gagner sa vie.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "RÉALITÉ DU MARCHÉ",
+              "variant": "warning"
+            },
+            "index": 51,
+            "order": 51
+          },
+          {
+            "type": "table",
+            "content": "Spécialisation        | Junior        | Confirmé      | Senior\nWordPress             | 200-350 €/jour| 350-550 €/jour| 500-800 €/jour\nReact/Next.js         | 350-500 €/jour| 500-750 €/jour| 700-1 100 €/jour\nPython/Django         | 350-500 €/jour| 500-700 €/jour| 650-1 000 €/jour",
+            "headers": [
+              "Spécialisation",
+              "Junior",
+              "Confirmé",
+              "Senior"
+            ],
+            "rows": [
+              [
+                "WordPress",
+                "200-350 €/jour",
+                "350-550 €/jour",
+                "500-800 €/jour"
+              ],
+              [
+                "React/Next.js",
+                "350-500 €/jour",
+                "500-750 €/jour",
+                "700-1 100 €/jour"
+              ],
+              [
+                "Python/Django",
+                "350-500 €/jour",
+                "500-700 €/jour",
+                "650-1 000 €/jour"
+              ]
+            ],
+            "metadata": {
+              "variant": "compare"
+            },
+            "index": 52,
+            "order": 52
+          },
+          {
+            "type": "callout",
+            "content": "- TJM moyen : 400-800 €/jour.\n- Un freelance confirmé en React/Next.js peut gagner 6 000-8 000 €/mois en travaillant 20-22 jours/mois.\n- Les senior React/Next.js sont parfois sollicités à 1 000 €/jour.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 53,
+            "order": 53
+          },
+          {
+            "type": "callout",
+            "content": "Pour un junior, commence en salarié pour acquérir de l'expérience. Passe en freelance après 2-3 ans quand tu as un réseau et des compétences solides.",
+            "metadata": {
+              "label": "CONSEIL",
+              "title": "CONSEIL",
+              "variant": "advice"
+            },
+            "index": 54,
+            "order": 54
+          },
+          {
+            "type": "paragraph",
+            "content": "7. Comment se former en 2026 (sans se faire arnaquer)",
+            "index": 55,
+            "order": 55
+          },
+          {
+            "type": "callout",
+            "content": "Méfie-toi des bootcamps à 10 000 €+ qui promettent un emploi garanti. Un portfolio de projets vaut plus qu'un diplôme coûteux.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "ARNAQUE À ÉVITER",
+              "variant": "warning"
+            },
+            "index": 56,
+            "order": 56
+          },
+          {
+            "type": "table",
+            "content": "Voie                      | Durée       | Coût              | Meilleur pour\nÉcole d'ingénieur         | 5 ans       | 500-12 000 €/an   | Carrière long terme\nBootcamp intensif         | 3-6 mois    | ~8 000 €          | Reconversion rapide\nAutoformation             | 6-12 mois   | Gratuit           | Budget limité\nBUT/Licence pro           | 3 ans       | 170-600 €/an      | Équilibre coût/qualité",
+            "headers": [
+              "Voie",
+              "Durée",
+              "Coût",
+              "Meilleur pour"
+            ],
+            "rows": [
+              [
+                "École d'ingénieur",
+                "5 ans",
+                "500-12 000 €/an",
+                "Carrière long terme"
+              ],
+              [
+                "Bootcamp intensif",
+                "3-6 mois",
+                "~8 000 €",
+                "Reconversion rapide"
+              ],
+              [
+                "Autoformation",
+                "6-12 mois",
+                "Gratuit",
+                "Budget limité"
+              ],
+              [
+                "BUT/Licence pro",
+                "3 ans",
+                "170-600 €/an",
+                "Équilibre coût/qualité"
+              ]
+            ],
+            "metadata": {
+              "variant": "compare"
+            },
+            "index": 57,
+            "order": 57
+          },
+          {
+            "type": "callout",
+            "content": "- Un portfolio de 3-5 projets GitHub déployés vaut plus qu'un diplôme.\n- 30 % des développeurs professionnels sont autodidactes.\n- Les meilleures ressources gratuites : freeCodeCamp, The Odin Project, documentation officielle.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 58,
+            "order": 58
+          },
+          {
+            "type": "paragraph",
+            "content": "Aujourd'hui, un étudiant motivé peut créer beaucoup plus vite qu'avant :",
+            "index": 59,
+            "order": 59
+          },
+          {
+            "type": "paragraph",
+            "content": "- un réseau social,\n- une plateforme de cours,\n- un site e-commerce,\n- une application mobile,\n- un SaaS rentable.",
+            "index": 60,
+            "order": 60
+          },
+          {
+            "type": "paragraph",
+            "content": "L'IA réduit fortement le temps nécessaire pour démarrer. Cela veut dire qu'il n'est plus obligatoire de tout faire à la main pendant des mois avant de montrer un premier résultat. On peut prototyper, tester et améliorer beaucoup plus vite.",
+            "index": 61,
+            "order": 61
+          },
+          {
+            "type": "paragraph",
+            "content": "Mais attention : lancer un projet ne suffit pas. Il faut aussi comprendre les utilisateurs, corriger les retours, travailler le design, penser au SEO et construire une vraie stratégie de contenu ou de croissance.",
+            "index": 62,
+            "order": 62
+          },
+          {
+            "type": "paragraph",
+            "content": "Les développeurs qui vont dominer le futur",
+            "index": 63,
+            "order": 63
+          },
+          {
+            "type": "callout",
+            "content": "Les développeurs qui refusent l'IA et n'apprennent pas en continu vont se faire dépasser en 2-3 ans.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "VÉRITÉ DÉCAPANTE",
+              "variant": "warning"
+            },
+            "index": 64,
+            "order": 64
+          },
+          {
+            "type": "paragraph",
+            "content": "Les développeurs qui réussiront demain ne seront pas ceux qui refusent l'IA. Ce seront ceux qui savent l'utiliser avec intelligence.",
+            "index": 65,
+            "order": 65
+          },
+          {
+            "type": "paragraph",
+            "content": "Ils auront généralement ces qualités :",
+            "index": 66,
+            "order": 66
+          },
+          {
+            "type": "paragraph",
+            "content": "- ils savent coder correctement,\n- ils savent utiliser les outils d'IA,\n- ils créent rapidement des solutions utiles,\n- ils apprennent en continu,\n- ils savent construire de vrais projets.",
+            "index": 67,
+            "order": 67
+          },
+          {
+            "type": "callout",
+            "content": "- Le profil hybride (technique + produit + design) est le plus recherché.\n- La capacité à apprendre vite est plus importante que de connaître toutes les technologies.\n- Publier des projets concrets (GitHub, portfolio, SaaS) vaut plus que des certifications.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 68,
+            "order": 68
+          },
+          {
+            "type": "paragraph",
+            "content": "Le futur appartient aux profils hybrides : des personnes capables de mélanger technique, vision produit, design et rapidité d'exécution. Un bon développeur ne sera pas seulement quelqu'un qui écrit du code, mais quelqu'un qui sait transformer une idée en solution concrète.",
+            "index": 69,
+            "order": 69
+          },
+          {
+            "type": "paragraph",
+            "content": "La vraie opportunité en 2026",
+            "index": 70,
+            "order": 70
+          },
+          {
+            "type": "callout",
+            "content": "En 2026, la valeur ne vient plus uniquement de la technique. Elle vient de ta capacité à créer des produits utiles et visibles.",
+            "metadata": {
+              "label": "WARNING",
+              "title": "OPPORTUNITÉ À SAISIR",
+              "variant": "warning"
+            },
+            "index": 71,
+            "order": 71
+          },
+          {
+            "type": "paragraph",
+            "content": "Le vrai avantage aujourd'hui n'est plus seulement de savoir coder. Le vrai avantage, c'est de savoir créer rapidement des solutions utiles.",
+            "index": 72,
+            "order": 72
+          },
+          {
+            "type": "paragraph",
+            "content": "Les personnes qui vont réussir sont celles qui savent :",
+            "index": 73,
+            "order": 73
+          },
+          {
+            "type": "paragraph",
+            "content": "- publier des projets concrets,\n- apprendre le design,\n- comprendre les besoins utilisateurs,\n- utiliser l'IA intelligemment,\n- construire une communauté autour de leur travail.",
+            "index": 74,
+            "order": 74
+          },
+          {
+            "type": "callout",
+            "content": "- Publier régulièrement (articles, projets, tutoriels) construit ta réputation.\n- Le design et l'UX sont des compétences qui font la différence.\n- Comprendre les utilisateurs est aussi important que coder proprement.",
+            "metadata": {
+              "label": "POINTS LES PLUS IMPORTANTS",
+              "title": "POINTS LES PLUS IMPORTANTS",
+              "variant": "warning"
+            },
+            "index": 75,
+            "order": 75
+          },
+          {
+            "type": "paragraph",
+            "content": "En 2026, la valeur ne vient pas uniquement de la technique brute. Elle vient aussi de la capacité à transformer une idée en produit visible, utile et cohérent. C'est ce mélange entre vitesse, créativité et exécution qui fera la différence.",
+            "index": 76,
+            "order": 76
+          },
+          {
+            "type": "paragraph",
+            "content": "Conclusion",
+            "index": 77,
+            "order": 77
+          },
+          {
+            "type": "callout",
+            "content": "Si tu ne retiens que 3 choses de cet article :",
+            "metadata": {
+              "label": "WARNING",
+              "title": "RÉSUMÉ ESSENTIEL",
+              "variant": "warning"
+            },
+            "index": 78,
+            "order": 78
+          },
+          {
+            "type": "paragraph",
+            "content": "1. Apprends TypeScript en priorité (78 % des projets).\n2. Maîtrise React + Next.js (stack la plus demandée).\n3. Utilise l'IA (Copilot/Cursor) pour accélérer.",
+            "index": 79,
+            "order": 79
+          },
+          {
+            "type": "paragraph",
+            "content": "Le développement web en 2026 ne demande plus les mêmes compétences qu'avant. TypeScript, React/Next.js et l'IA sont devenus essentiels.",
+            "index": 80,
+            "order": 80
+          },
+          {
+            "type": "paragraph",
+            "content": "Ce qui reste essentiel, c'est la créativité, la compréhension du besoin, la vision produit et la capacité à prendre les bonnes décisions. Les technologies changent, mais les fondamentaux restent : construire des solutions utiles, comprendre les utilisateurs et apprendre en continu.",
+            "index": 81,
+            "order": 81
+          },
+          {
+            "type": "callout",
+            "content": "[ ] Apprendre TypeScript (2-4 semaines).\n[ ] Maîtriser React + Next.js (2-3 mois).\n[ ] Installer Copilot/Cursor et les utiliser quotidiennement.\n[ ] Créer un portfolio de 3-5 projets déployés.\n[ ] Optimiser pour E-E-A-T (expérience, expertise, autorité, confiance).",
+            "metadata": {
+              "label": "CHECKLIST À SUIVRE MAINTENANT",
+              "title": "CHECKLIST À SUIVRE MAINTENANT",
+              "variant": "checklist"
+            },
+            "index": 82,
+            "order": 82
+          },
+          {
+            "type": "paragraph",
+            "content": "Le futur appartient à ceux qui savent combiner :",
+            "index": 83,
+            "order": 83
+          },
+          {
+            "type": "paragraph",
+            "content": "- code,\n- intelligence artificielle,\n- créativité,\n- rapidité,\n- et sens du produit.",
+            "index": 84,
+            "order": 84
+          },
+          {
+            "type": "callout",
+            "content": "Et toi, quelle compétence vas-tu apprendre en priorité en 2026 : TypeScript, React/Next.js, ou les outils d'IA ?",
+            "metadata": {
+              "label": "QUESTION POUR TOI",
+              "title": "QUESTION POUR TOI",
+              "variant": "question"
+            },
+            "index": 85,
+            "order": 85
+          }
+        ],
+        "created_at": 1780061567064,
+        "description": "Le développement web n'a jamais été aussi concurrentiel. En 2026, plus de 166 000 offres d'emploi sont publiées chaque année, mais les recruteurs ne trouvent pas leurs candidats. Pourquoi ? Parce que la majorité des développeurs maîtrisent encore des technologies de 2020. Voici les 7 compétences qui font vraiment la différence, avec les salaires réels et les technologies à apprendre en priorité.",
+        "excerpt": "Le développement web n'a jamais été aussi concurrentiel. En 2026, plus de 166 000 offres d'emploi sont publiées chaque année, mais les recruteurs ne trouvent pas leurs candidats. Pourquoi ? Parce que la majorité des développeurs maîtrisent encore des technologies de 2020. Voici les 7 compétences qui font vraiment la différence, avec les salaires réels et les technologies à apprendre en priorité.",
+        "image": "https://res.cloudinary.com/debvx2hca/image/upload/v1780061566/jc-hub-banniere-1780061270239-246006.png",
+        "likes": 0,
+        "published_at": 1780061567064,
+        "slug": "developpement-web-en-2026-les-7-competences-qui-font-la-difference-et-les-salaires-reels",
+        "status": "published",
+        "tags": [
+          "Développement Web",
+          "2026",
+          "Compétences Développeur",
+          "React",
+          "Next.js",
+          "TypeScript",
+          "Salaire Développeur",
+          "IA",
+          "Productivité",
+          "Carrière Tech"
+        ],
+        "title": "Développement Web en 2026 : Les 7 Compétences Qui Font La Différence (Et Les Salaires Réels)",
+        "updated_at": 1780061567064,
         "views": 0
       }
     }

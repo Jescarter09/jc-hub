@@ -575,13 +575,14 @@ function getCalloutVariant(label, title) {
     marker.includes('warning') ||
     marker.includes('danger') ||
     marker.includes('attention') ||
+    marker.includes('important') ||
     marker.includes('critique') ||
     marker.includes('arnaque')
   ) {
     return 'warning';
   }
   if (marker.includes('question')) return 'question';
-  if (marker.includes('conseil')) return 'advice';
+  if (marker.includes('conseil') || marker.includes('astuce')) return 'advice';
   if (marker.includes('chiffre')) return 'metric';
   if (marker.includes('checklist')) return 'checklist';
   return 'note';
@@ -593,13 +594,13 @@ function parseCalloutShortcut(line) {
 
   if (/^warning\s*:/i.test(trimmed)) {
     trimmed = trimmed.replace(/^warning\s*:\s*/i, '');
-    if (!/^(WARNING|DANGER|ATTENTION|CONSEIL|NB|NOTE|QUESTION|POINTS?|CHECKLIST|CHIFFRE|R[ÉE]SUM[ÉE])\b/i.test(trimmed)) {
+    if (!/^(WARNING|DANGER|ATTENTION|IMPORTANT|CONSEILS?|CONSEILLE|ASTUCE|NB|NOTE|INFO|QUESTION|QUESTIONNEMENT|POINTS?|CHECKLIST|CHIFFRE|R[ÉE]SUM[ÉE])\b/i.test(trimmed)) {
       trimmed = `WARNING : ${trimmed}`;
     }
   }
 
   const match = trimmed.match(
-    /^(WARNING|DANGER|ATTENTION|CONSEIL|NB|NOTE|QUESTION(?:\s+POUR\s+TOI)?|POINTS?\s+LES\s+PLUS\s+IMPORTANTS|CHECKLIST\s+[ÀA]?\s*SUIVRE\s+MAINTENANT|CHIFFRE\s+CL[ÉE]|R[ÉE]SUM[ÉE]\s+ESSENTIEL)\s*(?:\/\s*([^:]+))?\s*:\s*(.*)$/i
+    /^(WARNING|DANGER|ATTENTION|IMPORTANT|CONSEILS?|CONSEILLE|ASTUCE|NB|NOTE|INFO|QUESTION(?:\s+POUR\s+TOI)?|QUESTIONNEMENT|POINTS?\s+LES\s+PLUS\s+IMPORTANTS|CHECKLIST\s+[ÀA]?\s*SUIVRE\s+MAINTENANT|CHIFFRE\s+CL[ÉE]|R[ÉE]SUM[ÉE]\s+ESSENTIEL)\s*(?:\/\s*([^:]+))?\s*:\s*(.*)$/i
   );
   if (!match) return null;
 
