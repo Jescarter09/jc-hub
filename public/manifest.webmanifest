@@ -1,0 +1,24 @@
+{
+  "name": "JC Hub",
+  "short_name": "JC Hub",
+  "description": "Guides simples, articles pratiques et ressources JC Hub pour mieux comprendre le numérique.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff8e9",
+  "theme_color": "#2f5a3e",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

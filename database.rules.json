@@ -1,0 +1,170 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "blogMetrics": {
+      ".read": true,
+      "$slug": {
+        ".read": true,
+        ".write": "newData.exists() && $slug.matches(/^[A-Za-z0-9._-]{1,180}$/) && newData.child('slug').isString() && newData.child('slug').val() === $slug",
+        ".validate": "newData.hasChildren(['slug', 'createdAt', 'updatedAt'])",
+        "slug": {
+          ".validate": "newData.isString() && newData.val() === $slug"
+        },
+        "likesCount": {
+          ".validate": "newData.isNumber() && (newData.val() % 1 === 0) && newData.val() >= 0 && newData.val() <= 500000 && (data.exists() ? (newData.val() >= data.val() - 1 && newData.val() <= data.val() + 1) : newData.val() <= 5000)"
+        },
+        "savesCount": {
+          ".validate": "newData.isNumber() && (newData.val() % 1 === 0) && newData.val() >= 0 && newData.val() <= 500000 && (data.exists() ? (newData.val() >= data.val() - 1 && newData.val() <= data.val() + 1) : newData.val() <= 1)"
+        },
+        "readLaterCount": {
+          ".validate": "newData.isNumber() && (newData.val() % 1 === 0) && newData.val() >= 0 && newData.val() <= 500000 && (data.exists() ? (newData.val() >= data.val() - 1 && newData.val() <= data.val() + 1) : newData.val() <= 1)"
+        },
+        "viewsCount": {
+          ".validate": "newData.isNumber() && (newData.val() % 1 === 0) && newData.val() >= 0 && newData.val() <= 50000000 && (data.exists() ? (newData.val() >= data.val() && newData.val() <= data.val() + 1) : true)"
+        },
+        "totalReadSeconds": {
+          ".validate": "newData.isNumber() && (newData.val() % 1 === 0) && newData.val() >= 0 && newData.val() <= 300000000 && (data.exists() ? (newData.val() >= data.val() && newData.val() <= data.val() + 7200) : newData.val() <= 7200)"
+        },
+        "readSessionsCount": {
+          ".validate": "newData.isNumber() && (newData.val() % 1 === 0) && newData.val() >= 0 && newData.val() <= 10000000 && (data.exists() ? (newData.val() >= data.val() && newData.val() <= data.val() + 1) : newData.val() <= 1)"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000 && (data.exists() ? newData.val() === data.val() : true)"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000"
+        },
+        "interactionByClient": {
+          "$clientId": {
+            ".validate": "$clientId.matches(/^[A-Za-z0-9_-]{6,128}$/) && newData.hasChildren(['liked', 'saved', 'readLater', 'updatedAt'])",
+            "liked": {
+              ".validate": "newData.isBoolean()"
+            },
+            "saved": {
+              ".validate": "newData.isBoolean()"
+            },
+            "readLater": {
+              ".validate": "newData.isBoolean()"
+            },
+            "updatedAt": {
+              ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "blogComments": {
+      ".read": true,
+      "$slug": {
+        ".read": true,
+        "$commentId": {
+          ".read": true,
+          ".write": "newData.exists() && $slug.matches(/^[A-Za-z0-9._-]{1,180}$/) && $commentId.matches(/^[A-Za-z0-9_-]{8,64}$/) && newData.child('id').isString() && newData.child('id').val() === $commentId && newData.child('slug').isString() && newData.child('slug').val() === $slug && newData.child('author').isString() && newData.child('author').val().matches(/^.{2,48}$/) && newData.child('content').isString() && newData.child('content').val().matches(/^.{12,1200}$/) && newData.child('likesCount').isNumber() && (newData.child('likesCount').val() % 1 === 0) && newData.child('likesCount').val() >= 0 && newData.child('likesCount').val() <= 500000 && (data.exists() ? (newData.child('likesCount').val() >= data.child('likesCount').val() - 1 && newData.child('likesCount').val() <= data.child('likesCount').val() + 1) : newData.child('likesCount').val() === 0) && newData.child('createdAt').isNumber() && newData.child('createdAt').val() > 0 && newData.child('createdAt').val() <= now + 60000 && (data.exists() ? newData.child('createdAt').val() === data.child('createdAt').val() : true) && newData.child('updatedAt').isNumber() && newData.child('updatedAt').val() > 0 && newData.child('updatedAt').val() <= now + 60000 && (!newData.child('replyToAuthor').exists() || (newData.child('replyToAuthor').isString() && newData.child('replyToAuthor').val().matches(/^.{2,48}$/)))",
+          "id": {
+            ".validate": "newData.isString() && newData.val() === $commentId"
+          },
+          "slug": {
+            ".validate": "newData.isString() && newData.val() === $slug"
+          },
+          "author": {
+            ".validate": "newData.isString() && newData.val().matches(/^.{2,48}$/)"
+          },
+          "content": {
+            ".validate": "newData.isString() && newData.val().matches(/^.{12,1200}$/)"
+          },
+          "likesCount": {
+            ".validate": "newData.isNumber() && (newData.val() % 1 === 0) && newData.val() >= 0 && newData.val() <= 500000 && (data.exists() ? (newData.val() >= data.val() - 1 && newData.val() <= data.val() + 1) : newData.val() === 0)"
+          },
+          "createdAt": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000 && (data.exists() ? newData.val() === data.val() : true)"
+          },
+          "updatedAt": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000"
+          },
+          "replyToAuthor": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().matches(/^.{2,48}$/))"
+          },
+          "reply": {
+            ".validate": "newData.hasChildren(['author', 'role', 'createdAt', 'text'])",
+            "author": {
+              ".validate": "newData.isString() && newData.val().matches(/^.{2,48}$/)"
+            },
+            "role": {
+              ".validate": "newData.isString() && newData.val().matches(/^.{2,24}$/)"
+            },
+            "createdAt": {
+              ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000"
+            },
+            "text": {
+              ".validate": "newData.isString() && newData.val().matches(/^.{2,1200}$/)"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "likeByClient": {
+            "$clientId": {
+              ".validate": "$clientId.matches(/^[A-Za-z0-9_-]{6,128}$/) && newData.isBoolean()"
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+    "newsletterSubscribers": {
+      ".read": false,
+      "$subscriberId": {
+        ".read": false,
+        ".write": "newData.exists() && $subscriberId.matches(/^[A-Za-z0-9._%~-]{5,360}$/) && newData.child('email').isString() && newData.child('email').val().matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/) && newData.child('status').isString() && newData.child('status').val() === 'active' && newData.child('lastSource').isString() && newData.child('lastSource').val().matches(/^[A-Za-z0-9._-]{1,64}$/) && newData.child('consent').isBoolean() && newData.child('consent').val() === true && newData.child('updatedAt').isNumber() && newData.child('updatedAt').val() > 0 && newData.child('updatedAt').val() <= now + 60000",
+        "email": {
+          ".validate": "newData.isString() && newData.val().matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/)"
+        },
+        "status": {
+          ".validate": "newData.isString() && newData.val() === 'active'"
+        },
+        "lastSource": {
+          ".validate": "newData.isString() && newData.val().matches(/^[A-Za-z0-9._-]{1,64}$/)"
+        },
+        "consent": {
+          ".validate": "newData.isBoolean() && newData.val() === true"
+        },
+        "consentAt": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000"
+        },
+        "lastSignupAttemptAt": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000 && (data.exists() ? newData.val() === data.val() : true)"
+        },
+        "subscribedAt": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000"
+        },
+        "reactivatedAt": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000"
+        },
+        "unsubscribedAt": {
+          ".validate": "newData.val() === null || (newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000)"
+        },
+        "sources": {
+          ".validate": "newData.exists()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    }
+  }
+}

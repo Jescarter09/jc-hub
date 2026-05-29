@@ -1,0 +1,40 @@
+{
+  "name": "jc-hub",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "draft:article": "node scripts/generate-article.mjs",
+    "draft:from-text": "node scripts/generate-article-from-text.mjs --status=draft",
+    "draft:publish": "node scripts/generate-article-from-text.mjs --status=published",
+    "article:one-shot": "node scripts/generate-article-from-text.mjs --input=drafts/article.txt --status=published",
+    "auth:create-import-user": "node scripts/create-import-user.mjs",
+    "import:firestore": "node scripts/import-posts-to-firestore.mjs --doc-id=slug",
+    "generate:sitemap": "node scripts/generate-sitemap.mjs",
+    "sync:database": "node scripts/sync-database-from-firestore.mjs",
+    "sync:all": "npm run sync:database && npm run generate:sitemap",
+    "generate:logo": "node scripts/generate-logo-assets.mjs",
+    "content:dedupe": "node scripts/dedupe-database-posts.mjs --write",
+    "clean:artifacts": "node scripts/clean-artifacts.mjs"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.2",
+    "autoprefixer": "^10.5.0",
+    "firebase-admin": "^12.3.0",
+    "postcss": "^8.5.14",
+    "sharp": "^0.33.0",
+    "tailwindcss": "^4.3.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.12"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.3.0",
+    "firebase": "^12.13.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.15.1"
+  }
+}

@@ -1,0 +1,17 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fav-gradient-bold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563EB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main background square -->
+  <rect x="4" y="4" width="56" height="56" rx="10" fill="url(#fav-gradient-bold)"/>
+  
+  <!-- Accent dot -->
+  <circle cx="48" cy="16" r="6" fill="#A78BFA" opacity="1"/>
+  
+  <!-- Text JC - Bold and white -->
+  <text x="32" y="42" font-size="28" font-weight="900" fill="white" font-family="Arial, sans-serif" text-anchor="middle" letter-spacing="-1">JC</text>
+</svg>

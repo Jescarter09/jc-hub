@@ -1,0 +1,28 @@
+:root {
+  --app-nav-offset: 80px;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --app-nav-offset: 74px;
+  }
+}
+
+@media (max-width: 240px), (max-height: 260px) {
+  :root {
+    --app-nav-offset: 64px;
+  }
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--app-nav-offset);
+}

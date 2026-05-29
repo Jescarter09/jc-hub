@@ -1,0 +1,19 @@
+Titre: Mon article test
+Description: Description courte de l'article.
+Categorie: Tutoriels
+Tags: 
+Banniere: banniere
+
+## Introduction
+Colle ici ton texte libre.
+
+image 1
+
+## Deuxieme partie
+Tu peux ajouter autant de paragraphes que tu veux.
+
+images 2
+
+```js
+console.log('bloc de code optionnel');
+```
