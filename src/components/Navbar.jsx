@@ -221,6 +221,7 @@ export default function Navbar() {
             <NavItem to="/" active={location.pathname === '/' && !location.hash}>Accueil</NavItem>
             <NavItem to="/about" active={isActive('/about')}>About</NavItem>
             <NavItem to="/blog" active={isActive('/blog')}>Article</NavItem>
+            <NavItem to="/ebooks" active={isActive('/ebooks')}>Ebooks</NavItem>
 
             <div
               ref={desktopCategoriesRef}
@@ -395,6 +396,10 @@ export default function Navbar() {
               <NavItem to="/blog" active={isActive('/blog')}>
                 <i className="fas fa-newspaper mr-2 text-xs"></i>
                 Article
+              </NavItem>
+              <NavItem to="/ebooks" active={isActive('/ebooks')}>
+                <i className="fas fa-book-open mr-2 text-xs"></i>
+                Ebooks
               </NavItem>
               <NavItem to="/about" active={isActive('/about')}>
                 <i className="fas fa-circle-info mr-2 text-xs"></i>

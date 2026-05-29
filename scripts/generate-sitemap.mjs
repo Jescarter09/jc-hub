@@ -143,6 +143,7 @@ async function generateSitemap() {
     { path: 'about', priority: '0.8' },
     { path: 'contact', priority: '0.8' },
     { path: 'blog', priority: '0.9' },
+    { path: 'ebooks', priority: '0.8' },
     { path: 'search', priority: '0.6' },
     { path: 'res/mentions-legales', priority: '0.5' },
     { path: 'res/confidentialite', priority: '0.5' },

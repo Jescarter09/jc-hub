@@ -128,6 +128,11 @@ service cloud.firestore {
         && resource.data.authorId == request.auth.uid;
     }
 
+    match /books/{bookId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     match /newsletter_subscribers/{subscriberId} {
       allow read: if false;
 
