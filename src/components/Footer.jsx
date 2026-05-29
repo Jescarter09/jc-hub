@@ -122,7 +122,7 @@ export default function Footer() {
                 <i className="fab fa-twitter"></i>
               </a>
               <a
-                href="https://github.com/ngnambongojessy-design/jc_hub"
+                href="https://github.com/Jescarter09/jc-hub"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Repository GitHub JC Hub"

@@ -13,7 +13,7 @@ const creatorLinks = [
   },
   {
     label: 'GitHub',
-    href: 'https://github.com/ngnambongojessy-design/jc_hub'
+    href: 'https://github.com/Jescarter09/jc-hub'
   }
 ];
 
