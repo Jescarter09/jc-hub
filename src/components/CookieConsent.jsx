@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import './CookieConsent.css';
 
 const COOKIE_NAME = 'jchub_cookie_consent';
-const LEGACY_STORAGE_KEY = 'jchub.cookieConsent';
 const CONSENT_MAX_AGE = 60 * 60 * 24 * 365;
 
 const readCookie = () => {
@@ -29,25 +28,7 @@ const writeCookie = (value) => {
 
 const readConsent = () => {
   if (typeof window === 'undefined') return 'unknown';
-
-  const cookieConsent = readCookie();
-  if (cookieConsent !== 'unknown') {
-    return cookieConsent;
-  }
-
-  try {
-    const legacyConsent = window.localStorage.getItem(LEGACY_STORAGE_KEY);
-
-    if (legacyConsent) {
-      writeCookie(legacyConsent);
-      window.localStorage.removeItem(LEGACY_STORAGE_KEY);
-      return legacyConsent;
-    }
-  } catch {
-    // If storage is unavailable, the banner simply behaves like a session notice.
-  }
-
-  return 'unknown';
+  return readCookie();
 };
 
 const writeConsent = (value) => {
@@ -74,12 +55,16 @@ export default function CookieConsent() {
 
   return (
     <section className="cookie-consent" role="dialog" aria-label="Choix des cookies">
-      <div>
-        <p className="cookie-consent-kicker">Cookies</p>
+      <div className="cookie-consent-icon" aria-hidden="true">
+        <i className="fas fa-cookie-bite"></i>
+      </div>
+
+      <div className="cookie-consent-copy">
+        <p className="cookie-consent-kicker">Confidentialité</p>
         <h2>Une navigation plus claire.</h2>
         <p>
-          JC Hub utilise les éléments nécessaires au fonctionnement du site. Tu peux accepter les préférences
-          utiles ou garder uniquement l’essentiel.
+          JC Hub utilise un vrai cookie navigateur pour mémoriser ton choix. Tu peux accepter les préférences utiles
+          ou garder uniquement l’essentiel.
         </p>
       </div>
 
