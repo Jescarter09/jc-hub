@@ -318,10 +318,6 @@ export default function Navbar() {
               <i className="fas fa-magnifying-glass"></i>
             </button>
 
-            <button type="button" className="neo-mobile-icon-button" aria-label="Notifications">
-              <i className="far fa-bell"></i>
-            </button>
-
             <div className="neo-search-wrap" ref={searchBoxRef}>
               <form
                 className={`neo-header-search-form ${

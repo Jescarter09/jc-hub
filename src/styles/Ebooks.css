@@ -1169,28 +1169,248 @@
 @media (max-width: 640px) {
   .ebooks-section,
   .ebooks-hero {
-    width: min(calc(100% - 28px), var(--ebooks-max));
+    width: min(calc(100% - 24px), var(--ebooks-max));
   }
 
   .ebooks-hero {
-    margin-top: 24px;
-    padding: 24px 18px;
+    min-height: auto;
+    margin-top: 18px;
+    padding: 22px 16px;
+    border-radius: 16px;
   }
 
   .ebooks-hero-stats,
-  .ebooks-category-grid,
-  .ebooks-grid,
-  .ebooks-filters,
   .ebooks-popular-grid,
   .ebooks-benefits {
     grid-template-columns: 1fr;
   }
 
+  .ebooks-category-grid,
+  .ebooks-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .ebooks-hero h1 {
+    font-size: clamp(2rem, 11vw, 2.9rem);
+    letter-spacing: -0.045em;
+  }
+
+  .ebooks-hero-copy > p {
+    font-size: 0.92rem;
+    line-height: 1.58;
+  }
+
+  .ebooks-search {
+    max-width: none;
+  }
+
+  .ebooks-hero-stats {
+    gap: 10px;
+  }
+
+  .ebooks-hero-stats span {
+    grid-template-columns: 34px minmax(0, 1fr);
+    border: 1px solid var(--ebooks-line);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.76);
+    padding: 10px;
+  }
+
+  .ebooks-hero-stats i {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+  }
+
+  .ebooks-hero-photo {
+    min-height: 180px;
+  }
+
+  .ebooks-hero-photo img {
+    max-height: 210px;
+  }
+
+  .ebooks-section {
+    margin-top: 24px;
+  }
+
+  .ebooks-section-heading {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .ebooks-section-heading a,
+  .ebooks-section-heading button {
+    width: 100%;
+    justify-content: space-between;
+    border: 1px solid rgba(91, 61, 255, 0.16);
+    border-radius: 10px;
+    background: #ffffff;
+    padding: 11px 12px;
+  }
+
+  .ebooks-category-card {
+    min-height: 124px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 7px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  .ebooks-category-card i {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    font-size: 1.05rem;
+  }
+
+  .ebooks-category-card strong {
+    font-size: 0.74rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .ebooks-category-card span {
+    align-self: center;
+    padding: 3px 7px;
+    font-size: 0.62rem;
+  }
+
+  .ebooks-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    border-radius: 14px;
+    padding: 14px;
+  }
+
+  .ebooks-filters h2,
+  .ebooks-reset-filter {
+    grid-column: 1 / -1;
+  }
+
+  .ebooks-filter-group {
+    gap: 8px;
+    margin-top: 0;
+  }
+
+  .ebooks-filter-group h3 {
+    font-size: 0.72rem;
+  }
+
+  .ebooks-filter-group label {
+    gap: 6px;
+    font-size: 0.7rem;
+    line-height: 1.25;
+  }
+
+  .ebooks-filter-group input {
+    width: 12px;
+    height: 12px;
+  }
+
+  .ebooks-reset-filter {
+    min-height: 34px;
+    margin-top: 0;
+  }
+
+  .ebooks-results-head label,
+  .ebooks-results-head select {
+    width: 100%;
+  }
+
+  .ebooks-card {
+    border-radius: 14px;
+  }
+
   .ebooks-card-cover {
-    height: 210px;
+    height: 132px;
+    margin: 8px 8px 0;
+  }
+
+  .ebooks-card-body {
+    padding: 10px;
+  }
+
+  .ebooks-card-type {
+    margin-bottom: 5px;
+    font-size: 0.54rem;
+  }
+
+  .ebooks-card h3 {
+    font-size: 0.76rem;
+  }
+
+  .ebooks-card p {
+    font-size: 0.66rem;
+  }
+
+  .ebooks-card-footer {
+    gap: 6px;
+    margin-top: 7px;
+  }
+
+  .ebooks-card-footer > span {
+    font-size: 0.62rem;
+  }
+
+  .ebooks-card-download {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+  }
+
+  .ebooks-pagination {
+    gap: 8px;
+  }
+
+  .ebooks-pagination > button {
+    flex: 1 1 120px;
+    min-width: 0;
+  }
+
+  .ebooks-popular-card {
+    min-height: 0;
+    grid-template-columns: 86px minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+    padding: 12px;
+  }
+
+  .ebooks-popular-card-cover {
+    width: 78px;
+    height: 102px;
+    margin: 0;
+  }
+
+  .ebooks-popular-card strong,
+  .ebooks-popular-card-meta {
+    text-align: left;
+    justify-content: flex-start;
   }
 
   .ebooks-newsletter-copy {
     align-items: flex-start;
+  }
+
+  .ebooks-newsletter,
+  .ebooks-benefits {
+    padding: 18px;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .ebooks-category-card {
+    min-height: 112px;
+    padding: 10px 8px;
+  }
+
+  .ebooks-card-cover {
+    height: 118px;
+  }
+
+  .ebooks-filters {
+    grid-template-columns: 1fr;
   }
 }

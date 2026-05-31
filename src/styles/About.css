@@ -797,11 +797,41 @@
 
 @media (max-width: 680px) {
   .about-soft-section {
-    width: min(calc(100% - 28px), var(--about-max));
+    width: min(calc(100% - 24px), var(--about-max));
   }
 
   .about-hero {
-    padding-top: 28px;
+    min-height: auto;
+    gap: 20px;
+    padding: 22px 0 28px;
+  }
+
+  .about-breadcrumb {
+    flex-wrap: wrap;
+  }
+
+  .about-hero h1 {
+    font-size: clamp(2.05rem, 12vw, 3rem);
+    letter-spacing: -0.048em;
+  }
+
+  .about-hero p {
+    font-size: 0.92rem;
+    line-height: 1.58;
+  }
+
+  .about-primary-button {
+    width: 100%;
+  }
+
+  .about-hero-visual {
+    min-height: 180px;
+  }
+
+  .about-hero-visual img {
+    width: 100%;
+    max-height: 210px;
+    transform: none;
   }
 
   .about-mission-grid,
@@ -812,9 +842,55 @@
     grid-template-columns: 1fr;
   }
 
+  .about-section-heading {
+    margin-bottom: 20px;
+  }
+
+  .about-section-heading h2 {
+    font-size: clamp(1.45rem, 8vw, 2rem);
+  }
+
+  .about-mission-card,
+  .about-team-card,
+  .about-testimonial-card,
+  .about-source-group,
+  .about-source-card {
+    border-radius: 14px;
+  }
+
+  .about-mission-card {
+    min-height: 0;
+    padding: 20px;
+  }
+
+  .about-mission-card h3 {
+    margin-top: 18px;
+  }
+
+  .about-stats {
+    gap: 12px;
+  }
+
+  .about-stats article {
+    border: 1px solid rgba(91, 61, 255, 0.12);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.76);
+    padding: 12px;
+  }
+
+  .about-source-group {
+    padding: 18px;
+  }
+
+  .about-source-card a {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
   .about-newsletter,
   .about-stats {
-    padding: 20px;
+    padding: 18px;
+    border-radius: 14px;
   }
 
   .about-newsletter-copy {
@@ -831,6 +907,16 @@
 
   .about-stars {
     grid-column: 2;
+  }
+}
+
+@media (max-width: 380px) {
+  .about-testimonial-card > div {
+    grid-template-columns: 1fr;
+  }
+
+  .about-stars {
+    grid-column: auto;
   }
 }
 

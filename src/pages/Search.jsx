@@ -61,6 +61,7 @@ export default function Search() {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef(null);
+  const resultsTopRef = useRef(null);
   const initialQuery = searchParams.get('q') || '';
   const [query, setQuery] = useState(initialQuery);
   const [books, setBooks] = useState([]);
@@ -185,6 +186,13 @@ export default function Search() {
     inputRef.current?.focus();
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.requestAnimationFrame(() => {
+      resultsTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
   usePageSeo({
     title: normalizedQuery ? `Recherche: ${readableQuery}` : 'Recherche',
     description:
@@ -301,7 +309,7 @@ export default function Search() {
           {filtersContent}
         </aside>
 
-        <main className="search-soft-results">
+        <main className="search-soft-results" ref={resultsTopRef}>
           <div className="search-soft-toolbar">
             <button type="button" className="search-soft-filter-toggle" onClick={() => setIsFiltersOpen(true)}>
               <i className="fas fa-sliders"></i>
@@ -400,7 +408,7 @@ export default function Search() {
               <button
                 type="button"
                 disabled={currentPage === 1}
-                onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
               >
                 <i className="fas fa-chevron-left"></i>
                 Précédent
@@ -413,7 +421,7 @@ export default function Search() {
                     key={page}
                     type="button"
                     className={page === currentPage ? 'is-active' : ''}
-                    onClick={() => setCurrentPage(page)}
+                    onClick={() => handlePageChange(page)}
                   >
                     {page}
                   </button>
@@ -422,7 +430,7 @@ export default function Search() {
               <button
                 type="button"
                 disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
               >
                 Suivant
                 <i className="fas fa-chevron-right"></i>

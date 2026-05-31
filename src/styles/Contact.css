@@ -542,11 +542,28 @@
 
 @media (max-width: 760px) {
   .contact-soft-section {
-    width: min(calc(100% - 28px), var(--contact-max));
+    width: min(calc(100% - 24px), var(--contact-max));
   }
 
   .contact-hero {
-    padding-top: 28px;
+    min-height: auto;
+    gap: 20px;
+    padding: 22px 0 28px;
+  }
+
+  .contact-kicker {
+    padding: 6px 10px;
+    font-size: 0.66rem;
+  }
+
+  .contact-hero h1 {
+    font-size: clamp(2.05rem, 12vw, 3rem);
+    letter-spacing: -0.048em;
+  }
+
+  .contact-hero-copy > p:not(.contact-kicker) {
+    font-size: 0.92rem;
+    line-height: 1.58;
   }
 
   .contact-highlights,
@@ -556,11 +573,58 @@
     grid-template-columns: 1fr;
   }
 
+  .contact-highlights {
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .contact-highlights article {
+    border: 1px solid var(--contact-line);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.78);
+    padding: 10px;
+  }
+
+  .contact-hero-visual {
+    min-height: 180px;
+  }
+
+  .contact-hero-visual img {
+    max-height: 210px;
+    object-position: center;
+  }
+
+  .contact-main {
+    gap: 16px;
+  }
+
   .contact-form-panel,
   .contact-info-card,
   .contact-partner-card,
   .contact-newsletter {
-    padding: 20px;
+    border-radius: 14px;
+    padding: 18px;
+  }
+
+  .contact-soft .res-contact-form {
+    gap: 14px;
+  }
+
+  .contact-soft .res-contact-submit {
+    width: 100%;
+  }
+
+  .contact-detail-list {
+    gap: 16px;
+  }
+
+  .contact-faq-item summary {
+    min-height: 54px;
+    padding: 16px 18px;
+  }
+
+  .contact-faq-item p {
+    padding: 0 18px 16px;
   }
 
   .contact-partner-card {
@@ -577,5 +641,11 @@
 
   .contact-newsletter-form {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 380px) {
+  .contact-newsletter-copy {
+    display: grid;
   }
 }

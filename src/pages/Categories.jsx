@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useNewsletterForm } from '../hooks/useNewsletterForm';
 import { usePageSeo } from '../hooks/usePageSeo';
@@ -15,6 +15,8 @@ import '../styles/Categories.css';
 
 const categoryCounts = [120, 96, 58, 76, 42, 48, 52, 64, 38, 44];
 const categoryTones = ['purple', 'blue', 'blue', 'green', 'red', 'blue', 'purple', 'orange', 'green', 'orange'];
+const CATEGORIES_PAGE_SIZE = 6;
+const CATEGORY_CONTENT_PAGE_SIZE = 8;
 
 const categoryCards = PLATFORM_CATEGORIES.map((category, index) => ({
   ...category,
@@ -204,15 +206,23 @@ function getCategoryFallbackItems(category) {
   ];
 }
 
+function getPaginationItems(totalPages) {
+  return Array.from({ length: totalPages }, (_, index) => index + 1);
+}
+
 export default function Categories() {
   const navigate = useNavigate();
   const { slug } = useParams();
   const newsletter = useNewsletterForm({ source: 'categories-page' });
+  const categoriesTopRef = useRef(null);
+  const categoryContentTopRef = useRef(null);
   const [query, setQuery] = useState('');
   const [sortBy, setSortBy] = useState('popularite');
   const [activeFilter, setActiveFilter] = useState('all');
   const [categoryBooks, setCategoryBooks] = useState([]);
   const [isLoadingBooks, setIsLoadingBooks] = useState(false);
+  const [categoriesPage, setCategoriesPage] = useState(1);
+  const [categoryContentPage, setCategoryContentPage] = useState(1);
 
   const activeCategory = useMemo(
     () => categoryCards.find((category) => category.slug === slug) || null,
@@ -233,6 +243,13 @@ export default function Categories() {
   const popularCategories = useMemo(
     () => [...categoryCards].sort((a, b) => b.count - a.count).slice(0, 5),
     []
+  );
+
+  const totalCategoryPages = Math.max(1, Math.ceil(sortedCategories.length / CATEGORIES_PAGE_SIZE));
+  const safeCategoriesPage = Math.min(categoriesPage, totalCategoryPages);
+  const paginatedCategories = sortedCategories.slice(
+    (safeCategoriesPage - 1) * CATEGORIES_PAGE_SIZE,
+    safeCategoriesPage * CATEGORIES_PAGE_SIZE
   );
 
   const categoryContent = useMemo(() => {
@@ -266,6 +283,13 @@ export default function Categories() {
     };
   }, [activeCategory, categoryBooks]);
 
+  const totalContentPages = Math.max(1, Math.ceil(categoryContent.length / CATEGORY_CONTENT_PAGE_SIZE));
+  const safeContentPage = Math.min(categoryContentPage, totalContentPages);
+  const paginatedCategoryContent = categoryContent.slice(
+    (safeContentPage - 1) * CATEGORY_CONTENT_PAGE_SIZE,
+    safeContentPage * CATEGORY_CONTENT_PAGE_SIZE
+  );
+
   useEffect(() => {
     if (!activeCategory) return undefined;
 
@@ -290,7 +314,16 @@ export default function Categories() {
 
   useEffect(() => {
     setActiveFilter('all');
+    setCategoryContentPage(1);
   }, [slug]);
+
+  useEffect(() => {
+    setCategoriesPage(1);
+  }, [sortBy]);
+
+  useEffect(() => {
+    setCategoryContentPage(1);
+  }, [activeFilter, activeCategory]);
 
   const newsletterFeedbackClassName =
     newsletter.feedback.kind === 'error'
@@ -313,6 +346,22 @@ export default function Categories() {
     const cleanQuery = query.trim();
     if (!cleanQuery) return;
     navigate(getSearchPath(cleanQuery));
+  };
+
+  const scrollToBlock = (ref) => {
+    window.requestAnimationFrame(() => {
+      ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  const handleCategoriesPageChange = (page) => {
+    setCategoriesPage(page);
+    scrollToBlock(categoriesTopRef);
+  };
+
+  const handleCategoryContentPageChange = (page) => {
+    setCategoryContentPage(page);
+    scrollToBlock(categoryContentTopRef);
   };
 
   if (activeCategory) {
@@ -351,7 +400,7 @@ export default function Categories() {
           </div>
         </section>
 
-        <main className="category-detail-main">
+        <main className="category-detail-main" ref={categoryContentTopRef}>
           <div className="category-detail-toolbar">
             <div>
               <h2>Contenus classés</h2>
@@ -376,7 +425,7 @@ export default function Categories() {
           </div>
 
           <div className="category-detail-grid">
-            {categoryContent.map((item) => (
+            {paginatedCategoryContent.map((item) => (
               <Link className="category-content-card" to={item.path} key={item.id}>
                 {item.image ? (
                   <img src={item.image} alt={`JC Hub - ${item.title}`} loading="lazy" decoding="async" />
@@ -394,6 +443,39 @@ export default function Categories() {
               </Link>
             ))}
           </div>
+
+          {categoryContent.length > CATEGORY_CONTENT_PAGE_SIZE && (
+            <nav className="categories-pagination" aria-label="Pagination des contenus de la catégorie">
+              <button
+                type="button"
+                disabled={safeContentPage === 1}
+                onClick={() => handleCategoryContentPageChange(Math.max(1, safeContentPage - 1))}
+              >
+                <i className="fas fa-chevron-left"></i>
+                Précédent
+              </button>
+              <div>
+                {getPaginationItems(totalContentPages).map((page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    className={page === safeContentPage ? 'is-active' : ''}
+                    onClick={() => handleCategoryContentPageChange(page)}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                disabled={safeContentPage === totalContentPages}
+                onClick={() => handleCategoryContentPageChange(Math.min(totalContentPages, safeContentPage + 1))}
+              >
+                Suivant
+                <i className="fas fa-chevron-right"></i>
+              </button>
+            </nav>
+          )}
         </main>
       </div>
     );
@@ -448,7 +530,7 @@ export default function Categories() {
       </section>
 
       <main className="categories-main">
-        <section className="categories-list" aria-labelledby="categories-list-title">
+        <section className="categories-list" aria-labelledby="categories-list-title" ref={categoriesTopRef}>
           <div className="categories-section-head">
             <h2 id="categories-list-title">Toutes les catégories</h2>
             <label>
@@ -462,7 +544,7 @@ export default function Categories() {
           </div>
 
           <div className="categories-grid">
-            {sortedCategories.map((category) => (
+            {paginatedCategories.map((category) => (
               <Link
                 className="categories-card"
                 to={getCategoryPath(category)}
@@ -480,6 +562,39 @@ export default function Categories() {
               </Link>
             ))}
           </div>
+
+          {sortedCategories.length > CATEGORIES_PAGE_SIZE && (
+            <nav className="categories-pagination" aria-label="Pagination des catégories">
+              <button
+                type="button"
+                disabled={safeCategoriesPage === 1}
+                onClick={() => handleCategoriesPageChange(Math.max(1, safeCategoriesPage - 1))}
+              >
+                <i className="fas fa-chevron-left"></i>
+                Précédent
+              </button>
+              <div>
+                {getPaginationItems(totalCategoryPages).map((page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    className={page === safeCategoriesPage ? 'is-active' : ''}
+                    onClick={() => handleCategoriesPageChange(page)}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                disabled={safeCategoriesPage === totalCategoryPages}
+                onClick={() => handleCategoriesPageChange(Math.min(totalCategoryPages, safeCategoriesPage + 1))}
+              >
+                Suivant
+                <i className="fas fa-chevron-right"></i>
+              </button>
+            </nav>
+          )}
         </section>
 
         <aside className="categories-sidebar" aria-label="Filtres et catégories populaires">

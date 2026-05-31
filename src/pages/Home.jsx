@@ -330,7 +330,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-numerik-section">
+      <section className="home-numerik-section home-numerik-categories-section">
         <SectionTitle title="Explorer par catégorie" action="Voir toutes les catégories" to="/blog" />
         <div className="home-numerik-category-grid">
           {categories.map((category) => (

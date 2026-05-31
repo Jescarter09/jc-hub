@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoSvg from '../assets/jc-hub-logo.svg';
 import '../styles/Footer.css';
@@ -37,15 +38,27 @@ const aboutLinks = [
   ['Politique de confidentialité', '/res/confidentialite']
 ];
 
-function FooterColumn({ title, links }) {
+function FooterColumn({ title, links, defaultOpen = false }) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
   return (
-    <div className="site-footer-column">
-      <h4>{title}</h4>
-      {links.map(([label, to]) => (
-        <Link key={label} to={to}>
-          {label}
-        </Link>
-      ))}
+    <div className={`site-footer-column ${isOpen ? 'site-footer-column-open' : ''}`}>
+      <button
+        type="button"
+        className="site-footer-column-toggle"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((current) => !current)}
+      >
+        <span>{title}</span>
+        <i className="fas fa-chevron-down"></i>
+      </button>
+      <div className="site-footer-links">
+        {links.map(([label, to]) => (
+          <Link key={label} to={to}>
+            {label}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
@@ -85,7 +98,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <FooterColumn title="Navigation" links={navigationLinks} />
+          <FooterColumn title="Navigation" links={navigationLinks} defaultOpen />
           <FooterColumn title="Catégories" links={categoryLinks} />
           <FooterColumn title="Ressources" links={resourceLinks} />
           <FooterColumn title="À propos" links={aboutLinks} />

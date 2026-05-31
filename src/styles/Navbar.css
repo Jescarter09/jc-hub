@@ -2072,3 +2072,162 @@
     padding-inline: 0.95rem;
   }
 }
+
+/* Lisibilité mobile/tablette : logo plus visible, recherche plus forte, menu avec relief 3D. */
+@media (max-width: 1023px) {
+  .neo-nav .neo-nav-inner {
+    height: 74px;
+    gap: 0.85rem;
+  }
+
+  .neo-brand img {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(91, 61, 255, 0.12);
+  }
+
+  .neo-brand-copy strong {
+    font-size: clamp(1.18rem, 5vw, 1.42rem);
+    letter-spacing: -0.04em;
+  }
+
+  .neo-top-burger,
+  .neo-mobile-icon-button {
+    width: 2.72rem;
+    height: 2.72rem;
+    border: 1px solid rgba(91, 61, 255, 0.2);
+    background:
+      linear-gradient(145deg, #ffffff, #f4f2ff);
+    box-shadow:
+      0 12px 24px rgba(17, 23, 46, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  .neo-mobile-icon-button {
+    color: var(--nav-primary);
+    font-size: 1.24rem;
+  }
+
+  .neo-burger span {
+    width: 1.24rem;
+    height: 2.5px;
+  }
+
+  .neo-burger span:nth-child(2) {
+    width: 0.96rem;
+  }
+
+  .neo-mobile-panel {
+    width: min(94vw, 450px);
+    padding: max(1.1rem, env(safe-area-inset-top)) 1.18rem max(1.2rem, env(safe-area-inset-bottom));
+    border-left: 1px solid rgba(91, 61, 255, 0.12);
+    background:
+      radial-gradient(circle at 84% 14%, rgba(91, 61, 255, 0.16), transparent 13rem),
+      linear-gradient(145deg, #ffffff, #f8f9ff);
+    box-shadow:
+      -26px 0 70px rgba(17, 23, 46, 0.18),
+      inset 1px 0 0 rgba(255, 255, 255, 0.86);
+    transform: translateX(110%) perspective(900px) rotateY(-7deg);
+    transform-origin: right center;
+  }
+
+  .neo-mobile-shell-open .neo-mobile-panel {
+    transform: translateX(0) perspective(900px) rotateY(0deg);
+  }
+
+  .neo-mobile-brand img {
+    width: 48px;
+    height: 48px;
+    filter: drop-shadow(0 10px 16px rgba(91, 61, 255, 0.16));
+  }
+
+  .neo-mobile-brand span {
+    font-size: 1.5rem;
+  }
+
+  .neo-mobile-close {
+    width: 2.72rem;
+    height: 2.72rem;
+    background: #f5f3ff;
+    color: var(--nav-primary);
+  }
+
+  .neo-mobile-links .neo-nav-link,
+  .neo-mobile-categories-trigger,
+  .neo-mobile-category-link,
+  .neo-mobile-library-link,
+  .neo-mobile-preference-row {
+    font-size: 1.04rem;
+  }
+
+  .neo-mobile-links .neo-nav-link,
+  .neo-mobile-categories-trigger {
+    min-height: 3.45rem;
+    border-radius: 16px;
+    box-shadow:
+      0 10px 20px rgba(17, 23, 46, 0.045),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  }
+
+  .neo-mobile-links .neo-nav-link i,
+  .neo-mobile-categories-trigger span i {
+    font-size: 1.14rem;
+  }
+
+  .neo-mobile-category-title h2 {
+    font-size: 1.36rem;
+  }
+
+  .neo-mobile-category-title p,
+  .neo-mobile-premium-card p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .neo-nav .neo-nav-inner {
+    height: 70px;
+  }
+
+  .neo-brand img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .neo-brand-copy strong {
+    font-size: 1rem;
+  }
+
+  .neo-nav-link {
+    font-size: clamp(0.74rem, 1.1vw, 0.86rem);
+  }
+
+  .neo-mobile-icon-button,
+  .neo-library-cta {
+    min-height: 2.35rem;
+  }
+
+  .neo-mobile-icon-button {
+    width: 2.35rem;
+    height: 2.35rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .neo-brand img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .neo-brand-copy strong {
+    font-size: 1.18rem;
+  }
+
+  .neo-top-burger,
+  .neo-mobile-icon-button {
+    width: 2.55rem;
+    height: 2.55rem;
+  }
+}

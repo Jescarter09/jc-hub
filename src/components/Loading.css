@@ -1,17 +1,11 @@
 .minimal-loading {
-  --load-ink: #1d231d;
-  --load-text: #414a3f;
-  --load-muted: #77806f;
-  --load-paper: #fff8e9;
-  --load-cream: #fffef8;
-  --load-linen: #f2e7d1;
-  --load-green: #2f5a3e;
-  --load-green-soft: #dce8d2;
-  --load-gold: #e8b95a;
-  --load-rust: #b9623d;
-  --load-line: rgba(29, 35, 29, 0.13);
-  --load-card: rgba(255, 254, 248, 0.86);
-  --load-shadow: 0 22px 60px rgba(49, 45, 34, 0.16);
+  --load-ink: #11172e;
+  --load-text: #46516d;
+  --load-muted: #7a839b;
+  --load-primary: #5b3dff;
+  --load-primary-dark: #3f28d9;
+  --load-line: #edf0f7;
+  --load-shadow: 0 24px 70px rgba(17, 23, 46, 0.12);
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -22,19 +16,21 @@
   padding: 24px;
   color: var(--load-ink);
   background:
-    radial-gradient(circle at 10% 12%, rgba(232, 185, 90, 0.3), transparent 24rem),
-    radial-gradient(circle at 88% 8%, rgba(216, 231, 234, 0.82), transparent 22rem),
-    linear-gradient(180deg, var(--load-paper), #fffdf7 48%, #f4ebdc 100%);
-  font-family: Candara, "Trebuchet MS", sans-serif;
+    radial-gradient(circle at 18% 12%, rgba(91, 61, 255, 0.1), transparent 22rem),
+    radial-gradient(circle at 86% 16%, rgba(22, 135, 255, 0.08), transparent 20rem),
+    linear-gradient(180deg, #ffffff 0%, #f8f9ff 100%);
+  font-family: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .minimal-loading::before {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0.3;
-  background-image: radial-gradient(rgba(29, 35, 29, 0.13) 0.8px, transparent 0.8px);
-  background-size: 18px 18px;
+  opacity: 0.45;
+  background-image:
+    linear-gradient(rgba(17, 23, 46, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 23, 46, 0.035) 1px, transparent 1px);
+  background-size: 44px 44px;
   pointer-events: none;
 }
 
@@ -42,75 +38,76 @@
   position: absolute;
   border-radius: 999px;
   pointer-events: none;
+  filter: blur(1px);
 }
 
 .minimal-loading-orb-one {
-  top: 16%;
+  top: 18%;
   left: 12%;
-  width: 10rem;
-  height: 10rem;
-  background: rgba(185, 98, 61, 0.1);
-  animation: loadingFloat 5.2s ease-in-out infinite;
+  width: 9rem;
+  height: 9rem;
+  background: rgba(91, 61, 255, 0.08);
+  animation: loadingFloat 5.4s ease-in-out infinite;
 }
 
 .minimal-loading-orb-two {
-  right: 14%;
+  right: 12%;
   bottom: 18%;
-  width: 13rem;
-  height: 13rem;
-  background: rgba(47, 90, 62, 0.09);
-  animation: loadingFloat 6.4s ease-in-out infinite reverse;
+  width: 12rem;
+  height: 12rem;
+  background: rgba(22, 135, 255, 0.07);
+  animation: loadingFloat 6.2s ease-in-out infinite reverse;
 }
 
 .minimal-content {
   position: relative;
   z-index: 1;
   display: grid;
-  width: min(100%, 300px);
+  width: min(100%, 320px);
   place-items: center;
   border: 1px solid var(--load-line);
-  border-radius: 30px;
-  background:
-    linear-gradient(135deg, rgba(255, 254, 248, 0.94), rgba(242, 231, 209, 0.66)),
-    var(--load-card);
-  padding: 26px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px 28px;
   text-align: center;
   box-shadow: var(--load-shadow);
-  animation: loadingRise 0.58s ease both;
+  backdrop-filter: blur(18px);
+  animation: loadingRise 0.5s ease both;
 }
 
 .minimal-logo-wrap {
   position: relative;
   display: grid;
-  width: 112px;
-  height: 112px;
+  width: 92px;
+  height: 92px;
   place-items: center;
-  border: 1px solid rgba(47, 90, 62, 0.16);
-  border-radius: 30px;
+  border: 1px solid rgba(91, 61, 255, 0.14);
+  border-radius: 24px;
   background:
-    radial-gradient(circle at 35% 20%, rgba(232, 185, 90, 0.24), transparent 4.5rem),
-    rgba(255, 254, 248, 0.82);
-  box-shadow: 0 18px 36px rgba(47, 90, 62, 0.14);
+    linear-gradient(145deg, #ffffff, #f4f2ff);
+  box-shadow:
+    0 18px 36px rgba(91, 61, 255, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .minimal-logo-wrap::after {
   content: "";
   position: absolute;
-  inset: -8px;
-  border: 1px solid rgba(47, 90, 62, 0.12);
-  border-top-color: rgba(185, 98, 61, 0.42);
-  border-radius: 34px;
-  animation: loadingSpin 2.4s linear infinite;
+  inset: -7px;
+  border: 2px solid rgba(91, 61, 255, 0.1);
+  border-top-color: var(--load-primary);
+  border-radius: 28px;
+  animation: loadingSpin 1.7s linear infinite;
 }
 
 .minimal-logo {
-  width: 72px;
-  height: 72px;
-  animation: pulse-logo 2s ease-in-out infinite;
+  width: 62px;
+  height: 62px;
+  animation: pulseLogo 1.8s ease-in-out infinite;
 }
 
 .minimal-copy {
-  margin-top: 20px;
+  margin-top: 22px;
 }
 
 .minimal-kicker {
@@ -118,14 +115,13 @@
   align-items: center;
   gap: 8px;
   margin: 0;
-  border: 1px solid rgba(47, 90, 62, 0.16);
   border-radius: 999px;
-  background: rgba(255, 254, 248, 0.72);
-  color: var(--load-green);
-  padding: 7px 11px;
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.06em;
+  background: rgba(91, 61, 255, 0.09);
+  color: var(--load-primary);
+  padding: 7px 12px;
+  font-size: 0.82rem;
+  font-weight: 950;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -133,56 +129,60 @@
   content: "";
   width: 8px;
   height: 8px;
-  border-radius: 50%;
-  background: var(--load-rust);
+  border-radius: 999px;
+  background: var(--load-primary);
+  box-shadow: 0 0 0 5px rgba(91, 61, 255, 0.1);
 }
 
 .minimal-loading-text {
-  margin: 10px auto 0;
-  color: var(--load-muted);
-  font-size: 0.95rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
+  margin: 12px auto 0;
+  color: var(--load-text);
+  font-size: 1rem;
+  font-weight: 850;
+  letter-spacing: 0;
 }
 
 .minimal-loader {
   position: relative;
   display: flex;
-  gap: 9px;
-  align-items: center;
+  width: min(100%, 180px);
+  height: 28px;
+  gap: 8px;
+  align-items: flex-end;
   justify-content: center;
-  margin-top: 22px;
+  margin-top: 24px;
 }
 
 .minimal-loader::before {
   content: "";
   position: absolute;
-  top: -12px;
-  width: 128px;
-  height: 4px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(47, 90, 62, 0.12);
+  background: #ebe8ff;
 }
 
 .minimal-loader::after {
   content: "";
   position: absolute;
-  top: -12px;
-  left: calc(50% - 64px);
-  width: 48px;
-  height: 4px;
+  top: 0;
+  left: 0;
+  width: 42%;
+  height: 5px;
   border-radius: 999px;
-  background: var(--load-green);
-  animation: loadingBar 1.45s ease-in-out infinite;
+  background: linear-gradient(90deg, var(--load-primary), #1687ff);
+  animation: loadingBar 1.3s ease-in-out infinite;
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--load-green);
-  animation: minimalist-bounce 1.25s infinite ease-in-out;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(91, 61, 255, 0.36);
+  animation: loadingDot 1.2s ease-in-out infinite;
 }
 
 .dot-1 {
@@ -191,18 +191,16 @@
 
 .dot-2 {
   animation-delay: 0.16s;
-  background: var(--load-rust);
 }
 
 .dot-3 {
   animation-delay: 0.32s;
-  background: var(--load-gold);
 }
 
 @keyframes loadingRise {
   from {
     opacity: 0;
-    transform: translateY(18px) scale(0.98);
+    transform: translateY(14px) scale(0.98);
   }
 
   to {
@@ -218,7 +216,7 @@
   }
 
   50% {
-    transform: translate3d(0, -16px, 0);
+    transform: translate3d(0, -14px, 0);
   }
 }
 
@@ -234,7 +232,7 @@
   }
 
   50% {
-    transform: translateX(80px);
+    transform: translateX(138%);
   }
 
   100% {
@@ -242,45 +240,82 @@
   }
 }
 
-@keyframes minimalist-bounce {
+@keyframes loadingDot {
   0%,
   100% {
+    opacity: 0.45;
     transform: translateY(0);
-    opacity: 0.55;
   }
 
   50% {
-    transform: translateY(-7px);
     opacity: 1;
+    transform: translateY(-5px);
   }
 }
 
-@keyframes pulse-logo {
+@keyframes pulseLogo {
   0%,
   100% {
     transform: scale(1);
   }
 
   50% {
-    transform: scale(1.04);
+    transform: scale(1.035);
   }
 }
 
 @media (max-width: 520px) {
+  .minimal-loading {
+    padding: 18px;
+  }
+
   .minimal-content {
-    border-radius: 28px;
-    padding: 24px;
+    width: min(100%, 330px);
+    border-radius: 20px;
+    padding: 28px 22px;
   }
 
   .minimal-logo-wrap {
     width: 96px;
     height: 96px;
-    border-radius: 26px;
   }
 
   .minimal-logo {
-    width: 62px;
-    height: 62px;
+    width: 66px;
+    height: 66px;
+  }
+
+  .minimal-kicker {
+    font-size: 0.9rem;
+  }
+
+  .minimal-loading-text {
+    font-size: 1.12rem;
+  }
+}
+
+@media (min-width: 521px) and (max-width: 1023px) {
+  .minimal-content {
+    width: min(100%, 350px);
+    padding: 32px;
+  }
+
+  .minimal-logo-wrap {
+    width: 104px;
+    height: 104px;
+  }
+
+  .minimal-logo {
+    width: 70px;
+    height: 70px;
+  }
+
+  .minimal-kicker {
+    font-size: 0.94rem;
+  }
+
+  .minimal-loading-text {
+    font-size: 1.16rem;
   }
 }
 

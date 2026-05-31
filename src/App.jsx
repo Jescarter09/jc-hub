@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Loading from './components/Loading';
 import Navbar from './components/Navbar';
@@ -23,11 +23,35 @@ const MentionsLegales = lazy(() => import('./res/MentionsLegales'));
 const Confidentialite = lazy(() => import('./res/Confidentialite'));
 const Cookies = lazy(() => import('./res/Cookies'));
 const Faq = lazy(() => import('./res/Faq'));
+const ROUTE_LOADING_PATHS = new Set(['/', '/blog', '/ebooks', '/bibliotheque', '/about', '/contact']);
+const ROUTE_LOADING_DURATION_MS = 650;
+
+function RouteLoadingOverlay() {
+  const location = useLocation();
+  const [isRouteLoading, setIsRouteLoading] = useState(() => ROUTE_LOADING_PATHS.has(location.pathname));
+
+  useEffect(() => {
+    if (!ROUTE_LOADING_PATHS.has(location.pathname)) {
+      setIsRouteLoading(false);
+      return undefined;
+    }
+
+    setIsRouteLoading(true);
+    const timerId = window.setTimeout(() => {
+      setIsRouteLoading(false);
+    }, ROUTE_LOADING_DURATION_MS);
+
+    return () => window.clearTimeout(timerId);
+  }, [location.key, location.pathname]);
+
+  return isRouteLoading ? <Loading /> : null;
+}
 
 function AppShell() {
   return (
     <>
       <Navbar />
+      <RouteLoadingOverlay />
       <main className="app-main">
         <Suspense fallback={<Loading />}>
           <Routes>

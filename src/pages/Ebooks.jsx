@@ -23,37 +23,37 @@ const sourceFilters = [
 ];
 
 const typeFilters = [
-  { label: 'Ebooks', value: 'gutendex', count: 166 },
-  { label: 'Guides', value: 'google-books', count: 132 },
-  { label: 'Tutoriels', value: 'openlibrary', count: 98 },
-  { label: 'Livres blancs', value: 'internet-archive', count: 64 },
-  { label: 'Livres audio', value: 'librivox', count: 50 },
-  { label: 'Docs officielles', value: 'mdn-web-docs', count: 60 },
-  { label: 'Open source', value: 'github', count: 40 }
+  { label: 'Ebooks', value: 'gutendex' },
+  { label: 'Guides', value: 'google-books' },
+  { label: 'Tutoriels', value: 'openlibrary' },
+  { label: 'Livres blancs', value: 'internet-archive' },
+  { label: 'Livres audio', value: 'librivox' },
+  { label: 'Docs officielles', value: 'mdn-web-docs' },
+  { label: 'Open source', value: 'github' }
 ];
 
 const levelFilters = [
-  { label: 'Débutant', count: 120 },
-  { label: 'Intermédiaire', count: 190 },
-  { label: 'Avancé', count: 110 }
+  { label: 'Débutant' },
+  { label: 'Intermédiaire' },
+  { label: 'Avancé' }
 ];
 
 const formatFilters = [
-  { label: 'PDF', count: 320 },
-  { label: 'EPUB', count: 120 },
-  { label: 'Lien officiel', count: 60 },
-  { label: 'Audio', count: 38 }
+  { label: 'PDF' },
+  { label: 'EPUB' },
+  { label: 'Lien officiel' },
+  { label: 'Audio' }
 ];
 
 const categoryCards = [
-  { label: 'Technologies', count: 112, icon: 'fas fa-code', tone: 'purple', search: 'technologie' },
-  { label: 'Développement Web', count: 86, icon: 'fas fa-globe', tone: 'blue', search: 'web development' },
-  { label: 'Cybersécurité', count: 54, icon: 'fas fa-lock', tone: 'green', search: 'cybersecurity' },
-  { label: 'Intelligence Artificielle', count: 42, icon: 'fas fa-brain', tone: 'purple', search: 'artificial intelligence' },
-  { label: 'Design & UX', count: 38, icon: 'fas fa-palette', tone: 'red', search: 'design ux' },
-  { label: 'Marketing Digital', count: 40, icon: 'fas fa-bullhorn', tone: 'orange', search: 'digital marketing' },
-  { label: 'Data & Analytics', count: 32, icon: 'fas fa-chart-column', tone: 'purple', search: 'data analytics' },
-  { label: 'Cloud & DevOps', count: 28, icon: 'fas fa-cloud-arrow-up', tone: 'blue', search: 'cloud devops' }
+  { label: 'Technologies', icon: 'fas fa-code', tone: 'purple', search: 'technologie' },
+  { label: 'Développement Web', icon: 'fas fa-globe', tone: 'blue', search: 'web development' },
+  { label: 'Cybersécurité', icon: 'fas fa-lock', tone: 'green', search: 'cybersecurity' },
+  { label: 'Intelligence Artificielle', icon: 'fas fa-brain', tone: 'purple', search: 'artificial intelligence' },
+  { label: 'Design & UX', icon: 'fas fa-palette', tone: 'red', search: 'design ux' },
+  { label: 'Marketing Digital', icon: 'fas fa-bullhorn', tone: 'orange', search: 'digital marketing' },
+  { label: 'Data & Analytics', icon: 'fas fa-chart-column', tone: 'purple', search: 'data analytics' },
+  { label: 'Cloud & DevOps', icon: 'fas fa-cloud-arrow-up', tone: 'blue', search: 'cloud devops' }
 ];
 
 const sourceLabels = {
@@ -276,7 +276,7 @@ export default function Ebooks() {
   const booksToShow = filteredBooks.slice(pageStart, pageStart + BOOKS_PAGE_SIZE);
   const pageRangeStart = filteredBooks.length === 0 ? 0 : pageStart + 1;
   const pageRangeEnd = filteredBooks.length === 0 ? 0 : pageStart + booksToShow.length;
-  const downloadableCount = visibleBooks.filter((book) => Boolean(getDownloadUrl(book))).length;
+  const totalBookViews = hostedBooks.reduce((total, book) => total + (Number(book.viewsCount) || 0), 0);
   const popularBooks = useMemo(
     () =>
       [...hostedBooks]
@@ -424,9 +424,9 @@ export default function Ebooks() {
               <small>Catégories</small>
             </span>
             <span>
-              <i className="fas fa-download"></i>
-              <strong>{Math.max(downloadableCount, 0)}+</strong>
-              <small>Téléchargeables</small>
+              <i className="far fa-eye"></i>
+              <strong>{formatViewCount(totalBookViews)}</strong>
+              <small>Vues livres</small>
             </span>
             <span>
               <i className="far fa-clock"></i>
@@ -459,7 +459,7 @@ export default function Ebooks() {
             >
               <i className={category.icon}></i>
               <strong>{category.label}</strong>
-              <span>{category.count} ressources</span>
+              <span>Explorer</span>
             </button>
           ))}
         </div>
@@ -478,7 +478,7 @@ export default function Ebooks() {
                   checked={source === filter.value}
                   onChange={() => setSource((current) => (current === filter.value ? '' : filter.value))}
                 />
-                <span>{filter.label} ({filter.count})</span>
+                <span>{filter.label}</span>
               </label>
             ))}
           </div>
@@ -488,7 +488,7 @@ export default function Ebooks() {
             {levelFilters.map((filter) => (
               <label key={filter.label}>
                 <input type="checkbox" />
-                <span>{filter.label} ({filter.count})</span>
+                <span>{filter.label}</span>
               </label>
             ))}
           </div>
@@ -498,7 +498,7 @@ export default function Ebooks() {
             {formatFilters.map((filter) => (
               <label key={filter.label}>
                 <input type="checkbox" />
-                <span>{filter.label} ({filter.count})</span>
+                <span>{filter.label}</span>
               </label>
             ))}
           </div>

@@ -26,3 +26,63 @@
   flex-direction: column;
   padding-top: var(--app-nav-offset);
 }
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .app-main :is(p, li, label, input, select, textarea) {
+    font-size: max(1rem, 1em) !important;
+    line-height: 1.64 !important;
+  }
+
+  .app-main :is(a, button) {
+    font-size: max(0.98rem, 1em) !important;
+  }
+
+  .app-main small {
+    font-size: max(0.84rem, 1em) !important;
+  }
+
+  .app-main h1 {
+    font-size: max(2.65rem, 1em) !important;
+    line-height: 1.04 !important;
+  }
+
+  .app-main h2 {
+    font-size: max(1.65rem, 1em) !important;
+    line-height: 1.14 !important;
+  }
+
+  .app-main h3 {
+    font-size: max(1.08rem, 1em) !important;
+    line-height: 1.24 !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .app-main :is(p, li, label, input, select, textarea) {
+    font-size: max(1rem, 1em) !important;
+    line-height: 1.6 !important;
+  }
+
+  .app-main :is(a, button) {
+    font-size: max(0.96rem, 1em) !important;
+  }
+
+  .app-main small {
+    font-size: max(0.82rem, 1em) !important;
+  }
+
+  .app-main h1 {
+    font-size: max(2.35rem, 1em) !important;
+    line-height: 1.04 !important;
+  }
+
+  .app-main h2 {
+    font-size: max(1.48rem, 1em) !important;
+    line-height: 1.16 !important;
+  }
+
+  .app-main h3 {
+    font-size: max(1rem, 1em) !important;
+    line-height: 1.26 !important;
+  }
+}
