@@ -40,6 +40,7 @@ export function getContactErrorMessage(error) {
 export async function sendContactMessage({
   name,
   email,
+  subject,
   message,
   source = 'faq-contact',
   website = '',
@@ -47,6 +48,7 @@ export async function sendContactMessage({
 }) {
   const safeName = normalizeText(name, 120);
   const safeEmail = normalizeContactEmail(email);
+  const safeSubject = normalizeText(subject, 160);
   const safeMessage = normalizeText(message, 4000);
   const safeSource = normalizeText(source, 64).toLowerCase() || 'faq-contact';
 
@@ -71,6 +73,7 @@ export async function sendContactMessage({
       body: JSON.stringify({
         name: safeName,
         email: safeEmail,
+        subject: safeSubject,
         message: safeMessage,
         source: safeSource,
         website: String(website || '').trim(),

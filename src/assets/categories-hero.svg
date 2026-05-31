@@ -1,0 +1,116 @@
+<svg width="980" height="560" viewBox="0 0 980 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="screen" x1="280" y1="74" x2="710" y2="384" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#141A38"/>
+      <stop offset="1" stop-color="#27315F"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="330" y1="98" x2="686" y2="324" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F7F6FF"/>
+    </linearGradient>
+    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#6E55FF"/>
+      <stop offset="1" stop-color="#4425D8"/>
+    </linearGradient>
+    <linearGradient id="soft" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#EEE9FF"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <filter id="shadow" x="80" y="52" width="830" height="460" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="26" stdDeviation="24" flood-color="#332D78" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="522" cy="236" rx="360" ry="204" fill="#F1EEFF"/>
+  <ellipse cx="522" cy="236" rx="292" ry="158" fill="url(#soft)" opacity="0.92"/>
+
+  <g opacity="0.48">
+    <circle cx="150" cy="210" r="3" fill="#B6A9FF"/>
+    <circle cx="178" cy="210" r="3" fill="#B6A9FF"/>
+    <circle cx="206" cy="210" r="3" fill="#B6A9FF"/>
+    <circle cx="150" cy="238" r="3" fill="#B6A9FF"/>
+    <circle cx="178" cy="238" r="3" fill="#B6A9FF"/>
+    <circle cx="206" cy="238" r="3" fill="#B6A9FF"/>
+    <circle cx="804" cy="152" r="3" fill="#B6A9FF"/>
+    <circle cx="832" cy="152" r="3" fill="#B6A9FF"/>
+    <circle cx="860" cy="152" r="3" fill="#B6A9FF"/>
+    <circle cx="804" cy="180" r="3" fill="#B6A9FF"/>
+    <circle cx="832" cy="180" r="3" fill="#B6A9FF"/>
+    <circle cx="860" cy="180" r="3" fill="#B6A9FF"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <path d="M286 90C291 52 321 28 359 33L706 76C744 81 768 114 762 152L718 374H242L286 90Z" fill="url(#screen)"/>
+    <path d="M330 84C333 68 346 57 363 59L688 99C705 101 715 116 713 133L682 325H292L330 84Z" fill="url(#panel)"/>
+    <path d="M218 374H742L826 439C838 448 831 467 816 467H152C137 467 131 448 143 439L218 374Z" fill="#E9ECF8"/>
+    <path d="M256 390H712L756 423H211L256 390Z" fill="#D8DCEA"/>
+    <path d="M404 411H548L575 431H375L404 411Z" fill="#C6CBDA"/>
+    <path d="M152 457H816" stroke="#B8BED2" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(330 104)">
+    <text x="0" y="22" fill="#111833" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="900">Catégories</text>
+    <text x="426" y="23" fill="#B8AEFF" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="24" font-weight="900">+</text>
+    <path d="M470 17L480 25L470 33" stroke="#B8AEFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <g transform="translate(0 54)">
+      <rect width="88" height="170" rx="14" fill="#FFFFFF" stroke="#ECEFFA"/>
+      <rect x="13" y="14" width="62" height="22" rx="8" fill="#EEE9FF"/>
+      <text x="24" y="29" fill="#5B3DFF" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="10" font-weight="800">Tech</text>
+      <text x="18" y="61" fill="#6B738E" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="10" font-weight="700">Design</text>
+      <text x="18" y="88" fill="#6B738E" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="10" font-weight="700">Cyber</text>
+      <text x="18" y="115" fill="#6B738E" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="10" font-weight="700">Data</text>
+      <text x="18" y="142" fill="#6B738E" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="10" font-weight="700">Mobile</text>
+    </g>
+
+    <g transform="translate(120 48)">
+      <rect width="330" height="42" rx="14" fill="#FFFFFF" stroke="#ECEFFA"/>
+      <circle cx="28" cy="21" r="13" fill="#EEE9FF"/>
+      <path d="M22 21L28 15L34 21L28 27L22 21Z" stroke="#5B3DFF" stroke-width="3" stroke-linejoin="round"/>
+      <text x="55" y="26" fill="#171E3E" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="900">Technologies</text>
+      <path d="M294 15L303 21L294 27" stroke="#B8AEFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <g transform="translate(120 104)">
+      <rect width="330" height="42" rx="14" fill="#FFFFFF" stroke="#ECEFFA"/>
+      <circle cx="28" cy="21" r="13" fill="#E8FFF4"/>
+      <path d="M21 22H35M24 19V15C24 11 27 9 28 9C31 9 33 11 33 15V19" stroke="#18A66A" stroke-width="3" stroke-linecap="round"/>
+      <text x="55" y="26" fill="#171E3E" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="900">Cybersécurité</text>
+      <path d="M294 15L303 21L294 27" stroke="#B8AEFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <g transform="translate(120 160)">
+      <rect width="330" height="42" rx="14" fill="#FFFFFF" stroke="#ECEFFA"/>
+      <circle cx="28" cy="21" r="13" fill="#EEE9FF"/>
+      <path d="M23 16L18 21L23 26M33 16L38 21L33 26M30 14L26 28" stroke="#5B3DFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="55" y="26" fill="#171E3E" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="900">Développement Web</text>
+      <path d="M294 15L303 21L294 27" stroke="#B8AEFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <g transform="translate(120 216)">
+      <rect width="330" height="42" rx="14" fill="#FFFFFF" stroke="#ECEFFA"/>
+      <circle cx="28" cy="21" r="13" fill="#FFEDED"/>
+      <path d="M28 10C38 16 37 27 29 31C21 27 18 17 28 10Z" stroke="#FF4D6D" stroke-width="3" stroke-linejoin="round"/>
+      <text x="55" y="26" fill="#171E3E" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="900">Design &amp; UX</text>
+      <path d="M294 15L303 21L294 27" stroke="#B8AEFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+
+  <g transform="translate(754 246)">
+    <path d="M17 82H168C178 82 186 90 186 100V107H0V99C0 90 8 82 17 82Z" fill="#1B2856"/>
+    <path d="M13 53H154C164 53 172 61 172 71V82H0V66C0 59 6 53 13 53Z" fill="#E8E4FF"/>
+    <path d="M28 24H178C188 24 196 32 196 42V53H17V35C17 29 22 24 28 24Z" fill="#7967D9"/>
+    <path d="M48 0H188C198 0 206 8 206 18V24H37V11C37 5 42 0 48 0Z" fill="#C9C2FF"/>
+    <rect x="20" y="82" width="148" height="9" fill="#111B42" opacity="0.35"/>
+    <rect x="34" y="53" width="118" height="8" fill="#FFFFFF" opacity="0.75"/>
+    <rect x="55" y="24" width="128" height="8" fill="#FFFFFF" opacity="0.35"/>
+  </g>
+
+  <g transform="translate(790 347)">
+    <path d="M55 0C62 28 85 38 98 58C108 75 95 103 55 103C15 103 2 75 12 58C25 38 48 28 55 0Z" fill="#28C98D" opacity="0.28"/>
+    <path d="M55 13C60 35 77 46 86 62C94 76 83 94 55 94C27 94 16 76 24 62C33 46 50 35 55 13Z" fill="#16A36D"/>
+    <path d="M55 42V116" stroke="#0E7A50" stroke-width="5" stroke-linecap="round"/>
+    <path d="M19 98H91V124C91 143 75 158 55 158C35 158 19 143 19 124V98Z" fill="#FFFFFF" stroke="#DADFF0" stroke-width="4"/>
+    <ellipse cx="55" cy="98" rx="36" ry="10" fill="#F2F4FB" stroke="#DADFF0" stroke-width="4"/>
+  </g>
+</svg>

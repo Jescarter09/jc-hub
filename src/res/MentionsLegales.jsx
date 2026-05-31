@@ -61,8 +61,45 @@ export default function MentionsLegales() {
         </p>
       </article>
 
+      <article className="res-card res-card-warning">
+        <h2>6. Informations importantes</h2>
+        <ul className="res-list">
+          <li>
+            Certains contenus sont hébergés directement sur notre plateforme lorsqu’ils sont libres,
+            open-source ou appartenant au domaine public.
+          </li>
+          <li>
+            Certains livres et ressources restent hébergés sur leurs plateformes officielles et sont
+            accessibles via redirection ou aperçu officiel.
+          </li>
+          <li>
+            Toutes les marques, couvertures, noms d’auteurs et contenus restent la propriété de leurs
+            propriétaires respectifs.
+          </li>
+        </ul>
+      </article>
+
       <article className="res-card">
-        <h2>6. Coordonnées personnelles</h2>
+        <h2>7. Technologies utilisées</h2>
+        <div className="res-card-grid">
+          {['React', 'Vite', 'Firebase Firestore', 'Cloudinary', 'Vercel'].map((technology) => (
+            <div className="res-faq-item" key={technology}>
+              <h3>{technology}</h3>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <article className="res-card">
+        <h2>8. Remerciements</h2>
+        <p>
+          Merci aux communautés open-source, bibliothèques numériques et plateformes éducatives qui rendent
+          le savoir plus accessible au monde entier.
+        </p>
+      </article>
+
+      <article className="res-card">
+        <h2>9. Coordonnées personnelles</h2>
         <p>
           Pour toute demande liée au site (partenariat, droits, correction, données personnelles), utilise
           le formulaire de contact ou écris directement à cette adresse:

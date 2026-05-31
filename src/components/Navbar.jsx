@@ -1,10 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logoSvg from '../assets/jc-hub-logo.svg';
-import { useNewsletterForm } from '../hooks/useNewsletterForm';
+import { fetchHostedBooks } from '../services/ebookService';
+import {
+  POPULAR_SEARCHES,
+  PLATFORM_CATEGORIES,
+  buildPlatformSearchIndex,
+  getResultIcon,
+  getSearchParam,
+  getSearchSuggestions
+} from '../utils/platformSearch';
 import '../styles/Navbar.css';
-
-const CATEGORY_OPTIONS = ['Tous', 'Tutoriels', 'Securite', 'Outils', 'Actualites', 'Windows', 'Technologie'];
 
 function isStandaloneDisplayMode() {
   if (typeof window === 'undefined') return false;
@@ -24,80 +30,64 @@ function NavItem({ to, active, children }) {
   );
 }
 
-const getCategoryLabel = (category) => {
-  const normalized = String(category || '').trim().toLowerCase();
-  const labels = {
-    tous: 'Tous',
-    tutoriels: 'Tutoriels',
-    securite: 'Sécurité',
-    actualites: 'Actualités',
-    outils: 'Outils',
-    windows: 'Windows',
-    technologie: 'Numérique'
-  };
+const CATEGORY_TRENDS = [
+  { label: 'Intelligence Artificielle', to: '/categories/intelligence-artificielle' },
+  { label: 'Cybersécurité', to: '/categories/cybersecurite' },
+  { label: 'Développement Web', to: '/categories/developpement-web' },
+  { label: 'React', to: '/search?q=react' },
+  { label: 'Firebase', to: '/search?q=firebase' }
+];
 
-  return labels[normalized] || category;
-};
+const NAVBAR_CATEGORIES = PLATFORM_CATEGORIES.filter((category) => category.isFeatured).slice(0, 10);
 
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const deferredInstallPromptRef = useRef(null);
-  const desktopCategoriesRef = useRef(null);
-  const newsletterPanelRef = useRef(null);
+  const searchBoxRef = useRef(null);
+  const hasLoadedSearchSourcesRef = useRef(false);
   const mobilePanelRef = useRef(null);
   const mobileTriggerRef = useRef(null);
-  const [isDesktopCategoriesOpen, setIsDesktopCategoriesOpen] = useState(false);
-  const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [articles, setArticles] = useState([]);
+  const [books, setBooks] = useState([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] = useState(false);
   const [canInstallApp, setCanInstallApp] = useState(false);
   const [isInstallingApp, setIsInstallingApp] = useState(false);
-  const newsletter = useNewsletterForm({ source: 'navbar-top' });
-  const newsletterFeedbackClassName =
-    newsletter.feedback.kind === 'error'
-      ? 'neo-newsletter-feedback neo-newsletter-feedback-error'
-      : newsletter.feedback.kind === 'info'
-        ? 'neo-newsletter-feedback neo-newsletter-feedback-info'
-        : 'neo-newsletter-feedback neo-newsletter-feedback-success';
-  const activeCategory = useMemo(
-    () => new URLSearchParams(location.search).get('category') || 'Tous',
-    [location.search]
-  );
-  const categories = CATEGORY_OPTIONS;
 
   const isActive = (path) => {
     if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
   };
 
-  const closeDesktopCategories = () => {
-    setIsDesktopCategoriesOpen(false);
-  };
+  const searchItems = useMemo(() => buildPlatformSearchIndex({ articles, books }), [articles, books]);
+  const suggestions = useMemo(
+    () => getSearchSuggestions(searchQuery, searchItems, 6),
+    [searchItems, searchQuery]
+  );
+  const shouldShowSuggestions = isSearchOpen && (searchQuery.trim().length >= 2 || !searchQuery.trim());
+  const popularItems = POPULAR_SEARCHES.slice(0, 5);
 
   useEffect(() => {
-    setIsDesktopCategoriesOpen(false);
-    setIsNewsletterOpen(false);
     setIsMobileMenuOpen(false);
     setIsMobileCategoriesOpen(false);
   }, [location.hash, location.pathname, location.search]);
 
   useEffect(() => {
+    if (!isMobileMenuOpen) {
+      setIsMobileCategoriesOpen(false);
+      return;
+    }
+
+    if (isActive('/categories')) {
+      setIsMobileCategoriesOpen(true);
+    }
+  }, [isMobileMenuOpen, location.pathname]);
+
+  useEffect(() => {
     const handlePointerDown = (event) => {
-      if (
-        isDesktopCategoriesOpen &&
-        !desktopCategoriesRef.current?.contains(event.target)
-      ) {
-        setIsDesktopCategoriesOpen(false);
-      }
-
-      if (
-        isNewsletterOpen &&
-        !newsletterPanelRef.current?.contains(event.target)
-      ) {
-        setIsNewsletterOpen(false);
-      }
-
       if (
         isMobileMenuOpen &&
         !mobilePanelRef.current?.contains(event.target) &&
@@ -105,14 +95,16 @@ export default function Navbar() {
       ) {
         setIsMobileMenuOpen(false);
       }
+
+      if (isSearchOpen && !searchBoxRef.current?.contains(event.target)) {
+        setIsSearchOpen(false);
+      }
     };
 
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
-        setIsDesktopCategoriesOpen(false);
-        setIsNewsletterOpen(false);
         setIsMobileMenuOpen(false);
-        setIsMobileCategoriesOpen(false);
+        setIsSearchOpen(false);
       }
     };
 
@@ -122,7 +114,20 @@ export default function Navbar() {
       document.removeEventListener('mousedown', handlePointerDown);
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [isDesktopCategoriesOpen, isMobileMenuOpen, isNewsletterOpen]);
+  }, [isMobileMenuOpen, isSearchOpen]);
+
+  const loadSearchSources = () => {
+    if (hasLoadedSearchSourcesRef.current) return;
+    hasLoadedSearchSourcesRef.current = true;
+
+    import('../data/blogPosts')
+      .then((module) => setArticles(module.blogPosts || []))
+      .catch(() => setArticles([]));
+
+    fetchHostedBooks({ limit: 30 })
+      .then((nextBooks) => setBooks(nextBooks))
+      .catch(() => setBooks([]));
+  };
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
@@ -160,18 +165,6 @@ export default function Navbar() {
     };
   }, []);
 
-  const toggleDesktopCategories = () => {
-    setIsDesktopCategoriesOpen((open) => !open);
-  };
-
-  const toggleMobileCategories = () => {
-    setIsMobileCategoriesOpen((open) => !open);
-  };
-
-  const toggleNewsletterPanel = () => {
-    setIsNewsletterOpen((open) => !open);
-  };
-
   const handleInstallApp = async () => {
     const promptEvent = deferredInstallPromptRef.current;
     if (!promptEvent || isInstallingApp) return;
@@ -190,185 +183,214 @@ export default function Navbar() {
     }
   };
 
-  const handleOpenSearch = () => {
-    setIsDesktopCategoriesOpen(false);
-    setIsNewsletterOpen(false);
-    setIsMobileCategoriesOpen(false);
-
-    if (location.pathname !== '/search') {
+  const submitSearch = (value = searchQuery) => {
+    const cleanQuery = value.trim();
+    if (!cleanQuery) {
       navigate('/search', { state: { focusSearch: true } });
+      setIsSearchOpen(false);
       setIsMobileMenuOpen(false);
       return;
     }
 
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('jchub:focus-search'));
-    }
-
+    navigate(`/search?q=${encodeURIComponent(getSearchParam(cleanQuery))}`);
+    setIsSearchOpen(false);
     setIsMobileMenuOpen(false);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    submitSearch();
+  };
+
+  const handleSuggestionClick = () => {
+    setIsSearchOpen(false);
+    setIsMobileMenuOpen(false);
+  };
+
+  const handlePopularSearch = (value) => {
+    setSearchQuery(value);
+    submitSearch(value);
   };
 
   return (
     <>
       <nav className="neo-nav fixed inset-x-0 top-0 z-50">
         <div className="neo-nav-inner mx-auto flex h-[74px] w-full max-w-7xl items-center justify-between px-3 sm:h-[80px] sm:px-6 lg:px-8">
+          <button
+            ref={mobileTriggerRef}
+            type="button"
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+            aria-expanded={isMobileMenuOpen}
+            aria-label="Ouvrir le menu"
+            className={`neo-burger neo-top-burger ${isMobileMenuOpen ? 'neo-burger-open' : ''}`}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
           <Link to="/" className="neo-brand">
             <img src={logoSvg} alt="JC Hub Logo" className="h-12 w-12 rounded-lg" />
-            
+            <span className="neo-brand-copy">
+              <strong>JC Hub</strong>
+              <small>Blog & Bibliothèque</small>
+            </span>
           </Link>
 
           <div className="neo-desktop-links">
             <NavItem to="/" active={location.pathname === '/' && !location.hash}>Accueil</NavItem>
-            <NavItem to="/about" active={isActive('/about')}>About</NavItem>
-            <NavItem to="/blog" active={isActive('/blog')}>Article</NavItem>
-            <NavItem to="/ebooks" active={isActive('/ebooks')}>Ebooks</NavItem>
-
-            <div
-              ref={desktopCategoriesRef}
-              className="relative neo-categories-wrap"
-              onMouseEnter={() => setIsDesktopCategoriesOpen(true)}
-              onMouseLeave={closeDesktopCategories}
-              onFocus={() => setIsDesktopCategoriesOpen(true)}
-              onBlur={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget)) {
-                  closeDesktopCategories();
-                }
-              }}
-            >
-              <button
-                type="button"
-                onClick={toggleDesktopCategories}
-                aria-expanded={isDesktopCategoriesOpen}
-                aria-haspopup="menu"
-                className={`neo-nav-link ${isActive('/blog') && activeCategory !== 'Tous' ? 'neo-nav-link-active' : ''}`}
+            <NavItem to="/blog" active={isActive('/blog')}>Blog</NavItem>
+            <NavItem to="/ebooks" active={isActive('/ebooks')}>Bibliothèque</NavItem>
+            <div className="neo-categories-wrap">
+              <Link
+                to="/categories"
+                className={`neo-nav-link neo-categories-trigger ${
+                  isActive('/categories') ? 'neo-nav-link-active' : ''
+                }`}
+                aria-haspopup="true"
               >
                 Catégories
-                <i
-                  className={`fas fa-chevron-down ml-2 text-[10px] transition-transform duration-300 ${
-                    isDesktopCategoriesOpen ? 'rotate-180' : ''
-                  }`}
-                ></i>
-              </button>
+                <i className="fas fa-chevron-down"></i>
+              </Link>
 
-              <div
-                className={`neo-categories-menu ${
-                  isDesktopCategoriesOpen ? 'neo-categories-menu-open' : ''
-                }`}
-              >
-                <p className="neo-categories-title">Explorer par thème</p>
-                <div className="space-y-1">
-                  {categories.map((category) => {
-                    const query =
-                      category === 'Tous'
-                        ? ''
-                        : `?${new URLSearchParams({ category }).toString()}`;
-                    const isCurrent = (activeCategory || 'Tous') === category;
+              <div className="neo-categories-mega" aria-label="Catégories JC Hub">
+                <div className="neo-categories-mega-head">
+                  <span>
+                    <i className="fas fa-folder-open"></i>
+                  </span>
+                  <div>
+                    <strong>Catégories</strong>
+                    <p>Explore les articles, ebooks et guides par domaine.</p>
+                  </div>
+                </div>
 
-                    return (
-                      <Link
-                        key={category}
-                        to={{ pathname: '/blog', search: query }}
-                        onClick={() => setIsDesktopCategoriesOpen(false)}
-                        className={`neo-category-item ${isCurrent ? 'neo-category-item-active' : ''}`}
-                      >
-                        <span>{getCategoryLabel(category)}</span>
-                        {isCurrent && <i className="fas fa-circle-check text-[11px]"></i>}
+                <div className="neo-categories-mega-grid">
+                  {NAVBAR_CATEGORIES.map((category) => (
+                    <Link
+                      key={category.slug}
+                      to={`/categories/${category.slug}`}
+                      className={`neo-categories-mega-item ${
+                        location.pathname === `/categories/${category.slug}`
+                          ? 'neo-categories-mega-item-active'
+                          : ''
+                      }`}
+                    >
+                      <span>
+                        <i className={category.icon}></i>
+                      </span>
+                      <div>
+                        <strong>{category.name}</strong>
+                        <small>{category.description}</small>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="neo-categories-trends">
+                  <span>
+                    <i className="fas fa-fire"></i>
+                    Tendances
+                  </span>
+                  <div>
+                    {CATEGORY_TRENDS.map((trend) => (
+                      <Link key={trend.label} to={trend.to}>
+                        {trend.label}
                       </Link>
-                    );
-                  })}
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-
+            <NavItem to="/about" active={isActive('/about')}>À propos</NavItem>
             <NavItem to="/contact" active={isActive('/contact')}>Contact</NavItem>
           </div>
 
           <div className="neo-nav-actions">
-            <div className="neo-bonline-chip" aria-hidden="true">
-              <span className="neo-bonline-chip-label">Guides simples</span>
-              <span className="neo-bonline-chip-core"></span>
-              <span className="neo-bonline-chip-glow"></span>
-            </div>
-
-            {canInstallApp && (
-              <button
-                type="button"
-                className="neo-install-button neo-header-install-button"
-                onClick={handleInstallApp}
-                disabled={isInstallingApp}
-              >
-                <i className="fas fa-download"></i>
-                <span>{isInstallingApp ? "Installation..." : "Installer l'app"}</span>
-              </button>
-            )}
-
             <button
               type="button"
-              className={`neo-search-button neo-header-search-button ${
-                isActive('/search') ? 'neo-search-button-active' : ''
-              }`}
-              onClick={handleOpenSearch}
+              className="neo-mobile-icon-button"
+              onClick={() => {
+                loadSearchSources();
+                navigate('/search', { state: { focusSearch: true } });
+              }}
+              aria-label="Ouvrir la recherche"
             >
               <i className="fas fa-magnifying-glass"></i>
-              <span>Recherche</span>
             </button>
 
-            <div ref={newsletterPanelRef} className="neo-newsletter-wrap">
-              <button
-                type="button"
-                onClick={toggleNewsletterPanel}
-                aria-expanded={isNewsletterOpen}
-                aria-label="Ouvrir le formulaire newsletter"
-                className={`neo-subscribe-button neo-header-subscribe-button ${
-                  isNewsletterOpen ? 'neo-subscribe-button-active' : ''
+            <button type="button" className="neo-mobile-icon-button" aria-label="Notifications">
+              <i className="far fa-bell"></i>
+            </button>
+
+            <div className="neo-search-wrap" ref={searchBoxRef}>
+              <form
+                className={`neo-header-search-form ${
+                  isActive('/search') ? 'neo-search-button-active' : ''
                 }`}
+                onSubmit={handleSearchSubmit}
               >
-                <i className="fas fa-envelope text-xs"></i>
-                <span>Newsletter</span>
-              </button>
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => {
+                    setSearchQuery(event.target.value);
+                    setIsSearchOpen(true);
+                    loadSearchSources();
+                  }}
+                  onFocus={() => {
+                    setIsSearchOpen(true);
+                    loadSearchSources();
+                  }}
+                  placeholder="Rechercher un article, ebook ou catégorie..."
+                  aria-label="Rechercher un article, ebook ou catégorie"
+                />
+                <button type="submit" aria-label="Rechercher">
+                  <i className="fas fa-magnifying-glass"></i>
+                </button>
+              </form>
 
-              <div className={`neo-newsletter-popover ${isNewsletterOpen ? 'neo-newsletter-popover-open' : ''}`}>
-                <p className="neo-newsletter-kicker">La lettre JC Hub</p>
-                <h3>Rejoins la newsletter JC Hub</h3>
-                <p className="neo-newsletter-copy">
-                  Reçois les articles utiles et conseils pratiques directement dans ta boite mail.
-                </p>
-
-                <form onSubmit={newsletter.handleSubmit} className="neo-newsletter-form">
-                  <input
-                    type="email"
-                    placeholder="ton@email.com"
-                    value={newsletter.email}
-                    onChange={(event) => {
-                      newsletter.setEmail(event.target.value);
-                      newsletter.resetFeedback();
-                    }}
-                    autoComplete="email"
-                    required
-                  />
-                  <button type="submit" disabled={newsletter.isSubmitting}>
-                    {newsletter.isSubmitting ? 'Inscription...' : "Je m'abonne"}
-                  </button>
-                </form>
-
-                {newsletter.feedback.text && (
-                  <p className={newsletterFeedbackClassName}>{newsletter.feedback.text}</p>
-                )}
-              </div>
+              {shouldShowSuggestions && (
+                <div className="neo-search-suggestions" role="listbox">
+                  {searchQuery.trim().length < 2 ? (
+                    <>
+                      <p>Recherches populaires</p>
+                      <div className="neo-search-popular">
+                        {popularItems.map((item) => (
+                          <button key={item} type="button" onClick={() => handlePopularSearch(item)}>
+                            <i className="fas fa-arrow-trend-up"></i>
+                            {item}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  ) : suggestions.length > 0 ? (
+                    suggestions.map((item) => (
+                      <Link
+                        key={item.id}
+                        to={item.path}
+                        className="neo-search-suggestion"
+                        onClick={handleSuggestionClick}
+                      >
+                        <i className={getResultIcon(item)}></i>
+                        <span>
+                          <strong>{item.title}</strong>
+                          <small>{item.typeLabel}</small>
+                        </span>
+                      </Link>
+                    ))
+                  ) : (
+                    <button type="button" className="neo-search-empty" onClick={() => submitSearch()}>
+                      Rechercher “{searchQuery.trim()}”
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
-            <button
-              ref={mobileTriggerRef}
-              type="button"
-              onClick={() => setIsMobileMenuOpen((open) => !open)}
-              aria-expanded={isMobileMenuOpen}
-              aria-label="Ouvrir le menu"
-              className={`neo-burger ${isMobileMenuOpen ? 'neo-burger-open' : ''}`}
-            >
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
+            <Link className="neo-library-cta" to="/ebooks">
+              <i className="fas fa-book-open"></i>
+              <span>Explorer la bibliothèque</span>
+            </Link>
           </div>
         </div>
       </nav>
@@ -378,94 +400,132 @@ export default function Navbar() {
           <div className="neo-mobile-backdrop" onClick={() => setIsMobileMenuOpen(false)}></div>
 
           <aside ref={mobilePanelRef} className="neo-mobile-panel" aria-label="Menu mobile">
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="neo-mobile-close"
-              aria-label="Fermer le menu"
-            >
-              <i className="fas fa-xmark"></i>
-              <span>Fermer</span>
-            </button>
+            <div className="neo-mobile-panel-head">
+              <Link to="/" className="neo-mobile-brand" onClick={() => setIsMobileMenuOpen(false)}>
+                <img src={logoSvg} alt="JC Hub Logo" />
+                <span>JC Hub</span>
+              </Link>
 
-            <div className="neo-mobile-links">
-              <NavItem to="/" active={location.pathname === '/' && !location.hash}>
-                <i className="fas fa-house mr-2 text-xs"></i>
-                Accueil
-              </NavItem>
-              <NavItem to="/blog" active={isActive('/blog')}>
-                <i className="fas fa-newspaper mr-2 text-xs"></i>
-                Article
-              </NavItem>
-              <NavItem to="/ebooks" active={isActive('/ebooks')}>
-                <i className="fas fa-book-open mr-2 text-xs"></i>
-                Ebooks
-              </NavItem>
-              <NavItem to="/about" active={isActive('/about')}>
-                <i className="fas fa-circle-info mr-2 text-xs"></i>
-                About
-              </NavItem>
-              <NavItem to="/contact" active={isActive('/contact')}>
-                <i className="fas fa-envelope mr-2 text-xs"></i>
-                Contact
-              </NavItem>
-            </div>
-
-            <div
-              className="neo-mobile-categories"
-              onMouseEnter={() => setIsMobileCategoriesOpen(true)}
-              onMouseLeave={() => setIsMobileCategoriesOpen(false)}
-            >
               <button
                 type="button"
-                onClick={toggleMobileCategories}
-                className={`neo-mobile-categories-trigger ${
-                  isMobileCategoriesOpen ? 'neo-mobile-categories-trigger-open' : ''
-                }`}
-                aria-expanded={isMobileCategoriesOpen}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="neo-mobile-close"
+                aria-label="Fermer le menu"
               >
-                <span>
-                  <i className="fas fa-layer-group mr-2 text-xs"></i>
-                  Catégories
-                </span>
-                <i
-                  className={`fas fa-chevron-down text-[10px] transition-transform ${
-                    isMobileCategoriesOpen ? 'rotate-180' : ''
-                  }`}
-                ></i>
+                <i className="fas fa-xmark"></i>
               </button>
-
-              <div
-                className={`neo-mobile-categories-list ${
-                  isMobileCategoriesOpen ? 'neo-mobile-categories-list-open' : ''
-                }`}
-              >
-                {categories.map((category) => {
-                  const query =
-                    category === 'Tous'
-                      ? ''
-                      : `?${new URLSearchParams({ category }).toString()}`;
-                  const isCurrent = (activeCategory || 'Tous') === category;
-
-                  return (
-                    <Link
-                      key={category}
-                      to={{ pathname: '/blog', search: query }}
-                      className={`neo-mobile-category-link ${isCurrent ? 'neo-mobile-category-link-active' : ''}`}
-                      onClick={() => {
-                        setIsMobileCategoriesOpen(false);
-                        setIsMobileMenuOpen(false);
-                      }}
-                    >
-                      <span>{getCategoryLabel(category)}</span>
-                      {isCurrent && <i className="fas fa-check text-[10px]"></i>}
-                    </Link>
-                  );
-                })}
-              </div>
             </div>
 
+            {isMobileCategoriesOpen ? (
+              <div className="neo-mobile-category-view">
+                <button
+                  type="button"
+                  className="neo-mobile-back-button"
+                  onClick={() => setIsMobileCategoriesOpen(false)}
+                >
+                  <i className="fas fa-arrow-left"></i>
+                  Retour
+                </button>
+
+                <div className="neo-mobile-category-title">
+                  <span>
+                    <i className="fas fa-folder-open"></i>
+                  </span>
+                  <div>
+                    <h2>Catégories</h2>
+                    <p>Choisis un domaine pour voir les articles, ebooks et ressources associés.</p>
+                  </div>
+                </div>
+
+                <div className="neo-mobile-category-view-list">
+                  {NAVBAR_CATEGORIES.map((category) => (
+                    <Link
+                      key={category.slug}
+                      to={`/categories/${category.slug}`}
+                      className={`neo-mobile-category-link ${
+                        location.pathname === `/categories/${category.slug}`
+                          ? 'neo-mobile-category-link-active'
+                          : ''
+                      }`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <span>
+                        <i className={category.icon}></i>
+                        {category.name}
+                      </span>
+                      <i className="fas fa-chevron-right"></i>
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="neo-mobile-category-trends">
+                  <strong>
+                    <i className="fas fa-fire"></i>
+                    Tendances
+                  </strong>
+                  <div>
+                    {CATEGORY_TRENDS.map((trend) => (
+                      <Link key={trend.label} to={trend.to} onClick={() => setIsMobileMenuOpen(false)}>
+                        {trend.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                <Link
+                  className="neo-mobile-all-categories"
+                  to="/categories"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Voir toutes les catégories
+                  <i className="fas fa-arrow-right"></i>
+                </Link>
+              </div>
+            ) : (
+              <div className="neo-mobile-links">
+                <NavItem to="/" active={location.pathname === '/' && !location.hash}>
+                  <i className="fas fa-house mr-2 text-xs"></i>
+                  Accueil
+                </NavItem>
+                <NavItem to="/blog" active={isActive('/blog')}>
+                  <i className="fas fa-newspaper mr-2 text-xs"></i>
+                  Blog
+                </NavItem>
+                <NavItem to="/ebooks" active={isActive('/ebooks')}>
+                  <i className="fas fa-book-open mr-2 text-xs"></i>
+                  Bibliothèque
+                </NavItem>
+                <button
+                  type="button"
+                  className={`neo-mobile-categories-trigger ${
+                    isActive('/categories') ? 'neo-mobile-categories-trigger-open' : ''
+                  }`}
+                  onClick={() => setIsMobileCategoriesOpen(true)}
+                  aria-expanded={isMobileCategoriesOpen}
+                >
+                  <span>
+                    <i className="fas fa-layer-group"></i>
+                    Catégories
+                  </span>
+                  <i className="fas fa-chevron-right"></i>
+                </button>
+                <NavItem to="/about" active={isActive('/about')}>
+                  <i className="fas fa-circle-info mr-2 text-xs"></i>
+                  À propos
+                </NavItem>
+                <NavItem to="/contact" active={isActive('/contact')}>
+                  <i className="fas fa-envelope mr-2 text-xs"></i>
+                  Contact
+                </NavItem>
+              </div>
+            )}
+
             <div className="neo-mobile-footer">
+              <Link className="neo-mobile-library-link" to="/ebooks" onClick={() => setIsMobileMenuOpen(false)}>
+                <i className="fas fa-book-open"></i>
+                Explorer la bibliothèque
+              </Link>
+
               {canInstallApp && (
                 <button
                   type="button"
@@ -478,36 +538,12 @@ export default function Navbar() {
                 </button>
               )}
 
-              <button
-                type="button"
-                className="neo-search-button w-full justify-center"
-                onClick={handleOpenSearch}
-              >
-                <i className="fas fa-magnifying-glass"></i>
-                <span>Rechercher</span>
-              </button>
-
-              <form onSubmit={newsletter.handleSubmit} className="neo-mobile-newsletter-form">
-                <p className="neo-mobile-newsletter-title">Newsletter JC Hub</p>
-                <input
-                  type="email"
-                  placeholder="ton@email.com"
-                  value={newsletter.email}
-                  onChange={(event) => {
-                    newsletter.setEmail(event.target.value);
-                    newsletter.resetFeedback();
-                  }}
-                  autoComplete="email"
-                  required
-                />
-                <button type="submit" className="neo-subscribe-button w-full justify-center" disabled={newsletter.isSubmitting}>
-                  <i className="fas fa-envelope text-xs"></i>
-                  <span>{newsletter.isSubmitting ? 'Inscription...' : "Je m'abonne"}</span>
-                </button>
-                {newsletter.feedback.text && (
-                  <p className={newsletterFeedbackClassName}>{newsletter.feedback.text}</p>
-                )}
-              </form>
+              <div className="neo-mobile-socials" aria-label="Réseaux sociaux">
+                <a href="#" aria-label="Facebook"><i className="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="X"><i className="fab fa-x-twitter"></i></a>
+                <a href="#" aria-label="LinkedIn"><i className="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="YouTube"><i className="fab fa-youtube"></i></a>
+              </div>
             </div>
           </aside>
         </div>

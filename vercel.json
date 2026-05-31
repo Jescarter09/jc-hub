@@ -23,7 +23,21 @@
       ]
     }
   ],
+  "crons": [
+    {
+      "path": "/api/send-books-newsletter",
+      "schedule": "0 0 * * *"
+    }
+  ],
   "rewrites": [
+    {
+      "source": "/robots.txt",
+      "destination": "/api/robots"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
     {
       "source": "/",
       "destination": "/index.html"

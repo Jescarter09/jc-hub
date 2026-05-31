@@ -5,11 +5,20 @@ import '../styles/Resources.css';
 const initialState = {
   name: '',
   email: '',
+  subject: '',
   message: '',
   website: ''
 };
 
-export default function ContactForm({ source = 'faq-contact' }) {
+const subjectOptions = [
+  'Question générale',
+  'Proposition d’article ou ressource',
+  'Partenariat',
+  'Signalement d’un problème',
+  'Correction de contenu'
+];
+
+export default function ContactForm({ source = 'faq-contact', showSubject = false }) {
   const [formData, setFormData] = useState(initialState);
   const [formStartedAt, setFormStartedAt] = useState(() => Date.now());
   const [status, setStatus] = useState('idle');
@@ -39,7 +48,7 @@ export default function ContactForm({ source = 'faq-contact' }) {
       });
 
       setStatus('success');
-      setFeedback('Message envoye. Je te reponds tres vite.');
+      setFeedback('Message envoyé. L’équipe JC Hub répondra très vite.');
       setFormData(initialState);
       setFormStartedAt(Date.now());
     } catch (error) {
@@ -76,7 +85,7 @@ export default function ContactForm({ source = 'faq-contact' }) {
             type="text"
             value={formData.name}
             onChange={handleChange('name')}
-            placeholder="Ex: Jessy Carter"
+            placeholder="Votre nom complet"
             autoComplete="name"
             required
           />
@@ -88,12 +97,26 @@ export default function ContactForm({ source = 'faq-contact' }) {
             type="email"
             value={formData.email}
             onChange={handleChange('email')}
-            placeholder="Ex: contact@domaine.com"
+            placeholder="votre.email@exemple.com"
             autoComplete="email"
             required
           />
         </label>
       </div>
+
+      {showSubject && (
+        <label className="res-contact-field">
+          <span>Sujet</span>
+          <select value={formData.subject} onChange={handleChange('subject')} required>
+            <option value="">Choisissez un sujet</option>
+            {subjectOptions.map((subject) => (
+              <option key={subject} value={subject}>
+                {subject}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
 
       <label className="res-contact-field">
         <span>Message</span>

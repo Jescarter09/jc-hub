@@ -12,6 +12,8 @@ const Footer = lazy(() => import('./components/Footer'));
 const Home = lazy(() => import('./pages/Home'));
 const Blog = lazy(() => import('./pages/Blog'));
 const Ebooks = lazy(() => import('./pages/Ebooks'));
+const EbookDetail = lazy(() => import('./pages/EbookDetail'));
+const Categories = lazy(() => import('./pages/Categories'));
 const Search = lazy(() => import('./pages/Search'));
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
@@ -32,6 +34,11 @@ function AppShell() {
             <Route path="/" element={<Home />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/ebooks" element={<Ebooks />} />
+            <Route path="/ebooks/:category/:slug" element={<EbookDetail />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/categories/:slug" element={<Categories />} />
+            <Route path="/bibliotheque" element={<Ebooks />} />
+            <Route path="/bibliotheque/:category/:slug" element={<EbookDetail />} />
             <Route path="/search" element={<Search />} />
             <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="/about" element={<About />} />

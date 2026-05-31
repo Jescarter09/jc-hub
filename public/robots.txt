@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://jchub.vercel.app/sitemap.xml

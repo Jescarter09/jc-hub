@@ -12,7 +12,7 @@ Le site utilise un design éditorial doux, une recherche dédiée, des pages lé
 - Firebase client: Realtime Database, Firestore, Storage, Auth
 - Firebase Admin côté API Vercel
 - Brevo pour la newsletter et les contacts
-- Cloudinary pour les images d'articles
+- Cloudinary pour les images d'articles et les ebooks redistribuables
 
 ## Routes
 
@@ -24,6 +24,8 @@ Le site utilise un design éditorial doux, une recherche dédiée, des pages lé
 | `/blog/:slug` | Lecture d'un article |
 | `/about` | À propos |
 | `/contact` | Contact |
+| `/ebooks` | Bibliothèque numérique avec logique Cloudinary/Firestore |
+| `/ebooks/:category/:slug` | Détails SEO d'un livre |
 | `/500` | Page d'erreur technique |
 | `/res/mentions-legales` | Mentions légales |
 | `/res/confidentialite` | Politique de confidentialité |
@@ -71,10 +73,28 @@ npm run content:dedupe
 Nettoie les doublons de slugs dans `src/data/database.json`.
 
 ```bash
-npm run generate:sitemap
+npm run books:schedule:dry-run
 ```
 
-Régénère `sitemap.xml` à la racine et dans `public/sitemap.xml`.
+Prévisualise la programmation Firestore des livres sans écrire en base.
+
+```bash
+npm run books:schedule
+```
+
+Ajoute ou met à jour `publishAt`, `publishOrder`, `publishWave` et `newsletterSent` dans Firestore.
+
+```bash
+npm run env:check
+```
+
+Vérifie la présence des variables importantes sans afficher les secrets.
+
+```bash
+npm run secret:cron
+```
+
+Génère une valeur sûre pour `CRON_SECRET`.
 
 ```bash
 npm run clean:artifacts
@@ -86,7 +106,7 @@ Supprime les artefacts générés ou publics inutiles comme `dist` et `public/mo
 npm run sync:all
 ```
 
-Synchronise la base locale puis régénère le sitemap.
+Synchronise la base locale depuis Firestore.
 
 ## Variables d'environnement
 
@@ -115,8 +135,41 @@ BREVO_API_KEY=...
 FIREBASE_SERVICE_ACCOUNT_JSON=...
 FIREBASE_SERVICE_ACCOUNT_BASE64=...
 FIREBASE_SERVICE_ACCOUNT_KEY_PATH=./firebase-service-account.json
+CLOUDINARY_API_KEY=...
+CLOUDINARY_API_SECRET=...
+BOOKS_IMPORT_TOKEN=...
+CRON_SECRET=...
+BREVO_SENDER_EMAIL=...
+BREVO_SENDER_NAME=JC Hub
 SYNC_API_TOKEN=...
 ```
+
+## Bibliothèque numérique
+
+La route `/ebooks` recherche dans Gutendex, Google Books, OpenLibrary et Internet Archive via `/api/books/search`. Chaque livre pointe vers une page détail SEO comme `/ebooks/developpement/react-pour-debutants`.
+
+- Gutendex, domaine public et Creative Commons peuvent être importés vers Cloudinary côté serveur.
+- Google Books, OpenLibrary et les contenus sans droits clairs restent en redirection externe.
+- Les métadonnées sont cataloguées dans Firestore (`books`) avec `isHosted`, `pdfUrl`, `externalLink`, `license` et `canRedistribute`.
+- Les livres libres peuvent être uploadés automatiquement vers Cloudinary pendant la recherche (`BOOKS_AUTO_HOST_ON_SEARCH=true`).
+- `BOOKS_AUTO_HOST_LIMIT` limite le nombre d'uploads automatiques par recherche pour protéger Cloudinary et le temps de réponse.
+- Les livres visibles sont filtrés côté API avec `publishAt <= maintenant`.
+- Le script `books:schedule` programme 30 livres au lancement, puis 10 livres supplémentaires par semaine.
+- `/api/books/import` est protégé par `BOOKS_IMPORT_TOKEN`; il upload seulement les livres redistribuables et catalogue les autres sans fichier.
+- `BOOKS_SEARCH_AUTOSAVE=false` désactive la sauvegarde automatique des résultats de recherche.
+
+## Newsletter livres
+
+Vercel Cron appelle `/api/send-books-newsletter` tous les jours à `00:00 UTC`.
+
+La Function:
+
+- lit les livres publiés avec `newsletterSent=false`;
+- récupère les abonnés actifs depuis `NEWSLETTER_COLLECTION`;
+- envoie un email Brevo;
+- marque les livres avec `newsletterSent=true`.
+
+La route est protégée par `CRON_SECRET`. La même valeur doit exister dans `.env` local et dans les variables d'environnement Vercel.
 
 ## Sécurité des secrets
 
@@ -136,7 +189,7 @@ Si une clé Firebase Admin, Brevo ou Cloudinary a déjà été publiée, il faut
 3. Redéployer le site.
 4. Nettoyer l'historique Git si le projet est placé dans un dépôt.
 
-Cette copie locale ne contient pas de dossier `.git`, donc l'historique Git ne peut pas être audité depuis ce dossier.
+Avant un commit, vérifie toujours `git status` pour confirmer que seuls les fichiers attendus sont inclus.
 
 ## Anti-spam
 
@@ -163,7 +216,16 @@ Un hook `usePageSeo` met à jour dynamiquement:
 - Twitter card;
 - canonical URL.
 
-Le sitemap est généré par `scripts/generate-sitemap.mjs` et déduplique les URLs avant écriture.
+`robots.txt` et `sitemap.xml` sont générés dynamiquement par Vercel Functions:
+
+- `/robots.txt` -> `/api/robots`;
+- `/sitemap.xml` -> `/api/sitemap`.
+
+Le sitemap lit Firestore en temps réel et inclut uniquement:
+
+- les livres avec `publishAt <= maintenant`;
+- les articles publiés;
+- les pages principales du site.
 
 Note importante: comme le projet est une SPA Vite, les balises dynamiques sont mises à jour côté navigateur. Pour des aperçus sociaux parfaits sur tous les robots, une étape future serait le prerendering ou SSR.
 
@@ -183,7 +245,7 @@ Avant de déployer:
 2. Vérifier les règles Firebase Realtime Database avec `database.rules.json`.
 3. Vérifier les règles Firestore avec `firestore.rules`.
 4. Lancer `npm run build`.
-5. Lancer `npm run generate:sitemap`.
+5. Vérifier `/robots.txt` et `/sitemap.xml` après le déploiement.
 
 ## Dernières vérifications recommandées
 

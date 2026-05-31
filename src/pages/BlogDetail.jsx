@@ -1210,59 +1210,50 @@ export default function BlogDetail() {
           </div>
 
           <div className="article-editorial-hero-grid">
-            <div>
+            <div className="article-editorial-hero-copy">
               <span className="article-editorial-category">{getCategoryLabel(blog.category)}</span>
               <h1>{blog.title}</h1>
               <p className="article-editorial-summary">{blog.excerpt}</p>
-            </div>
 
-            <aside className="article-editorial-meta-card">
-              <div className="article-editorial-author">
-                <img
-                  src={AUTHOR_AVATAR}
-                  alt={blog.author}
-                  loading="lazy"
-                  decoding="async"
-                  onError={(event) => {
-                    event.currentTarget.src = '/jchub_monogram.png';
-                  }}
-                />
-                <div>
+              <div className="article-editorial-topline">
+                <span className="article-editorial-author-mini">
+                  <img
+                    src={AUTHOR_AVATAR}
+                    alt={blog.author}
+                    loading="lazy"
+                    decoding="async"
+                    onError={(event) => {
+                      event.currentTarget.src = '/jchub_monogram.png';
+                    }}
+                  />
                   <strong>{blog.author}</strong>
-                  <span>{blog.role || 'Auteur JC Hub'}</span>
-                </div>
+                </span>
+                <span>{blog.dateLabel}</span>
+                <span>{readingLabel}</span>
+                <span>{getCategoryLabel(blog.category)}</span>
               </div>
-              <div className="article-editorial-meta-list">
-                <div>
-                  <strong>Date</strong>
-                  <span>{blog.dateLabel}</span>
-                </div>
-                <div>
-                  <strong>Lecture</strong>
-                  <span>{readingLabel}</span>
-                </div>
-                <div>
-                  <strong>Vues</strong>
-                  <span>{formatCompactNumber(viewCount)}</span>
-                </div>
+
+              <div className="article-editorial-share-inline">
+                <strong>Partager :</strong>
+                <a href={shareLinks.facebook} target="_blank" rel="noopener noreferrer" aria-label="Partager sur Facebook">
+                  <i className="fab fa-facebook-f"></i>
+                </a>
+                <a href={shareLinks.twitter} target="_blank" rel="noopener noreferrer" aria-label="Partager sur X">
+                  <i className="fab fa-twitter"></i>
+                </a>
+                <a href={shareLinks.linkedIn} target="_blank" rel="noopener noreferrer" aria-label="Partager sur LinkedIn">
+                  <i className="fab fa-linkedin-in"></i>
+                </a>
+                <button type="button" onClick={handleShare} aria-label="Copier le lien">
+                  <i className="fas fa-link"></i>
+                </button>
               </div>
-            </aside>
+            </div>
           </div>
+
         </section>
 
-        <figure className="article-editorial-cover">
-          <img
-            src={blog.image}
-            alt={blog.title}
-            fetchPriority="high"
-            decoding="async"
-            onError={(event) => {
-              event.currentTarget.src = '/jchub_monogram.png';
-            }}
-          />
-        </figure>
-
-        <div className="article-editorial-reading-tools">
+        <div className="article-editorial-reading-tools" hidden>
           <div className="article-editorial-tool-group">
             <a className="article-editorial-tool article-editorial-tool-primary" href="#article">
               Commencer
@@ -1313,6 +1304,18 @@ export default function BlogDetail() {
         )}
 
         <section className="article-editorial-shell" id="article">
+          <figure className="article-editorial-cover">
+            <img
+              src={blog.image}
+              alt={`JC Hub - ${blog.title}`}
+              fetchPriority="high"
+              decoding="async"
+              onError={(event) => {
+                event.currentTarget.src = '/jchub_monogram.png';
+              }}
+            />
+          </figure>
+
           <aside className="article-editorial-toc" aria-label="Sommaire">
             <div className="article-editorial-toc-title">Sommaire</div>
             <nav>
@@ -1435,16 +1438,57 @@ export default function BlogDetail() {
           </article>
 
           <aside className="article-editorial-aside-note">
-            <h3>À retenir</h3>
-            <p>{asideTakeaway}</p>
+            <div className="article-editorial-author-card">
+              <h3>À propos de l’auteur</h3>
+              <div className="article-editorial-author">
+                <img
+                  src={AUTHOR_AVATAR}
+                  alt={blog.author}
+                  loading="lazy"
+                  decoding="async"
+                  onError={(event) => {
+                    event.currentTarget.src = '/jchub_monogram.png';
+                  }}
+                />
+                <div>
+                  <strong>{blog.author}</strong>
+                  <span>{blog.role || 'Auteur JC Hub'}</span>
+                </div>
+              </div>
+              <p>
+                Passionné par les technologies émergentes et leur impact sur notre quotidien.
+              </p>
+              <Link to="/blog">Voir tous ses articles</Link>
+            </div>
+
+            <div className="article-editorial-side-related">
+              <h3>Articles similaires</h3>
+              {relatedPosts.map((post) => (
+                <Link key={post.slug} to={`/blog/${post.slug}`}>
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    loading="lazy"
+                    decoding="async"
+                    onError={(event) => {
+                      event.currentTarget.src = '/jchub_monogram.png';
+                    }}
+                  />
+                  <span>
+                    <strong>{post.title}</strong>
+                    <small>{post.dateLabel} · {post.readMinutes} min</small>
+                  </span>
+                </Link>
+              ))}
+            </div>
           </aside>
         </section>
 
-        <section className="article-editorial-wide-section" id="related">
+        <section className="article-editorial-wide-section article-editorial-related-section" id="related">
           <div className="article-editorial-section-head">
             <div>
               <span className="article-editorial-category">Lire ensuite</span>
-              <h2>Articles similaires.</h2>
+              <h2>Articles similaires</h2>
             </div>
             <p>Des recommandations simples pour continuer sans se disperser.</p>
           </div>
@@ -1477,7 +1521,7 @@ export default function BlogDetail() {
           <div className="article-editorial-section-head">
             <div>
               <span className="article-editorial-category">Discussion</span>
-              <h2>Commentaires.</h2>
+              <h2>Commentaires ({comments.length})</h2>
             </div>
             <p>{comments.length} contribution{comments.length > 1 ? 's' : ''} autour de cet article.</p>
           </div>
@@ -1589,13 +1633,13 @@ export default function BlogDetail() {
         <section className="article-editorial-wide-section" id="newsletter">
           <div className="article-editorial-newsletter">
             <div>
-              <h2>Recevoir les prochains guides.</h2>
-              <p>Une invitation simple après la lecture: recevoir les articles utiles sans bruit.</p>
+              <h2>Cet article vous a plu ?</h2>
+              <p>Abonnez-vous à notre newsletter pour recevoir nos derniers articles.</p>
             </div>
             <form onSubmit={newsletter.handleSubmit} className="article-editorial-newsletter-form">
               <input
                 type="email"
-                placeholder="ton@email.com"
+                placeholder="Votre adresse e-mail"
                 value={newsletter.email}
                 onChange={(event) => {
                   newsletter.setEmail(event.target.value);

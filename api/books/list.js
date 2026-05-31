@@ -1,7 +1,15 @@
 import { BOOKS_COLLECTION, normalizeHostedBook } from '../_lib/books.js';
-import { getAdminDb } from '../_lib/firebaseAdmin.js';
+import { Timestamp, getAdminDb } from '../_lib/firebaseAdmin.js';
 import { sendJson } from '../_lib/http.js';
 import { checkRateLimit } from '../_lib/rateLimit.js';
+
+const DEFAULT_BOOKS_LIMIT = 500;
+const MAX_BOOKS_LIMIT = 500;
+
+function getDefaultBooksLimit() {
+  const configured = Number(process.env.BOOKS_VISIBLE_LIMIT);
+  return Number.isFinite(configured) ? Math.min(Math.max(configured, 1), MAX_BOOKS_LIMIT) : DEFAULT_BOOKS_LIMIT;
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -23,11 +31,16 @@ export default async function handler(req, res) {
   }
 
   const params = new URL(req.url || '/', `https://${req.headers?.host || 'localhost'}`).searchParams;
-  const limit = Math.min(Math.max(Number(params.get('limit')) || 24, 1), 48);
+  const limit = Math.min(Math.max(Number(params.get('limit')) || getDefaultBooksLimit(), 1), MAX_BOOKS_LIMIT);
 
   try {
     const db = getAdminDb();
-    const snapshot = await db.collection(BOOKS_COLLECTION).limit(limit).get();
+    const snapshot = await db
+      .collection(BOOKS_COLLECTION)
+      .where('publishAt', '<=', Timestamp.now())
+      .orderBy('publishAt', 'desc')
+      .limit(limit)
+      .get();
     const books = snapshot.docs.map((doc) => normalizeHostedBook(doc.id, doc.data()));
 
     return sendJson(res, 200, {

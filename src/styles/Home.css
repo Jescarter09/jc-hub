@@ -58,7 +58,6 @@
   max-width: 100%;
 }
 
-.home-soft-hero,
 .home-soft-section,
 .home-soft-newsletter {
   width: min(calc(100% - 34px), var(--home-max));
@@ -66,17 +65,43 @@
 }
 
 .home-soft-hero {
-  padding: 58px 0 54px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 34px 17px 48px;
 }
 
 .home-soft-hero-grid {
+  position: relative;
   display: grid;
+  width: min(100%, var(--home-max));
+  margin: 0 auto;
   grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
-  gap: 34px;
+  gap: clamp(20px, 4vw, 38px);
   align-items: center;
+  overflow: hidden;
+  padding: clamp(26px, 4.5vw, 48px);
+  border-radius: clamp(28px, 4vw, 44px);
+  background:
+    linear-gradient(105deg, rgba(255, 253, 247, 0.96) 0%, rgba(242, 231, 209, 0.76) 48%, rgba(217, 226, 207, 0.9) 100%),
+    radial-gradient(circle at 78% 20%, rgba(201, 120, 80, 0.18), transparent 24rem);
+  box-shadow: var(--home-shadow);
+  isolation: isolate;
+}
+
+.home-soft-hero-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(255, 253, 247, 0.58), transparent 18rem),
+    linear-gradient(90deg, rgba(255, 253, 247, 0.26), transparent 58%);
+  pointer-events: none;
 }
 
 .home-soft-hero-copy {
+  position: relative;
+  z-index: 1;
   animation: homeSoftRise 0.75s ease both;
 }
 
@@ -185,38 +210,42 @@
 
 .home-soft-cover-stack {
   position: relative;
-  min-height: 580px;
+  z-index: 1;
+  display: flex;
+  min-height: 520px;
+  align-items: center;
+  justify-content: center;
 }
 
 .home-soft-cover-card {
-  position: absolute;
-  inset: 0 0 auto auto;
-  width: min(100%, 470px);
-  padding: 18px;
-  border: 1px solid rgba(31, 38, 31, 0.12);
-  border-radius: 34px;
-  background: var(--home-card);
-  box-shadow: var(--home-shadow);
-  transform: rotate(1.5deg);
+  position: relative;
+  width: min(100%, 500px);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
   animation: homeSoftRise 0.75s 0.08s ease both;
 }
 
 .home-soft-cover-image {
   position: relative;
-  min-height: 360px;
+  min-height: 430px;
   overflow: hidden;
-  border-radius: 26px;
-  background: var(--home-linen);
+  border-radius: 0;
+  background: transparent;
 }
 
 .home-soft-cover-image img,
 .home-soft-cover-image picture {
   width: 100%;
-  height: 360px;
+  height: 430px;
 }
 
 .home-soft-cover-image img {
   object-fit: cover;
+  filter: drop-shadow(0 28px 42px rgba(32, 60, 45, 0.24));
 }
 
 .home-soft-cover-image span {
@@ -673,13 +702,14 @@
   }
 
   .home-soft-cover-stack {
-    min-height: 720px;
+    min-height: 560px;
   }
 
   .home-soft-cover-card {
-    left: 50%;
+    left: auto;
     right: auto;
-    transform: translateX(-50%) rotate(1deg);
+    margin: 0 auto;
+    transform: none;
   }
 
   .home-soft-floating-left {
@@ -703,7 +733,7 @@
 
 @media (max-width: 640px) {
   .home-soft-hero {
-    padding-top: 42px;
+    padding: 28px 14px 42px;
   }
 
   .home-soft h1 {

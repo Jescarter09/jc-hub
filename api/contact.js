@@ -25,6 +25,33 @@ function toDocId(email) {
   return encodeURIComponent(email);
 }
 
+function toSubject(value) {
+  return sanitizeText(value, 160) || 'Question générale';
+}
+
+function toSubjectKey(value) {
+  return sanitizeText(value, 160)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80) || 'question-generale';
+}
+
+function toSafeTimestampMillis(value) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : 0;
+}
+
+function getRequestMetadata(req) {
+  return {
+    userAgent: sanitizeText(req.headers?.['user-agent'], 360),
+    referer: sanitizeText(req.headers?.referer || req.headers?.referrer, 500),
+    acceptLanguage: sanitizeText(req.headers?.['accept-language'], 160)
+  };
+}
+
 function parseExtraBrevoAttributes(message) {
   const attributeName = String(process.env.BREVO_CONTACT_MESSAGE_ATTRIBUTE || '').trim();
   if (!attributeName) return {};
@@ -74,8 +101,14 @@ export default async function handler(req, res) {
 
   const name = sanitizeText(body?.name, 120);
   const email = normalizeEmail(body?.email);
+  const subject = toSubject(body?.subject);
+  const subjectKey = toSubjectKey(subject);
   const message = sanitizeText(body?.message, 4000);
   const source = toSource(body?.source);
+  const formStartedAtMillis = toSafeTimestampMillis(body?.formStartedAt);
+  const submittedAtMillis = Date.now();
+  const completionMs = formStartedAtMillis ? Math.max(0, submittedAtMillis - formStartedAtMillis) : null;
+  const metadata = getRequestMetadata(req);
 
   if (!name) {
     return sendJson(res, 422, {
@@ -101,28 +134,79 @@ export default async function handler(req, res) {
     });
   }
 
+  let leadRef = null;
+  let byEmailRef = null;
+
   try {
     const db = getAdminDb();
     const now = FieldValue.serverTimestamp();
-    const leadRef = db.collection(COLLECTION_NAME).doc();
+    leadRef = db.collection(COLLECTION_NAME).doc();
 
     await leadRef.set({
+      schemaVersion: 2,
       name,
       email,
+      subject,
       message,
       source,
       status: 'new',
+      priority: subjectKey === 'partenariat' ? 'high' : 'normal',
+      contact: {
+        name,
+        email
+      },
+      messageInfo: {
+        subject,
+        subjectKey,
+        body: message,
+        preview: message.slice(0, 180),
+        length: message.length
+      },
+      form: {
+        source,
+        hasSubject: Boolean(sanitizeText(body?.subject, 160)),
+        startedAtMillis: formStartedAtMillis || null,
+        submittedAtMillis,
+        completionMs
+      },
+      tracking: metadata,
+      integrations: {
+        brevo: {
+          status: 'pending',
+          syncedAt: null,
+          error: ''
+        }
+      },
       createdAt: now,
       updatedAt: now
     });
 
-    const byEmailRef = db.collection(`${COLLECTION_NAME}ByEmail`).doc(toDocId(email));
+    byEmailRef = db.collection(`${COLLECTION_NAME}ByEmail`).doc(toDocId(email));
     await byEmailRef.set(
       {
+        schemaVersion: 2,
         name,
         email,
+        subject,
         source,
         lastMessage: message,
+        contact: {
+          name,
+          email
+        },
+        latestMessage: {
+          id: leadRef.id,
+          subject,
+          subjectKey,
+          body: message,
+          preview: message.slice(0, 180),
+          source,
+          status: 'new',
+          createdAt: now
+        },
+        stats: {
+          messageCount: FieldValue.increment(1)
+        },
         updatedAt: now,
         lastContactAt: now
       },
@@ -144,9 +228,42 @@ export default async function handler(req, res) {
       listIds: resolveBrevoListIds({ type: 'contact' }),
       extraAttributes: parseExtraBrevoAttributes(message)
     });
+
+    if (leadRef) {
+      await leadRef.set(
+        {
+          integrations: {
+            brevo: {
+              status: 'synced',
+              syncedAt: FieldValue.serverTimestamp(),
+              error: ''
+            }
+          },
+          updatedAt: FieldValue.serverTimestamp()
+        },
+        { merge: true }
+      );
+    }
   } catch (error) {
     console.error('contact/brevo-sync-error', error);
     const details = String(error?.message || '').trim().slice(0, 240);
+
+    if (leadRef) {
+      await leadRef.set(
+        {
+          integrations: {
+            brevo: {
+              status: 'failed',
+              syncedAt: null,
+              error: details
+            }
+          },
+          updatedAt: FieldValue.serverTimestamp()
+        },
+        { merge: true }
+      ).catch(() => {});
+    }
+
     return sendJson(res, 502, {
       success: false,
       code: 'contact/brevo-sync-failed',

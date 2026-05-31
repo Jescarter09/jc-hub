@@ -1,84 +1,6 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isValidNewsletterEmail(value) {
-      return value is string
-        && value.size() > 4
-        && value.size() <= 320
-        && value.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$');
-    }
-
-    function hasOnlyNewsletterFields() {
-      return request.resource.data.keys().hasOnly([
-        'email',
-        'status',
-        'subscribedAt',
-        'createdAt',
-        'updatedAt',
-        'consent',
-        'consentAt',
-        'lastSource',
-        'sources',
-        'lastSignupAttemptAt',
-        'reactivatedAt',
-        'unsubscribedAt'
-      ]);
-    }
-
-    function hasRequiredNewsletterCreateFields() {
-      return request.resource.data.keys().hasAll([
-        'email',
-        'status',
-        'subscribedAt',
-        'createdAt',
-        'updatedAt',
-        'consent',
-        'consentAt',
-        'lastSource',
-        'sources',
-        'lastSignupAttemptAt'
-      ]);
-    }
-
-    function hasRequiredNewsletterUpdateFields() {
-      return request.resource.data.keys().hasAll([
-        'email',
-        'status',
-        'updatedAt',
-        'consent',
-        'consentAt',
-        'lastSource',
-        'sources',
-        'lastSignupAttemptAt'
-      ]);
-    }
-
-    function isValidNewsletterCommon() {
-      return hasOnlyNewsletterFields()
-        && isValidNewsletterEmail(request.resource.data.email)
-        && request.resource.data.status == 'active'
-        && request.resource.data.consent == true
-        && request.resource.data.lastSource is string
-        && request.resource.data.lastSource.size() > 0
-        && request.resource.data.lastSource.size() <= 64
-        && request.resource.data.sources is list
-        && request.resource.data.sources.size() > 0
-        && request.resource.data.sources.size() <= 20
-        && request.resource.data.updatedAt is timestamp
-        && request.resource.data.consentAt is timestamp
-        && request.resource.data.lastSignupAttemptAt is timestamp;
-    }
-
-    function isTimestampOrMissing(field) {
-      return !request.resource.data.keys().hasAny([field]) || request.resource.data[field] is timestamp;
-    }
-
-    function isTimestampNullOrMissing(field) {
-      return !request.resource.data.keys().hasAny([field])
-        || request.resource.data[field] == null
-        || request.resource.data[field] is timestamp;
-    }
-
     match /blogMetrics/{slug} {
       allow read: if true;
       allow create, update: if request.resource.data.slug == slug
@@ -129,29 +51,25 @@ service cloud.firestore {
     }
 
     match /books/{bookId} {
-      allow read: if true;
+      allow read: if resource.data.publishAt is timestamp
+        && resource.data.publishAt <= request.time;
       allow write: if false;
     }
 
+    match /contactLeads/{leadId} {
+      allow read, write: if false;
+    }
+
+    match /contactLeadsByEmail/{emailId} {
+      allow read, write: if false;
+    }
+
+    match /newsletterSubscribers/{subscriberId} {
+      allow read, write: if false;
+    }
+
     match /newsletter_subscribers/{subscriberId} {
-      allow read: if false;
-
-      allow create: if isValidNewsletterCommon()
-        && hasRequiredNewsletterCreateFields()
-        && request.resource.data.subscribedAt is timestamp
-        && request.resource.data.createdAt is timestamp
-        && isTimestampOrMissing('reactivatedAt')
-        && isTimestampNullOrMissing('unsubscribedAt');
-
-      allow update: if isValidNewsletterCommon()
-        && hasRequiredNewsletterUpdateFields()
-        && request.resource.data.email == resource.data.email
-        && isTimestampOrMissing('subscribedAt')
-        && isTimestampOrMissing('createdAt')
-        && isTimestampOrMissing('reactivatedAt')
-        && isTimestampNullOrMissing('unsubscribedAt');
-
-      allow delete: if false;
+      allow read, write: if false;
     }
   }
 }

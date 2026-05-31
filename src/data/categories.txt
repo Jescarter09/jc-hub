@@ -1,0 +1,130 @@
+Catalogue des catégories JC Hub
+Dernière mise à jour: 2026-05-31T09:24:25.967Z
+Source: Firestore (blogs + books)
+Articles lus: 20
+Livres lus: 351
+
+Format: groupe | slug | catégorie | articles | livres | total
+
+# Intelligence artificielle & data — articles: 18 | livres: 21 | total: 39
+Intelligence artificielle & data | intelligence-artificielle | Intelligence Artificielle | articles: 6 | livres: 0 | total: 6
+Intelligence artificielle & data | ia-generative | IA Générative | articles: 0 | livres: 2 | total: 2
+Intelligence artificielle & data | machine-learning | Machine Learning | articles: 1 | livres: 0 | total: 1
+Intelligence artificielle & data | deep-learning | Deep Learning | articles: 0 | livres: 2 | total: 2
+Intelligence artificielle & data | prompt-engineering | Prompt Engineering | articles: 0 | livres: 1 | total: 1
+Intelligence artificielle & data | data-science | Data Science | articles: 2 | livres: 11 | total: 13
+Intelligence artificielle & data | data-analytics | Data Analytics | articles: 0 | livres: 0 | total: 0
+Intelligence artificielle & data | business-intelligence | Business Intelligence | articles: 0 | livres: 0 | total: 0
+Intelligence artificielle & data | big-data | Big Data | articles: 7 | livres: 1 | total: 8
+Intelligence artificielle & data | bases-de-donnees | Bases de données | articles: 2 | livres: 4 | total: 6
+Intelligence artificielle & data | visualisation-de-donnees | Visualisation de données | articles: 0 | livres: 0 | total: 0
+Intelligence artificielle & data | ethique-de-lia | Éthique de l'IA | articles: 0 | livres: 0 | total: 0
+
+# Développement & programmation — articles: 20 | livres: 193 | total: 213
+Développement & programmation | developpement-web | Développement Web | articles: 5 | livres: 43 | total: 48
+Développement & programmation | frontend | Frontend | articles: 3 | livres: 57 | total: 60
+Développement & programmation | backend | Backend | articles: 2 | livres: 0 | total: 2
+Développement & programmation | javascript | JavaScript | articles: 3 | livres: 27 | total: 30
+Développement & programmation | typescript | TypeScript | articles: 3 | livres: 28 | total: 31
+Développement & programmation | python | Python | articles: 2 | livres: 11 | total: 13
+Développement & programmation | php | PHP | articles: 1 | livres: 21 | total: 22
+Développement & programmation | java | Java | articles: 0 | livres: 1 | total: 1
+Développement & programmation | c-et-net | C# & .NET | articles: 0 | livres: 0 | total: 0
+Développement & programmation | apis-et-microservices | APIs & Microservices | articles: 0 | livres: 0 | total: 0
+Développement & programmation | architecture-logicielle | Architecture logicielle | articles: 0 | livres: 0 | total: 0
+Développement & programmation | tests-et-qa | Tests & QA | articles: 0 | livres: 2 | total: 2
+Développement & programmation | git-et-github | Git & GitHub | articles: 1 | livres: 0 | total: 1
+Développement & programmation | open-source | Open Source | articles: 0 | livres: 3 | total: 3
+
+# Mobile, design & produit — articles: 8 | livres: 61 | total: 69
+Mobile, design & produit | developpement-mobile | Développement Mobile | articles: 1 | livres: 1 | total: 2
+Mobile, design & produit | android | Android | articles: 1 | livres: 1 | total: 2
+Mobile, design & produit | ios | iOS | articles: 1 | livres: 1 | total: 2
+Mobile, design & produit | react-native | React Native | articles: 3 | livres: 31 | total: 34
+Mobile, design & produit | flutter | Flutter | articles: 0 | livres: 2 | total: 2
+Mobile, design & produit | ui-ux-design | UI / UX Design | articles: 2 | livres: 25 | total: 27
+Mobile, design & produit | accessibilite-numerique | Accessibilité numérique | articles: 0 | livres: 0 | total: 0
+Mobile, design & produit | product-management | Product Management | articles: 0 | livres: 0 | total: 0
+
+# Cloud, DevOps & infrastructure — articles: 14 | livres: 4 | total: 18
+Cloud, DevOps & infrastructure | cloud-computing | Cloud Computing | articles: 3 | livres: 1 | total: 4
+Cloud, DevOps & infrastructure | devops | DevOps | articles: 0 | livres: 0 | total: 0
+Cloud, DevOps & infrastructure | docker-et-conteneurs | Docker & Conteneurs | articles: 0 | livres: 1 | total: 1
+Cloud, DevOps & infrastructure | kubernetes | Kubernetes | articles: 0 | livres: 0 | total: 0
+Cloud, DevOps & infrastructure | ci-cd | CI/CD | articles: 2 | livres: 0 | total: 2
+Cloud, DevOps & infrastructure | serverless | Serverless | articles: 1 | livres: 1 | total: 2
+Cloud, DevOps & infrastructure | firebase | Firebase | articles: 1 | livres: 0 | total: 1
+Cloud, DevOps & infrastructure | vercel | Vercel | articles: 2 | livres: 0 | total: 2
+Cloud, DevOps & infrastructure | aws | AWS | articles: 3 | livres: 1 | total: 4
+Cloud, DevOps & infrastructure | reseaux-et-administration-systeme | Réseaux & Administration système | articles: 2 | livres: 0 | total: 2
+
+# Cybersécurité & confidentialité — articles: 23 | livres: 31 | total: 54
+Cybersécurité & confidentialité | cybersecurite | Cybersécurité | articles: 6 | livres: 26 | total: 32
+Cybersécurité & confidentialité | securite-web | Sécurité Web | articles: 0 | livres: 1 | total: 1
+Cybersécurité & confidentialité | securite-reseau | Sécurité Réseau | articles: 2 | livres: 0 | total: 2
+Cybersécurité & confidentialité | cryptographie | Cryptographie | articles: 0 | livres: 0 | total: 0
+Cybersécurité & confidentialité | protection-des-donnees | Protection des données | articles: 7 | livres: 2 | total: 9
+Cybersécurité & confidentialité | osint | OSINT | articles: 0 | livres: 1 | total: 1
+Cybersécurité & confidentialité | pentest-et-ethical-hacking | Pentest & Ethical Hacking | articles: 0 | livres: 1 | total: 1
+Cybersécurité & confidentialité | securite-cloud | Sécurité Cloud | articles: 5 | livres: 0 | total: 5
+Cybersécurité & confidentialité | authentification | Authentification | articles: 3 | livres: 0 | total: 3
+Cybersécurité & confidentialité | sauvegarde-et-recuperation | Sauvegarde & Récupération | articles: 0 | livres: 0 | total: 0
+
+# Bureautique, outils & productivité — articles: 20 | livres: 7 | total: 27
+Bureautique, outils & productivité | outils-numeriques | Outils Numériques | articles: 10 | livres: 0 | total: 10
+Bureautique, outils & productivité | productivite | Productivité | articles: 1 | livres: 0 | total: 1
+Bureautique, outils & productivité | automatisation | Automatisation | articles: 1 | livres: 3 | total: 4
+Bureautique, outils & productivité | no-code-et-low-code | No-code & Low-code | articles: 4 | livres: 0 | total: 4
+Bureautique, outils & productivité | notion-et-organisation | Notion & Organisation | articles: 0 | livres: 2 | total: 2
+Bureautique, outils & productivité | microsoft-office | Microsoft Office | articles: 0 | livres: 0 | total: 0
+Bureautique, outils & productivité | google-workspace | Google Workspace | articles: 0 | livres: 0 | total: 0
+Bureautique, outils & productivité | gestion-de-projet | Gestion de projet | articles: 2 | livres: 0 | total: 2
+Bureautique, outils & productivité | collaboration-en-ligne | Collaboration en ligne | articles: 0 | livres: 2 | total: 2
+Bureautique, outils & productivité | veille-technologique | Veille technologique | articles: 2 | livres: 0 | total: 2
+
+# Marketing, business & carrière — articles: 8 | livres: 15 | total: 23
+Marketing, business & carrière | marketing-digital | Marketing Digital | articles: 0 | livres: 0 | total: 0
+Marketing, business & carrière | seo | SEO | articles: 2 | livres: 1 | total: 3
+Marketing, business & carrière | reseaux-sociaux | Réseaux Sociaux | articles: 1 | livres: 0 | total: 1
+Marketing, business & carrière | e-commerce | E-commerce | articles: 0 | livres: 4 | total: 4
+Marketing, business & carrière | creation-de-contenu | Création de contenu | articles: 0 | livres: 1 | total: 1
+Marketing, business & carrière | entrepreneuriat | Entrepreneuriat | articles: 3 | livres: 5 | total: 8
+Marketing, business & carrière | startups | Startups | articles: 0 | livres: 1 | total: 1
+Marketing, business & carrière | finance-personnelle | Finance personnelle | articles: 0 | livres: 1 | total: 1
+Marketing, business & carrière | freelance | Freelance | articles: 0 | livres: 0 | total: 0
+Marketing, business & carrière | carriere-numerique | Carrière numérique | articles: 2 | livres: 1 | total: 3
+Marketing, business & carrière | leadership | Leadership | articles: 0 | livres: 1 | total: 1
+
+# Culture numérique & éducation — articles: 11 | livres: 21 | total: 32
+Culture numérique & éducation | culture-numerique | Culture Numérique | articles: 7 | livres: 1 | total: 8
+Culture numérique & éducation | education-numerique | Éducation numérique | articles: 1 | livres: 6 | total: 7
+Culture numérique & éducation | methodes-dapprentissage | Méthodes d'apprentissage | articles: 0 | livres: 0 | total: 0
+Culture numérique & éducation | litteratie-numerique | Littératie numérique | articles: 2 | livres: 0 | total: 2
+Culture numérique & éducation | recherche-documentaire | Recherche documentaire | articles: 0 | livres: 0 | total: 0
+Culture numérique & éducation | medias-et-information | Médias & Information | articles: 1 | livres: 8 | total: 9
+Culture numérique & éducation | langues | Langues | articles: 0 | livres: 0 | total: 0
+Culture numérique & éducation | communication | Communication | articles: 0 | livres: 3 | total: 3
+Culture numérique & éducation | ecriture-et-redaction | Écriture & Rédaction | articles: 0 | livres: 1 | total: 1
+Culture numérique & éducation | documentation-technique | Documentation technique | articles: 0 | livres: 2 | total: 2
+
+# Sciences, société & savoirs — articles: 5 | livres: 92 | total: 97
+Sciences, société & savoirs | mathematiques | Mathématiques | articles: 1 | livres: 0 | total: 1
+Sciences, société & savoirs | physique | Physique | articles: 1 | livres: 17 | total: 18
+Sciences, société & savoirs | sciences | Sciences | articles: 0 | livres: 17 | total: 17
+Sciences, société & savoirs | histoire | Histoire | articles: 0 | livres: 57 | total: 57
+Sciences, société & savoirs | geographie | Géographie | articles: 0 | livres: 0 | total: 0
+Sciences, société & savoirs | philosophie | Philosophie | articles: 0 | livres: 0 | total: 0
+Sciences, société & savoirs | psychologie | Psychologie | articles: 1 | livres: 0 | total: 1
+Sciences, société & savoirs | sante-et-bien-etre | Santé & Bien-être | articles: 2 | livres: 0 | total: 2
+Sciences, société & savoirs | environnement | Environnement | articles: 0 | livres: 0 | total: 0
+Sciences, société & savoirs | droit-numerique | Droit numérique | articles: 0 | livres: 1 | total: 1
+
+# Bibliothèque & formats — articles: 17 | livres: 197 | total: 214
+Bibliothèque & formats | livres-numeriques | Livres numériques | articles: 0 | livres: 177 | total: 177
+Bibliothèque & formats | guides-pratiques | Guides pratiques | articles: 6 | livres: 11 | total: 17
+Bibliothèque & formats | tutoriels | Tutoriels | articles: 10 | livres: 0 | total: 10
+Bibliothèque & formats | livres-blancs | Livres blancs | articles: 0 | livres: 1 | total: 1
+Bibliothèque & formats | ressources-gratuites | Ressources gratuites | articles: 1 | livres: 3 | total: 4
+Bibliothèque & formats | domaine-public | Domaine public | articles: 0 | livres: 1 | total: 1
+Bibliothèque & formats | creative-commons | Creative Commons | articles: 0 | livres: 1 | total: 1
+Bibliothèque & formats | documentation-officielle | Documentation officielle | articles: 0 | livres: 3 | total: 3

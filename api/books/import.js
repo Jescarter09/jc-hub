@@ -2,7 +2,14 @@ import { FieldValue, getAdminDb } from '../_lib/firebaseAdmin.js';
 import { readJsonBody, sendJson } from '../_lib/http.js';
 import { checkRateLimit } from '../_lib/rateLimit.js';
 import { uploadRemoteResourceToCloudinary } from '../_lib/cloudinaryUpload.js';
-import { BOOKS_COLLECTION, canRedistributeBook, sanitizeBookText, toStableBookId } from '../_lib/books.js';
+import {
+  BOOKS_COLLECTION,
+  getBookAccessDecision,
+  sanitizeBookText,
+  toBookCatalogPayload,
+  toStableBookId,
+  withBookRouting
+} from '../_lib/books.js';
 
 function getHeader(req, name) {
   const direct = req.headers?.[name.toLowerCase()];
@@ -46,6 +53,22 @@ function isTrustedGutendexDownload(remoteFileUrl) {
   }
 }
 
+async function saveCatalogOnlyBook(book) {
+  const docId = toStableBookId(book);
+  const now = FieldValue.serverTimestamp();
+  const payload = toBookCatalogPayload(book, { now });
+
+  await getAdminDb().collection(BOOKS_COLLECTION).doc(docId).set(payload, { merge: true });
+
+  return {
+    id: docId,
+    ...payload,
+    catalogedAt: Date.now(),
+    updatedAt: Date.now(),
+    lastSeenAt: Date.now()
+  };
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return sendJson(res, 405, { success: false, code: 'books-import/method-not-allowed' });
@@ -85,12 +108,46 @@ export default async function handler(req, res) {
   }
 
   const book = body?.book || body;
-  if (!canRedistributeBook(book)) {
-    return sendJson(res, 403, {
-      success: false,
-      code: 'books-import/not-redistributable',
-      message: 'Ce livre ne peut pas etre re heberge automatiquement. Utilise un lien externe.'
-    });
+  const source = sanitizeBookText(book?.source, 80).toLowerCase();
+  const decision = getBookAccessDecision(book);
+  const reviewApproved = body?.reviewApproved === true || book?.reviewApproved === true;
+
+  if (!decision.canRedistribute) {
+    try {
+      const catalogedBook = await saveCatalogOnlyBook(book);
+      return sendJson(res, 200, {
+        success: true,
+        mode: 'external-only',
+        message: 'Livre catalogue sans re hebergement. Redirection vers la source officielle uniquement.',
+        book: catalogedBook
+      });
+    } catch (error) {
+      console.error('books-import/catalog-external-failed', error);
+      return sendJson(res, 502, {
+        success: false,
+        code: 'books-import/catalog-failed',
+        message: "Impossible d'enregistrer les metadonnees de ce livre pour le moment."
+      });
+    }
+  }
+
+  if (source !== 'gutendex' && !reviewApproved) {
+    try {
+      const catalogedBook = await saveCatalogOnlyBook(book);
+      return sendJson(res, 202, {
+        success: true,
+        mode: 'review-required',
+        message: 'Metadonnees enregistrees. Validation manuelle requise avant Cloudinary.',
+        book: catalogedBook
+      });
+    } catch (error) {
+      console.error('books-import/catalog-review-failed', error);
+      return sendJson(res, 502, {
+        success: false,
+        code: 'books-import/catalog-failed',
+        message: "Impossible d'enregistrer les metadonnees de ce livre pour le moment."
+      });
+    }
   }
 
   const remoteFileUrl = sanitizeBookText(book?.downloadUrl || book?.pdfUrl, 800);
@@ -102,22 +159,11 @@ export default async function handler(req, res) {
     });
   }
 
-  const source = sanitizeBookText(book?.source, 80).toLowerCase();
-  const reviewApproved = body?.reviewApproved === true || book?.reviewApproved === true;
-
   if (source === 'gutendex' && !isTrustedGutendexDownload(remoteFileUrl)) {
     return sendJson(res, 403, {
       success: false,
       code: 'books-import/untrusted-gutendex-url',
       message: 'Le fichier Gutendex doit provenir de Gutenberg ou de son CDN officiel.'
-    });
-  }
-
-  if (source !== 'gutendex' && !reviewApproved) {
-    return sendJson(res, 409, {
-      success: false,
-      code: 'books-import/manual-review-required',
-      message: 'Cette source demande une validation manuelle avant re hebergement.'
     });
   }
 
@@ -133,7 +179,7 @@ export default async function handler(req, res) {
     });
 
     let hostedThumbnail = sanitizeBookText(book?.thumbnail, 800);
-    if (hostedThumbnail && /^https?:\/\//i.test(hostedThumbnail) && book?.source === 'gutendex') {
+    if (hostedThumbnail && /^https?:\/\//i.test(hostedThumbnail) && source === 'gutendex') {
       try {
         const uploadedCover = await uploadRemoteResourceToCloudinary(hostedThumbnail, {
           resourceType: 'image',
@@ -147,6 +193,7 @@ export default async function handler(req, res) {
     }
 
     const now = FieldValue.serverTimestamp();
+    const routedBook = withBookRouting(book);
     const payload = {
       title: sanitizeBookText(book?.title, 220),
       author: sanitizeBookText(book?.author, 220),
@@ -155,16 +202,30 @@ export default async function handler(req, res) {
       source: sanitizeBookText(book?.source, 80),
       sourceId: sanitizeBookText(book?.sourceId || book?.id, 160),
       sourceLabel: sanitizeBookText(book?.sourceLabel, 80),
+      category: routedBook.category,
+      categorySlug: routedBook.categorySlug,
+      slug: routedBook.slug,
+      detailPath: routedBook.detailPath,
+      sourceType: 'public_domain',
       isHosted: true,
+      fileUrl: uploadedFile.secure_url,
       pdfUrl: uploadedFile.secure_url,
+      readerUrl: uploadedFile.secure_url,
       downloadUrl: remoteFileUrl,
       externalLink: sanitizeBookText(book?.externalLink, 800),
+      previewLink: sanitizeBookText(book?.previewLink || book?.externalLink, 800),
       license: sanitizeBookText(book?.license || 'public-domain', 120),
       canRedistribute: true,
+      canReadOnline: true,
+      canDownload: true,
       publicDomain: book?.publicDomain === true,
       preferredFormat: sanitizeBookText(book?.preferredFormat || uploadedFile.format || 'raw', 40),
+      accessAction: 'download',
+      accessReason: decision.reason,
+      readerType: 'integrated',
       cloudinaryPublicId: uploadedFile.public_id,
       cloudinaryResourceType: uploadedFile.resource_type,
+      createdAt: now,
       importedAt: now,
       updatedAt: now
     };

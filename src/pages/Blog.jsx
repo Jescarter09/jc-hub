@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { blogPosts } from '../data/blogPosts';
+import { CONTENT_CATEGORIES } from '../data/categoriesCatalog';
 import { useNewsletterForm } from '../hooks/useNewsletterForm';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { subscribeBlogMetricsMap } from '../services/blogInteractionsService';
@@ -8,6 +9,18 @@ import blogHeaderImage from '../assets/blog.webp';
 import '../styles/Blog.css';
 
 const AUTHOR_AVATAR = '/carter.webp';
+
+const TOPIC_FILTERS = [
+  { key: 'all', label: 'Tous', category: 'Tous' },
+  { key: 'tech', label: 'Technologies', term: 'technologie' },
+  { key: 'dev', label: 'Développement Web', category: 'Tutoriels' },
+  { key: 'security', label: 'Cybersécurité', category: 'Securite' },
+  { key: 'ai', label: 'IA', term: 'ia' },
+  { key: 'design', label: 'Design & UX', term: 'design' },
+  { key: 'marketing', label: 'Marketing', term: 'marketing' }
+];
+
+const DEFAULT_KEYWORDS = ['IA', 'Web', 'Sécurité', 'Python', 'JavaScript', 'SEO', 'UX', 'DevOps', 'Cloud', 'Données'];
 
 const normalizeSearchText = (value) =>
   String(value || '')
@@ -20,33 +33,45 @@ const normalizeSearchText = (value) =>
     .trim();
 
 const formatViews = (views) => {
-  if (views >= 1000) {
-    return `${(views / 1000).toFixed(1)}K`;
+  const safeViews = Math.max(0, Number(views) || 0);
+  if (safeViews >= 1000) {
+    return `${(safeViews / 1000).toFixed(1)}K`;
   }
-  return `${views}`;
-};
-
-const formatDurationFromSeconds = (seconds) => {
-  const safeSeconds = Math.max(0, Math.floor(Number(seconds) || 0));
-  const minutes = Math.floor(safeSeconds / 60);
-  const remainingSeconds = safeSeconds % 60;
-  return `${minutes}m ${remainingSeconds.toString().padStart(2, '0')}s`;
+  return `${safeViews}`;
 };
 
 const getCategoryLabel = (category) => {
   const normalized = normalizeSearchText(category);
   const labels = {
     tous: 'Tous',
-    tutoriels: 'Tutoriels',
-    securite: 'Sécurité',
-    actualites: 'Actualités',
-    outils: 'Outils',
+    tutoriels: 'Développement Web',
+    securite: 'Cybersécurité',
+    actualites: 'Culture Numérique',
+    outils: 'Technologies',
     windows: 'Windows',
-    technologie: 'Numérique'
+    technologie: 'Technologies'
   };
 
   return labels[normalized] || category;
 };
+
+const getAuthorName = (author) => {
+  const name = String(author || '').trim();
+  if (!name) return 'JC Hub';
+  if (/^[a-z0-9_-]{18,}$/i.test(name)) return 'JC Hub';
+  return name;
+};
+
+const getBlogSearchText = (blog) =>
+  normalizeSearchText(
+    [
+      blog.title,
+      blog.excerpt,
+      blog.author,
+      blog.category,
+      ...(Array.isArray(blog.tags) ? blog.tags : [])
+    ].join(' ')
+  );
 
 const scrollToArticles = () => {
   if (typeof window === 'undefined') return;
@@ -70,21 +95,6 @@ export default function Blog() {
   const [shouldFocusSearch, setShouldFocusSearch] = useState(Boolean(location.state?.focusSearch));
   const newsletter = useNewsletterForm({ source: 'blog-sidebar' });
   const articleSlugs = useMemo(() => blogPosts.map((post) => post.slug).filter(Boolean), []);
-  const tagChips = useMemo(() => {
-    const counts = blogPosts.reduce((acc, blog) => {
-      for (const rawTag of Array.isArray(blog.tags) ? blog.tags : []) {
-        const tag = String(rawTag || '').trim();
-        if (!tag) continue;
-        acc.set(tag, (acc.get(tag) || 0) + 1);
-      }
-      return acc;
-    }, new Map());
-
-    return [...counts.entries()]
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'fr'))
-      .slice(0, 10)
-      .map(([tag]) => tag);
-  }, []);
 
   useEffect(() => {
     if (location.state?.focusSearch) {
@@ -154,20 +164,27 @@ export default function Blog() {
   }, [categories, searchParams, setSearchParams]);
 
   const handleCategorySelect = (category) => {
+    const nextCategory = category || 'Tous';
+    setSelectedCategory(nextCategory);
+    setSearchTerm('');
     setSearchParams((current) => {
       const nextParams = new URLSearchParams(current);
-      if (category === 'Tous') {
+      if (nextCategory === 'Tous') {
         nextParams.delete('category');
       } else {
-        nextParams.set('category', category);
+        nextParams.set('category', nextCategory);
       }
       return nextParams;
     }, { replace: true });
   };
 
-  const applyQuickPath = ({ category = 'Tous', term = '' }) => {
-    handleCategorySelect(category);
-    setSearchTerm(term);
+  const handleTopicSelect = (filter) => {
+    if (filter.category) {
+      handleCategorySelect(filter.category);
+    } else {
+      handleCategorySelect('Tous');
+      setSearchTerm(filter.term || '');
+    }
     scrollToArticles();
   };
 
@@ -175,18 +192,7 @@ export default function Blog() {
     const normalizedSearch = normalizeSearchText(searchTerm);
     return blogPosts.filter((blog) => {
       const matchesCategory = selectedCategory === 'Tous' || blog.category === selectedCategory;
-      const title = normalizeSearchText(blog.title);
-      const excerpt = normalizeSearchText(blog.excerpt);
-      const author = normalizeSearchText(blog.author);
-      const category = normalizeSearchText(blog.category);
-      const tags = blog.tags.map((tag) => normalizeSearchText(tag));
-      const matchesSearch =
-        normalizedSearch.length === 0 ||
-        title.includes(normalizedSearch) ||
-        excerpt.includes(normalizedSearch) ||
-        author.includes(normalizedSearch) ||
-        category.includes(normalizedSearch) ||
-        tags.some((tag) => tag.includes(normalizedSearch));
+      const matchesSearch = normalizedSearch.length === 0 || getBlogSearchText(blog).includes(normalizedSearch);
       return matchesCategory && matchesSearch;
     });
   }, [searchTerm, selectedCategory]);
@@ -200,20 +206,12 @@ export default function Blog() {
     return baselineViews;
   };
 
-  const resolveReadingSeconds = (article) => {
+  const resolveReadingMinutes = (article) => {
     const metric = metricsBySlug[article.slug];
     if (metric && Number.isFinite(metric.avgReadSeconds) && metric.avgReadSeconds > 0) {
-      return metric.avgReadSeconds;
+      return Math.max(1, Math.round(metric.avgReadSeconds / 60));
     }
-    return Math.max(0, Math.round((Number(article.readMinutes) || 0) * 60));
-  };
-
-  const resolveReadingLabel = (article) => {
-    const metric = metricsBySlug[article.slug];
-    if (metric && Number.isFinite(metric.avgReadSeconds) && metric.avgReadSeconds > 0) {
-      return formatDurationFromSeconds(metric.avgReadSeconds);
-    }
-    return `${article.readMinutes} min`;
+    return Math.max(1, Math.round(Number(article.readMinutes) || 1));
   };
 
   const sortedBlogs = useMemo(() => {
@@ -222,21 +220,18 @@ export default function Blog() {
       return clone.sort((a, b) => resolveViews(b) - resolveViews(a));
     }
     if (sortBy === 'reading') {
-      return clone.sort((a, b) => resolveReadingSeconds(a) - resolveReadingSeconds(b));
+      return clone.sort((a, b) => resolveReadingMinutes(a) - resolveReadingMinutes(b));
     }
     return clone.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
   }, [filteredBlogs, metricsBySlug, sortBy]);
 
-  const featuredArticle = sortedBlogs[0] || null;
-  const listArticles = sortedBlogs.slice(1);
-
-  const pageSize = 4;
-  const totalPages = Math.max(1, Math.ceil(listArticles.length / pageSize));
+  const pageSize = 6;
+  const totalPages = Math.max(1, Math.ceil(sortedBlogs.length / pageSize));
   const currentPage = Math.min(page, totalPages);
   const pageStart = (currentPage - 1) * pageSize;
-  const paginatedArticles = listArticles.slice(pageStart, pageStart + pageSize);
-  const rangeStart = listArticles.length === 0 ? 0 : pageStart + 1;
-  const rangeEnd = listArticles.length === 0 ? 0 : pageStart + paginatedArticles.length;
+  const paginatedArticles = sortedBlogs.slice(pageStart, pageStart + pageSize);
+  const rangeStart = sortedBlogs.length === 0 ? 0 : pageStart + 1;
+  const rangeEnd = sortedBlogs.length === 0 ? 0 : pageStart + paginatedArticles.length;
 
   const pageNumbers = useMemo(() => {
     const numbers = [];
@@ -254,6 +249,38 @@ export default function Blog() {
     return [...new Set(numbers)];
   }, [currentPage, totalPages]);
 
+  const popularArticles = useMemo(
+    () => [...blogPosts].sort((a, b) => resolveViews(b) - resolveViews(a)).slice(0, 5),
+    [metricsBySlug]
+  );
+
+  const tagChips = useMemo(() => {
+    const dataTags = blogPosts.flatMap((blog) => (Array.isArray(blog.tags) ? blog.tags : []));
+    return [...new Set([...DEFAULT_KEYWORDS, ...dataTags].map((tag) => String(tag).trim()).filter(Boolean))].slice(0, 12);
+  }, []);
+
+  const sidebarCategories = useMemo(
+    () =>
+      categories
+        .filter((category) => category !== 'Tous')
+        .slice(0, 7)
+        .map((category) => ({
+          category,
+          label: getCategoryLabel(category),
+          count: categoryCounts[category] || 0
+        })),
+    [categories, categoryCounts]
+  );
+
+  const activeTopicKey = useMemo(() => {
+    const normalizedTerm = normalizeSearchText(searchTerm);
+    const match = TOPIC_FILTERS.find((filter) => {
+      if (filter.category) return selectedCategory === filter.category && normalizedTerm.length === 0;
+      return selectedCategory === 'Tous' && normalizedTerm === normalizeSearchText(filter.term);
+    });
+    return match?.key || '';
+  }, [searchTerm, selectedCategory]);
+
   const newsletterFeedbackClassName =
     newsletter.feedback.kind === 'error'
       ? 'blog-soft-newsletter-feedback blog-soft-newsletter-feedback-error'
@@ -261,125 +288,103 @@ export default function Blog() {
         ? 'blog-soft-newsletter-feedback blog-soft-newsletter-feedback-info'
         : 'blog-soft-newsletter-feedback blog-soft-newsletter-feedback-success';
 
-  const tutorielCategory = categories.find((category) => normalizeSearchText(category).includes('tutoriel')) || 'Tous';
-  const securityCategory = categories.find((category) => normalizeSearchText(category).includes('securite')) || 'Tous';
-  const projectCategory = categories.find((category) => normalizeSearchText(category).includes('outil')) || tutorielCategory;
+  const heroArticle = sortedBlogs[0] || blogPosts[0] || null;
   const hasActiveFilters = selectedCategory !== 'Tous' || searchTerm.trim().length > 0;
 
+  const resetFilters = () => {
+    handleCategorySelect('Tous');
+    setSearchTerm('');
+  };
+
+  const applyKeyword = (keyword) => {
+    handleCategorySelect('Tous');
+    setSearchTerm(keyword);
+    scrollToArticles();
+  };
+
   usePageSeo({
-    title: 'Articles et guides pratiques',
+    title: 'Blog',
     description:
-      'Explore les articles JC Hub: guides simples, tutoriels, sécurité, ordinateur, bureautique et projets numériques pour progresser sans jargon.',
-    image: featuredArticle?.image || blogHeaderImage,
+      'Articles, conseils et ressources JC Hub pour comprendre et maîtriser le monde numérique.',
+    image: heroArticle?.image || blogHeaderImage,
     path: '/blog'
   });
 
   return (
     <div className="blog-soft">
-      <section className="blog-soft-section blog-soft-hero">
-        <div className="blog-soft-hero-grid">
-          <div className="blog-soft-hero-copy">
-            <p className="blog-soft-kicker">Bibliothèque JC Hub</p>
-            <h1>
-              Trouver le bon article, <span>sans perdre du temps.</span>
-            </h1>
-            <p className="blog-soft-hero-text">
-              Une page blog plus calme et plus claire: recherche visible, catégories simples,
-              articles mieux hiérarchisés et parcours de lecture pour apprendre progressivement.
-            </p>
+      <section className="blog-soft-section blog-soft-hero" aria-labelledby="blog-title">
+        <div className="blog-soft-hero-copy">
+          <h1 id="blog-title">Blog</h1>
+          <p>
+            Des articles, des conseils et des ressources pour comprendre et maîtriser le monde numérique.
+          </p>
 
-            <div className="blog-soft-hero-actions">
-              <button type="button" className="blog-soft-button blog-soft-button-primary" onClick={scrollToArticles}>
-                Voir les articles
-              </button>
-              <button
-                type="button"
-                className="blog-soft-button blog-soft-button-secondary"
-                onClick={() => {
-                  document.getElementById('blog-soft-parcours')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }}
-              >
-                Explorer par besoin
-              </button>
-            </div>
+          <div className="blog-soft-hero-stats" aria-label="Statistiques du blog JC Hub">
+            <span>
+              <i className="far fa-file-lines"></i>
+              <strong>{blogPosts.length}+</strong>
+              <small>Articles publiés</small>
+            </span>
+            <span>
+              <i className="fas fa-border-all"></i>
+              <strong>{CONTENT_CATEGORIES.length}+</strong>
+              <small>Catégories</small>
+            </span>
+            <span>
+              <i className="far fa-clock"></i>
+              <strong>Mises à jour</strong>
+              <small>Chaque semaine</small>
+            </span>
           </div>
-
-          <article className="blog-soft-hero-card">
-            <img
-              src={featuredArticle?.image || blogHeaderImage}
-              alt={featuredArticle?.title || 'Illustration JC Hub'}
-              fetchPriority="high"
-              decoding="async"
-              onError={(event) => {
-                event.currentTarget.src = '/jchub_monogram.png';
-              }}
-            />
-            <div className="blog-soft-hero-card-content">
-              <p className="blog-soft-kicker">Article de la semaine</p>
-              <h2>{featuredArticle?.title || 'Les meilleurs articles JC Hub'}</h2>
-              <p>{featuredArticle?.excerpt || 'Une sélection douce pour commencer la lecture au bon endroit.'}</p>
-            </div>
-          </article>
         </div>
 
-        <div className="blog-soft-search-panel" id="categories">
-          <div className="blog-soft-search-row">
-            <label className="blog-soft-search-box">
-              <i className="fas fa-search" aria-hidden="true"></i>
-              <input
-                ref={searchInputRef}
-                type="search"
-                placeholder="Rechercher: ordinateur, Excel, Internet, sécurité..."
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-              />
-              {searchTerm.trim().length > 0 && (
-                <button type="button" onClick={() => setSearchTerm('')} aria-label="Effacer la recherche">
-                  <i className="fas fa-xmark"></i>
-                </button>
-              )}
-            </label>
+        <div className="blog-soft-hero-visual">
+          <img
+            src={blogHeaderImage}
+            alt="JC Hub - illustration de la page blog"
+            fetchPriority="high"
+            decoding="async"
+            onError={(event) => {
+              event.currentTarget.src = '/jchub_monogram.png';
+            }}
+          />
+          <span className="blog-soft-floating-icon blog-soft-floating-icon-chat">
+            <i className="fas fa-comment-dots"></i>
+          </span>
+          <span className="blog-soft-floating-icon blog-soft-floating-icon-code">
+            <i className="fas fa-code"></i>
+          </span>
+        </div>
+      </section>
+
+      <section className="blog-soft-section blog-soft-main-layout">
+        <main className="blog-soft-content">
+          <div className="blog-soft-toolbar" id="blog-soft-articles">
+            <div>
+              <h2>Tous les articles</h2>
+              <div className="blog-soft-topic-filters" aria-label="Filtres rapides du blog">
+                {TOPIC_FILTERS.map((filter) => (
+                  <button
+                    key={filter.key}
+                    type="button"
+                    className={`blog-soft-topic ${activeTopicKey === filter.key ? 'blog-soft-topic-active' : ''}`}
+                    onClick={() => handleTopicSelect(filter)}
+                  >
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <label className="blog-soft-sort-pill">
-              <span>Tri</span>
+              <span>Trier par</span>
               <select value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
                 <option value="recent">Plus récents</option>
                 <option value="popular">Plus populaires</option>
                 <option value="reading">Lecture rapide</option>
               </select>
+              <i className="fas fa-chevron-down"></i>
             </label>
-          </div>
-
-          <div className="blog-soft-chips" aria-label="Catégories">
-            {categories.map((category) => {
-              const active = selectedCategory === category;
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  onClick={() => handleCategorySelect(category)}
-                  className={`blog-soft-chip ${active ? 'blog-soft-chip-active' : ''}`}
-                >
-                  {getCategoryLabel(category)}
-                  <span>{categoryCounts[category]}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="blog-soft-section blog-soft-main-layout">
-        <div className="blog-soft-content">
-          <div className="blog-soft-section-head">
-            <div>
-              <p className="blog-soft-kicker">Articles récents</p>
-              <h2 id="blog-soft-articles">La sélection du moment.</h2>
-            </div>
-            <p>
-              {filteredBlogs.length} article{filteredBlogs.length > 1 ? 's' : ''} trouvé
-              {filteredBlogs.length > 1 ? 's' : ''}, dans une grille plus respirante.
-            </p>
           </div>
 
           {hasActiveFilters && (
@@ -397,226 +402,202 @@ export default function Blog() {
                   <i className="fas fa-xmark"></i>
                 </button>
               )}
-              <button
-                type="button"
-                className="blog-soft-reset-filter"
-                onClick={() => {
-                  handleCategorySelect('Tous');
-                  setSearchTerm('');
-                }}
-              >
+              <button type="button" className="blog-soft-reset-filter" onClick={resetFilters}>
                 Réinitialiser
               </button>
             </div>
           )}
 
-          {!featuredArticle ? (
-            <div className="blog-soft-empty">
-              <h3>Aucun article trouvé.</h3>
-              <p>Essaie une autre recherche ou retire certains filtres.</p>
-              <button
-                type="button"
-                onClick={() => {
-                  handleCategorySelect('Tous');
-                  setSearchTerm('');
-                }}
-              >
-                Revenir à tous les articles
-              </button>
-            </div>
-          ) : (
-            <>
-              <article className="blog-soft-featured">
-                <Link to={`/blog/${featuredArticle.slug}`} className="blog-soft-featured-image">
-                  <img
-                    src={featuredArticle.image}
-                    alt={featuredArticle.title}
-                    loading="lazy"
-                    decoding="async"
-                    onError={(event) => {
-                      event.currentTarget.src = '/jchub_monogram.png';
-                    }}
-                  />
-                </Link>
-                <div className="blog-soft-featured-body">
-                  <div className="blog-soft-meta">
-                    <span className="blog-soft-badge">À la une</span>
-                    <span>{getCategoryLabel(featuredArticle.category)} · {featuredArticle.dateLabel}</span>
-                  </div>
-                  <Link to={`/blog/${featuredArticle.slug}`}>
-                    <h3>{featuredArticle.title}</h3>
+          {paginatedArticles.length > 0 ? (
+            <div className="blog-soft-article-list">
+              {paginatedArticles.map((article) => (
+                <article key={article.slug} className="blog-soft-article-row">
+                  <Link to={`/blog/${article.slug}`} className="blog-soft-article-image">
+                    <img
+                      src={article.image}
+                      alt={`JC Hub - ${article.title}`}
+                      loading="lazy"
+                      decoding="async"
+                      onError={(event) => {
+                        event.currentTarget.src = '/jchub_monogram.png';
+                      }}
+                    />
                   </Link>
-                  <p>{featuredArticle.excerpt}</p>
 
-                  <div className="blog-soft-featured-footer">
-                    <div className="blog-soft-author">
-                      <img
-                        src={AUTHOR_AVATAR}
-                        alt={featuredArticle.author}
-                        loading="lazy"
-                        decoding="async"
-                        onError={(event) => {
-                          event.currentTarget.src = '/jchub_monogram.png';
-                        }}
-                      />
-                      <span>{featuredArticle.author}</span>
-                    </div>
-                    <div>
-                      <span>{resolveReadingLabel(featuredArticle)}</span>
-                      <span>{formatViews(resolveViews(featuredArticle))} vues</span>
-                    </div>
-                  </div>
+                  <div className="blog-soft-article-body">
+                    <span className="blog-soft-badge">{getCategoryLabel(article.category)}</span>
+                    <Link to={`/blog/${article.slug}`}>
+                      <h3>{article.title}</h3>
+                    </Link>
+                    <p>{article.excerpt}</p>
 
-                  <Link to={`/blog/${featuredArticle.slug}`} className="blog-soft-read-link">
-                    Lire l'article
-                  </Link>
-                </div>
-              </article>
-
-              {paginatedArticles.length > 0 ? (
-                <div className="blog-soft-articles-grid">
-                  {paginatedArticles.map((article) => (
-                    <article key={article.slug} className="blog-soft-article-card">
-                      <Link to={`/blog/${article.slug}`} className="blog-soft-article-image">
+                    <div className="blog-soft-article-meta">
+                      <span className="blog-soft-author">
                         <img
-                          src={article.image}
-                          alt={article.title}
+                          src={AUTHOR_AVATAR}
+                          alt={`JC Hub - avatar de ${getAuthorName(article.author)}`}
                           loading="lazy"
                           decoding="async"
                           onError={(event) => {
                             event.currentTarget.src = '/jchub_monogram.png';
                           }}
                         />
-                      </Link>
-
-                      <div className="blog-soft-article-body">
-                        <div className="blog-soft-meta">
-                          <span className="blog-soft-badge">{getCategoryLabel(article.category)}</span>
-                          <span>{resolveReadingLabel(article)}</span>
-                        </div>
-
-                        <Link to={`/blog/${article.slug}`}>
-                          <h3>{article.title}</h3>
-                        </Link>
-                        <p>{article.excerpt}</p>
-
-                        <div className="blog-soft-article-footer">
-                          <span>{article.dateLabel}</span>
-                          <span>
-                            <i className="far fa-eye"></i> {formatViews(resolveViews(article))}
-                          </span>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              ) : (
-                <div className="blog-soft-empty blog-soft-empty-small">
-                  <h3>Un seul article dans cette sélection.</h3>
-                  <p>Change de catégorie ou enlève la recherche pour voir plus de cartes.</p>
-                </div>
-              )}
-
-              {listArticles.length > 0 && (
-                <div className="blog-soft-pagination" aria-label="Pagination blog">
-                  <p>
-                    Affichage de {rangeStart}-{rangeEnd} sur {listArticles.length} article
-                    {listArticles.length > 1 ? 's' : ''}
-                  </p>
-
-                  <div className="blog-soft-page-controls">
-                    <button
-                      type="button"
-                      disabled={currentPage === 1}
-                      onClick={() => setPage((prev) => Math.max(1, prev - 1))}
-                    >
-                      <i className="fas fa-arrow-left"></i>
-                      <span>Précédent</span>
-                    </button>
-
-                    <div className="blog-soft-page-buttons">
-                      {pageNumbers.map((pageNumber, index) => {
-                        const showEllipsis = index > 0 && pageNumber - pageNumbers[index - 1] > 1;
-                        return (
-                          <span key={pageNumber} className="blog-soft-page-number-wrap">
-                            {showEllipsis && <span className="blog-soft-page-ellipsis">...</span>}
-                            <button
-                              type="button"
-                              onClick={() => setPage(pageNumber)}
-                              className={currentPage === pageNumber ? 'blog-soft-page-active' : ''}
-                            >
-                              {pageNumber}
-                            </button>
-                          </span>
-                        );
-                      })}
+                        {getAuthorName(article.author)}
+                      </span>
+                      <span>{article.dateLabel}</span>
+                      <span>{resolveReadingMinutes(article)} min de lecture</span>
                     </div>
-
-                    <button
-                      type="button"
-                      disabled={currentPage === totalPages}
-                      onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
-                    >
-                      <span>Suivant</span>
-                      <i className="fas fa-arrow-right"></i>
-                    </button>
                   </div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
 
-        <aside className="blog-soft-sidebar">
-          <div className="blog-soft-side-card" id="blog-soft-parcours">
-            <p className="blog-soft-kicker">Parcours</p>
-            <h3>Commencer par quoi ?</h3>
-            <p>Des chemins de lecture pour ne pas se sentir perdu dans la liste d'articles.</p>
-
-            <div className="blog-soft-path-list">
-              <button type="button" onClick={() => applyQuickPath({ category: 'Tous', term: 'debutant' })}>
-                <strong>Je débute</strong>
-                <span>Internet, vocabulaire simple, premiers repères.</span>
-              </button>
-              <button type="button" onClick={() => applyQuickPath({ category: securityCategory, term: '' })}>
-                <strong>Je sécurise mon PC</strong>
-                <span>Sécurité, nettoyage, lenteurs et sauvegardes.</span>
-              </button>
-              <button type="button" onClick={() => applyQuickPath({ category: projectCategory, term: 'projet' })}>
-                <strong>Je veux publier</strong>
-                <span>Créer une page, organiser un projet, le mettre en ligne.</span>
+                  <Link to={`/blog/${article.slug}`} className="blog-soft-bookmark" aria-label={`Lire ${article.title}`}>
+                    <i className="far fa-bookmark"></i>
+                  </Link>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="blog-soft-empty">
+              <h3>Aucun article trouvé.</h3>
+              <p>Essaie une autre recherche ou retire certains filtres.</p>
+              <button type="button" onClick={resetFilters}>
+                Revenir à tous les articles
               </button>
             </div>
-          </div>
+          )}
 
-          <div className="blog-soft-side-card">
-            <p className="blog-soft-kicker">Tags utiles</p>
-            <h3>Recherches rapides</h3>
-            <div className="blog-soft-chips blog-soft-tag-chips">
-              {tagChips.map((tag) => (
+          {sortedBlogs.length > pageSize && (
+            <div className="blog-soft-pagination" aria-label="Pagination blog">
+              <button
+                type="button"
+                disabled={currentPage === 1}
+                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+              >
+                <i className="fas fa-chevron-left"></i>
+                <span>Précédent</span>
+              </button>
+
+              <div className="blog-soft-page-buttons">
+                {pageNumbers.map((pageNumber, index) => {
+                  const showEllipsis = index > 0 && pageNumber - pageNumbers[index - 1] > 1;
+                  return (
+                    <span key={pageNumber} className="blog-soft-page-number-wrap">
+                      {showEllipsis && <span className="blog-soft-page-ellipsis">...</span>}
+                      <button
+                        type="button"
+                        onClick={() => setPage(pageNumber)}
+                        className={currentPage === pageNumber ? 'blog-soft-page-active' : ''}
+                      >
+                        {pageNumber}
+                      </button>
+                    </span>
+                  );
+                })}
+              </div>
+
+              <button
+                type="button"
+                disabled={currentPage === totalPages}
+                onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+              >
+                <span>Suivant</span>
+                <i className="fas fa-chevron-right"></i>
+              </button>
+
+              <p>
+                {rangeStart}-{rangeEnd} / {sortedBlogs.length}
+              </p>
+            </div>
+          )}
+        </main>
+
+        <aside className="blog-soft-sidebar">
+          <section className="blog-soft-side-card">
+            <h3>Rechercher un article</h3>
+            <form
+              className="blog-soft-sidebar-search"
+              onSubmit={(event) => {
+                event.preventDefault();
+                scrollToArticles();
+              }}
+            >
+              <input
+                ref={searchInputRef}
+                type="search"
+                placeholder="Rechercher..."
+                value={searchTerm}
+                onChange={(event) => {
+                  handleCategorySelect('Tous');
+                  setSearchTerm(event.target.value);
+                }}
+              />
+              <button type="submit" aria-label="Rechercher un article">
+                <i className="fas fa-search"></i>
+              </button>
+            </form>
+          </section>
+
+          <section className="blog-soft-side-card">
+            <h3>Catégories</h3>
+            <div className="blog-soft-category-list">
+              {sidebarCategories.map((item) => (
                 <button
-                  key={tag}
+                  key={item.category}
                   type="button"
-                  className="blog-soft-chip"
+                  className={selectedCategory === item.category ? 'blog-soft-category-active' : ''}
                   onClick={() => {
-                    setSearchTerm(tag);
+                    handleCategorySelect(item.category);
                     scrollToArticles();
                   }}
                 >
-                  {tag}
+                  <span>
+                    <i className="far fa-circle-dot"></i>
+                    {item.label}
+                  </span>
+                  <small>{item.count}</small>
                 </button>
               ))}
             </div>
-          </div>
+            <button type="button" className="blog-soft-side-link" onClick={resetFilters}>
+              Voir toutes les catégories <i className="fas fa-arrow-right"></i>
+            </button>
+          </section>
 
-          <div className="blog-soft-side-card blog-soft-newsletter" id="newsletter">
-            <p className="blog-soft-kicker">Newsletter</p>
-            <h3>Recevoir les prochains guides</h3>
-            <p>Un petit rendez-vous pour apprendre sans bruit, avec les meilleurs articles JC Hub.</p>
+          <section className="blog-soft-side-card">
+            <h3>Articles populaires</h3>
+            <div className="blog-soft-popular-list">
+              {popularArticles.map((article) => (
+                <Link key={article.slug} to={`/blog/${article.slug}`} className="blog-soft-popular-item">
+                  <img
+                    src={article.image}
+                    alt={`JC Hub - ${article.title}`}
+                    loading="lazy"
+                    decoding="async"
+                    onError={(event) => {
+                      event.currentTarget.src = '/jchub_monogram.png';
+                    }}
+                  />
+                  <span>
+                    <strong>{article.title}</strong>
+                    <small>{resolveReadingMinutes(article)} min de lecture</small>
+                  </span>
+                </Link>
+              ))}
+            </div>
+            <Link to="/blog" className="blog-soft-side-link">
+              Voir tous les articles populaires <i className="fas fa-arrow-right"></i>
+            </Link>
+          </section>
+
+          <section className="blog-soft-side-card blog-soft-newsletter" id="newsletter">
+            <i className="far fa-envelope"></i>
+            <div>
+              <h3>Restez à jour</h3>
+              <p>Recevez nos derniers articles directement dans votre boîte mail.</p>
+            </div>
             <form onSubmit={newsletter.handleSubmit} className="blog-soft-form">
               <input
                 type="email"
-                placeholder="ton@email.com"
+                placeholder="Votre adresse e-mail"
                 value={newsletter.email}
                 onChange={(event) => {
                   newsletter.setEmail(event.target.value);
@@ -626,13 +607,27 @@ export default function Blog() {
                 required
               />
               <button type="submit" disabled={newsletter.isSubmitting}>
-                {newsletter.isSubmitting ? 'Inscription...' : "Je m'abonne"}
+                {newsletter.isSubmitting ? 'Inscription...' : "S'abonner"}
               </button>
               {newsletter.feedback.text && (
                 <p className={newsletterFeedbackClassName}>{newsletter.feedback.text}</p>
               )}
             </form>
-          </div>
+          </section>
+
+          <section className="blog-soft-side-card">
+            <h3>Mots-clés populaires</h3>
+            <div className="blog-soft-keywords">
+              {tagChips.map((tag) => (
+                <button key={tag} type="button" onClick={() => applyKeyword(tag)}>
+                  {tag}
+                </button>
+              ))}
+            </div>
+            <button type="button" className="blog-soft-side-link" onClick={() => applyKeyword('')}>
+              Voir tous les mots-clés <i className="fas fa-arrow-right"></i>
+            </button>
+          </section>
         </aside>
       </section>
     </div>

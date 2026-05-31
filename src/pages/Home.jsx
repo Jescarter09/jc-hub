@@ -1,321 +1,528 @@
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { blogPosts } from '../data/blogPosts';
+import { CONTENT_CATEGORIES } from '../data/categoriesCatalog';
+import { useNewsletterForm } from '../hooks/useNewsletterForm';
 import { usePageSeo } from '../hooks/usePageSeo';
-import '../styles/Home.css';
+import { subscribeBlogMetricsMap } from '../services/blogInteractionsService';
+import { fetchHostedBooks } from '../services/ebookService';
+import partner2mdLogo from '../assets/partner-2md.jpg';
+import partnerEadLogo from '../assets/partner-ead.png';
+import partnerNjdwebLogo from '../assets/partner-njdweb.png';
+import '../styles/HomeHub.css';
 
-const fallbackImage = '/jchub_monogram.png';
-
-const needCards = [
+const categories = [
   {
-    label: 'Comprendre',
-    title: 'Les bases sans jargon',
-    text: 'Internet, outils, securite et notions simples pour partir du bon pied.'
+    icon: 'fas fa-code',
+    title: 'Technologies',
+    description: 'IA, Dev, Cloud, outils.',
+    color: 'violet',
+    link: '/blog?category=Technologie'
   },
   {
-    label: 'Apprendre',
-    title: 'Des guides pas a pas',
-    text: 'Des formats progressifs pour pratiquer, refaire et avancer a ton rythme.'
+    icon: 'fas fa-lock',
+    title: 'Cybersécurité',
+    description: 'Sécurité, vie privée, protection.',
+    color: 'green',
+    link: '/blog?category=Securite'
   },
   {
-    label: 'Reparer',
-    title: 'Un ordinateur plus propre',
-    text: 'Maintenance, lenteurs, protection et bons reflexes avant de paniquer.'
+    icon: 'fas fa-globe',
+    title: 'Développement Web',
+    description: 'Web, mobile, frameworks.',
+    color: 'blue',
+    link: '/blog?category=Tutoriels'
   },
   {
-    label: 'Gagner du temps',
-    title: 'Bureautique utile',
-    text: 'Word, Excel, PowerPoint et methodes simples pour mieux travailler.'
+    icon: 'fas fa-palette',
+    title: 'Design & UX',
+    description: 'UI/UX, graphisme, expérience.',
+    color: 'pink',
+    link: '/blog?category=Design'
+  },
+  {
+    icon: 'fas fa-bullhorn',
+    title: 'Marketing digital',
+    description: 'SEO, réseaux sociaux, stratégie.',
+    color: 'orange',
+    link: '/blog?category=Outils'
+  },
+  {
+    icon: 'fas fa-chart-simple',
+    title: 'Data & IA',
+    description: 'Données, analyse, intelligence artificielle.',
+    color: 'purple',
+    link: '/blog?category=Technologie'
   }
 ];
 
-const normalizeText = (value) =>
-  String(value || '')
-    .toLowerCase()
+const partners = [
+  {
+    name: '2MD Designer',
+    role: 'Design graphique & identité visuelle',
+    logo: partner2mdLogo,
+    tone: 'purple'
+  },
+  {
+    name: 'NJDWeb',
+    role: 'Développement web & solutions digitales',
+    logo: partnerNjdwebLogo,
+    tone: 'blue'
+  },
+  {
+    name: 'EAD',
+    role: 'École de formation professionnelle',
+    logo: partnerEadLogo,
+    tone: 'green'
+  }
+];
+
+const contentSourcesPreview = [
+  {
+    name: 'Gutendex',
+    label: 'Domaine public',
+    url: 'https://gutendex.com',
+    icon: 'fas fa-book-open'
+  },
+  {
+    name: 'Internet Archive',
+    label: 'Archives éducatives',
+    url: 'https://archive.org',
+    icon: 'fas fa-box-archive'
+  },
+  {
+    name: 'Open Library',
+    label: 'Métadonnées & couvertures',
+    url: 'https://openlibrary.org',
+    icon: 'fas fa-layer-group'
+  },
+  {
+    name: 'Google Books',
+    label: 'Aperçus officiels',
+    url: 'https://books.google.com',
+    icon: 'fas fa-magnifying-glass'
+  }
+];
+
+const formatStatValue = (value) => {
+  if (value === null) return '...';
+  return new Intl.NumberFormat('fr-FR').format(Math.max(0, Number(value) || 0));
+};
+
+const formatViewCount = (value) => `${formatStatValue(value)} vue${Number(value) > 1 ? 's' : ''}`;
+const BOOKS_STATS_REFRESH_MS = 60000;
+
+const toSeoSlug = (value, fallback = 'livre') => {
+  const slug = String(value || '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9\s-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+    .toLowerCase()
+    .replace(/&/g, ' et ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120);
 
-function getUniqueRecentPosts(posts) {
-  const seenTitles = new Set();
+  return slug || fallback;
+};
 
-  return [...posts]
-    .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
-    .filter((post) => {
-      const key = normalizeText(post.title);
-      if (!key || seenTitles.has(key)) return false;
-      seenTitles.add(key);
-      return true;
-    });
-}
+const getBookDetailPath = (book) => {
+  if (book?.detailPath) return book.detailPath;
+  const categorySlug = toSeoSlug(book?.categorySlug || book?.category || 'general', 'general');
+  const slug = toSeoSlug(book?.slug || book?.title || book?.sourceId || book?.id, 'livre');
+  return `/ebooks/${categorySlug}/${slug}`;
+};
 
-function findPost(posts, words, excludedSlugs = new Set()) {
-  return posts.find((post) => {
-    if (excludedSlugs.has(post.slug)) return false;
-    const haystack = normalizeText(`${post.title} ${post.excerpt} ${post.category} ${(post.tags || []).join(' ')}`);
-    return words.some((word) => haystack.includes(normalizeText(word)));
-  });
-}
+const fallbackArticleImage = '/jchub_monogram.png';
 
-function pickArticleSet(posts) {
-  const pickedSlugs = new Set();
-  const picks = [];
-  const criteria = [
-    ['fonctionne internet', 'bases du web', 'url', 'dns'],
-    ['virus', 'securiser', 'ordinateur', 'pc'],
-    ['nettoyer', 'booster', 'windows', 'ordinateur'],
-    ['excel', 'word', 'powerpoint', 'bureautique'],
-    ['apprendre', 'peu de moyens', 'informatique'],
-    ['deployer', 'projet en ligne', 'vercel']
-  ];
-
-  criteria.forEach((words) => {
-    const post = findPost(posts, words, pickedSlugs);
-    if (!post) return;
-    pickedSlugs.add(post.slug);
-    picks.push(post);
-  });
-
-  return [...picks, ...posts.filter((post) => !pickedSlugs.has(post.slug))].slice(0, 6);
-}
-
-function ArticleCard({ article, compact = false }) {
-  if (!article) return null;
-
+function SectionTitle({ title, action, to }) {
   return (
-    <Link to={`/blog/${article.slug}`} className={`home-soft-article-card ${compact ? 'home-soft-article-card-compact' : ''}`}>
-      <div className="home-soft-article-image">
-        <img
-          src={article.image || fallbackImage}
-          alt={article.title}
-          loading="lazy"
-          decoding="async"
-          onError={(event) => {
-            event.currentTarget.src = fallbackImage;
-          }}
-        />
-      </div>
-      <div className="home-soft-article-body">
-        <div className="home-soft-meta">
-          <span>{article.category}</span>
-          <span>{article.readMinutes} min</span>
-        </div>
-        <h3>{article.title}</h3>
-        <p>{article.excerpt}</p>
-      </div>
-    </Link>
+    <div className="home-numerik-section-title">
+      <h2>{title}</h2>
+      {to && (
+        <Link to={to}>
+          {action}
+          <i className="fas fa-arrow-right"></i>
+        </Link>
+      )}
+    </div>
   );
 }
 
 export default function Home() {
+  const newsletter = useNewsletterForm({ source: 'home-redesign' });
+  const [hostedBooks, setHostedBooks] = useState([]);
+  const [hasLoadedBooks, setHasLoadedBooks] = useState(false);
+  const [blogMetricsBySlug, setBlogMetricsBySlug] = useState({});
+  const articleSlugs = useMemo(() => blogPosts.map((post) => post.slug).filter(Boolean), []);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadBooks = () => {
+      fetchHostedBooks()
+        .then((books) => {
+          if (active) setHostedBooks(books);
+        })
+        .catch(() => {
+          if (active) setHostedBooks([]);
+        })
+        .finally(() => {
+          if (active) setHasLoadedBooks(true);
+        });
+    };
+
+    loadBooks();
+    const refreshId = window.setInterval(loadBooks, BOOKS_STATS_REFRESH_MS);
+
+    return () => {
+      active = false;
+      window.clearInterval(refreshId);
+    };
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = subscribeBlogMetricsMap(articleSlugs, setBlogMetricsBySlug);
+    return () => unsubscribe();
+  }, [articleSlugs]);
+
+  const stats = useMemo(() => {
+    const articleViews = blogPosts.reduce((total, post) => {
+      const liveViews = Number(blogMetricsBySlug[post.slug]?.viewsCount) || 0;
+      const baselineViews = Number(post.views) || 0;
+      return total + Math.max(liveViews, baselineViews);
+    }, 0);
+    const bookViews = hostedBooks.reduce((total, book) => total + (Number(book.viewsCount) || 0), 0);
+
+    return [
+      { value: formatStatValue(blogPosts.length), label: 'Articles publiés', icon: 'fas fa-file-lines' },
+      {
+        value: formatStatValue(hasLoadedBooks ? hostedBooks.length : null),
+        label: 'Ressources disponibles',
+        icon: 'fas fa-book-open'
+      },
+      {
+        value: formatStatValue(hasLoadedBooks ? articleViews + bookViews : articleViews),
+        label: 'Lecteurs actifs',
+        icon: 'far fa-eye'
+      },
+      { value: formatStatValue(CONTENT_CATEGORIES.length), label: 'Catégories', icon: 'fas fa-layer-group' },
+    ];
+  }, [blogMetricsBySlug, hasLoadedBooks, hostedBooks]);
+
+  const latestArticles = useMemo(
+    () =>
+      [...blogPosts]
+        .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
+        .slice(0, 6),
+    []
+  );
+
+  const homeResources = useMemo(
+    () =>
+      [...hostedBooks]
+        .sort((a, b) => (Number(b.viewsCount) || 0) - (Number(a.viewsCount) || 0))
+        .slice(0, 6),
+    [hostedBooks]
+  );
+
   usePageSeo({
-    title: 'JC Hub - Guides simples pour mieux comprendre le numérique',
+    title: 'JC Hub - Blog, bibliothèque et ressources numériques',
     description:
-      'JC Hub aide les débutants, étudiants et curieux à comprendre Internet, la sécurité, la bureautique et les projets web avec des guides simples.',
-    image: '/desktop.webp',
+      'JC Hub rassemble des articles, guides pratiques et une bibliothèque de ressources pour apprendre, comprendre et progresser dans le numérique.',
     path: '/'
   });
 
-  const posts = getUniqueRecentPosts(blogPosts);
-  const featuredPost = findPost(posts, ['fonctionne internet', 'internet', 'debutant']) || posts[0] || null;
-  const articleSet = pickArticleSet(posts).filter((post) => post.slug !== featuredPost?.slug);
-  const sideArticles = articleSet.slice(0, 3);
-
   return (
-    <div className="home-soft">
-      <section className="home-soft-hero">
-        <div className="home-soft-hero-grid">
-          <div className="home-soft-hero-copy">
-            <p className="home-soft-kicker">Blog simple et pratique</p>
-            <h1>
-              Des guides simples pour mieux utiliser <span>le numerique.</span>
-            </h1>
-            <p className="home-soft-lead">
-              JC Hub aide les debutants, les etudiants et les curieux a comprendre Internet,
-              entretenir leur ordinateur, progresser en bureautique et publier leurs premiers projets.
-            </p>
+    <main className="home-numerik">
+      <section className="home-numerik-hero">
+        <div className="home-numerik-hero-copy">
+          <h1>
+            Explorez <span>JC Hub.</span>
+            <br />
+            Apprenez sans limite.
+          </h1>
+          <p>
+            Des articles, des guides pratiques et une bibliothèque de ressources pour comprendre et maîtriser le monde
+            numérique.
+          </p>
 
-            <div className="home-soft-actions">
-              <Link to="/blog" className="home-soft-button home-soft-button-primary">
-                Lire les articles
-              </Link>
-              <a href="#categories" className="home-soft-button home-soft-button-secondary">
-                Choisir un sujet
-              </a>
-            </div>
-
-            <div className="home-soft-notes">
-              <div>
-                <strong>Clair</strong>
-                <span>Des explications sans vocabulaire inutile.</span>
-              </div>
-              <div>
-                <strong>Utile</strong>
-                <span>Des conseils applicables tout de suite.</span>
-              </div>
-              <div>
-                <strong>Accessible</strong>
-                <span>Pour apprendre meme quand on part de zero.</span>
-              </div>
-            </div>
+          <div className="home-numerik-actions">
+            <Link className="home-numerik-button home-numerik-button-primary" to="/ebooks">
+              <i className="fas fa-book-open"></i>
+              Explorer la bibliothèque
+            </Link>
+            <Link className="home-numerik-button home-numerik-button-secondary" to="/blog">
+              <i className="fas fa-pen-to-square"></i>
+              Lire le blog
+            </Link>
           </div>
 
-          <div className="home-soft-cover-stack" aria-label="Apercu JC Hub">
-            <article className="home-soft-cover-card">
-              <div className="home-soft-cover-image">
-                <picture>
-                  <source media="(max-width: 767px)" srcSet="/mobile.webp" type="image/webp" />
-                  <source srcSet="/desktop.webp" type="image/webp" />
-                  <img
-                    src="/desktop.png"
-                    alt="Apercu JC Hub"
-                    fetchPriority="high"
-                    decoding="async"
-                    onError={(event) => {
-                      event.currentTarget.src = fallbackImage;
-                    }}
-                  />
-                </picture>
-                <span>Guide de la semaine</span>
+          <div className="home-numerik-mini-stats" aria-label="Statistiques JC Hub">
+            {stats.map((item) => (
+              <div key={item.label}>
+                <i className={item.icon}></i>
+                <strong>{item.value}</strong>
+                <span>{item.label}</span>
               </div>
-              <div className="home-soft-cover-content">
-                <h2>Apprendre a son rythme.</h2>
-                <p>Une porte d'entree plus douce pour comprendre, pratiquer et avancer sans pression.</p>
-              </div>
-            </article>
-
-            <article className="home-soft-floating-card home-soft-floating-left">
-              <span>01</span>
-              <h3>Moins de jargon.</h3>
-              <p>On explique les choses simplement, avec des exemples du quotidien.</p>
-            </article>
-
-            <article className="home-soft-floating-card home-soft-floating-right">
-              <span>02</span>
-              <h3>Plus pratique.</h3>
-              <p>PC, bureautique, Internet, securite et projets: tout part d'un besoin reel.</p>
-            </article>
+            ))}
           </div>
+        </div>
+
+        <div className="home-numerik-hero-visual" aria-label="JC Hub bibliothèque numérique">
+          <div className="home-numerik-wire home-numerik-wire-one"></div>
+          <div className="home-numerik-wire home-numerik-wire-two"></div>
+          <span className="home-numerik-float-icon is-cloud">
+            <i className="fas fa-cloud-arrow-down"></i>
+          </span>
+          <span className="home-numerik-float-icon is-lock">
+            <i className="fas fa-lock"></i>
+          </span>
+          <span className="home-numerik-float-icon is-chart">
+            <i className="fas fa-chart-line"></i>
+          </span>
+          <span className="home-numerik-float-icon is-book">
+            <i className="fas fa-book-open"></i>
+          </span>
+
+          <div className="home-numerik-laptop">
+            <div className="home-numerik-laptop-screen">
+              <div className="home-numerik-screen-top">
+                <strong>Bibliothèque</strong>
+                <span>
+                  <i className="fas fa-arrow-left"></i>
+                  <i className="fas fa-arrow-right"></i>
+                </span>
+              </div>
+              <div className="home-numerik-search-fake">
+                <i className="fas fa-magnifying-glass"></i>
+                <span>Rechercher une ressource...</span>
+              </div>
+              <div className="home-numerik-screen-layout">
+                <div className="home-numerik-screen-menu">
+                  <span>Toutes</span>
+                  <span>Guides</span>
+                  <span>Livres blancs</span>
+                  <span>Tutoriels</span>
+                  <span>Outils</span>
+                </div>
+                <div className="home-numerik-screen-cards">
+                  {['Cybersécurité', 'Développement Web', 'Intelligence Artificielle'].map((title, index) => (
+                    <div key={title}>
+                      <i className={index === 0 ? 'fas fa-shield-halved' : index === 1 ? 'fas fa-code' : 'fas fa-brain'}></i>
+                      <strong>{title}</strong>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="home-numerik-laptop-base"></div>
+          </div>
+
+          <div className="home-numerik-phone">
+            <strong>Guide</strong>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div className="home-numerik-plant" aria-hidden="true"></div>
         </div>
       </section>
 
-      <section className="home-soft-section home-soft-about-panel">
-        <div className="home-soft-about-copy">
-          <p className="home-soft-kicker">A propos de JC Hub</p>
-          <h2>Un espace pour apprendre sans pression.</h2>
-          <p>
-            L'objectif est simple: rendre l'informatique plus comprehensible, plus utile et moins intimidante.
-            Chaque contenu doit aider a faire quelque chose de concret.
-          </p>
-        </div>
-
-        <div className="home-soft-about-points">
-          <article>
-            <strong>Pour les debutants</strong>
-            <span>Des bases expliquees avec des mots simples et des exemples du quotidien.</span>
-          </article>
-          <article>
-            <strong>Pour les etudiants</strong>
-            <span>Des guides pour progresser, creer, publier et mieux utiliser les outils.</span>
-          </article>
-          <article>
-            <strong>Pour le quotidien</strong>
-            <span>Des conseils sur l'ordinateur, la securite, la bureautique et les bonnes pratiques.</span>
-          </article>
-        </div>
-      </section>
-
-      <section className="home-soft-section">
-        <div className="home-soft-section-head">
-          <div>
-            <p className="home-soft-kicker">A lire maintenant</p>
-            <h2>Des articles utiles.</h2>
-          </div>
-          <p>
-            La selection met en avant les sujets les plus accessibles: comprendre, proteger,
-            apprendre et gagner du temps.
-          </p>
-        </div>
-
-        <div className="home-soft-feature-grid">
-          {featuredPost && (
-            <Link to={`/blog/${featuredPost.slug}`} className="home-soft-feature-card">
-              <img
-                src={featuredPost.image || '/desktop.webp'}
-                alt={featuredPost.title}
-                loading="lazy"
-                decoding="async"
-                onError={(event) => {
-                  event.currentTarget.src = '/desktop.png';
-                }}
-              />
+      <section className="home-numerik-section">
+        <SectionTitle title="Explorer par catégorie" action="Voir toutes les catégories" to="/blog" />
+        <div className="home-numerik-category-grid">
+          {categories.map((category) => (
+            <Link className={`home-numerik-category is-${category.color}`} to={category.link} key={category.title}>
+              <span>
+                <i className={category.icon}></i>
+              </span>
               <div>
-                <p className="home-soft-kicker">A la une</p>
-                <h3>{featuredPost.title}</h3>
-                <p>{featuredPost.excerpt}</p>
+                <strong>{category.title}</strong>
+                <p>{category.description}</p>
               </div>
             </Link>
-          )}
+          ))}
+        </div>
+      </section>
 
-          <div className="home-soft-side-list">
-            {sideArticles.map((article) => (
-              <ArticleCard key={article.slug} article={article} compact />
+      <section className="home-numerik-section">
+        <SectionTitle title="Derniers articles du blog" action="Voir tous les articles" to="/blog" />
+        <div className="home-numerik-article-slider" aria-label="Derniers articles récents">
+          <div className="home-numerik-article-track">
+            {[0, 1].map((groupIndex) => (
+              <div
+                className="home-numerik-article-set"
+                key={`article-group-${groupIndex}`}
+                aria-hidden={groupIndex === 1}
+              >
+                {latestArticles.map((article) => (
+                  <article className="home-numerik-article" key={`${groupIndex}-${article.slug}`}>
+                    <Link
+                      className="home-numerik-article-image has-image"
+                      to={`/blog/${article.slug}`}
+                      aria-label={article.title}
+                      tabIndex={groupIndex === 1 ? -1 : undefined}
+                    >
+                      <img
+                        src={article.image || fallbackArticleImage}
+                        alt={`JC Hub - ${article.title}`}
+                        loading="lazy"
+                        decoding="async"
+                        onError={(event) => {
+                          event.currentTarget.src = fallbackArticleImage;
+                        }}
+                      />
+                      <span>{article.category}</span>
+                    </Link>
+                    <div>
+                      <p className="home-numerik-tag">{article.category}</p>
+                      <h3>{article.title}</h3>
+                      <p>{article.excerpt}</p>
+                      <div className="home-numerik-article-meta">
+                        <span>
+                          <i className="fas fa-user"></i>
+                          {article.author || 'JC Hub'}
+                        </span>
+                        <span>{article.dateLabel}</span>
+                        <span>{article.readMinutes} min</span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="home-soft-section" id="categories">
-        <div className="home-soft-section-head">
-          <div>
-            <p className="home-soft-kicker">Categories</p>
-            <h2>Choisir par besoin.</h2>
-          </div>
-          <p>Les rubriques deviennent des chemins simples: comprendre, apprendre, reparer ou gagner du temps.</p>
-        </div>
+      <section className="home-numerik-section">
+        <SectionTitle title="Ressources populaires" action="Voir toute la bibliothèque" to="/ebooks" />
+        <div className="home-numerik-resource-grid">
+          {!hasLoadedBooks && (
+            <p className="home-numerik-resource-feedback">Chargement des livres...</p>
+          )}
 
-        <div className="home-soft-need-grid">
-          {needCards.map((card) => (
-            <article key={card.title} className="home-soft-need-card">
-              <span>{card.label}</span>
-              <h3>{card.title}</h3>
-              <p>{card.text}</p>
-            </article>
+          {hasLoadedBooks && homeResources.length === 0 && (
+            <p className="home-numerik-resource-feedback">Aucun livre disponible pour le moment.</p>
+          )}
+
+          {homeResources.map((book) => (
+            <Link className="home-numerik-resource" to={getBookDetailPath(book)} state={{ book }} key={book.id || book.title}>
+              <span className="home-numerik-resource-cover">
+                {book.thumbnail ? (
+                  <img
+                    src={book.thumbnail}
+                    alt={`JC Hub - couverture du livre ${book.title}`}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <i className="fas fa-book-open"></i>
+                )}
+              </span>
+              <strong>{book.title}</strong>
+              <span className="home-numerik-resource-meta">
+                <em>{book.category || book.sourceLabel || 'Livre'}</em>
+                <span>
+                  <i className="far fa-eye"></i>
+                  {formatViewCount(book.viewsCount)}
+                </span>
+              </span>
+            </Link>
           ))}
         </div>
       </section>
 
-      <section className="home-soft-section home-soft-more">
-        <div className="home-soft-section-head">
-          <div>
-            <p className="home-soft-kicker">Explorer plus</p>
-            <h2>Continuer avec les derniers articles.</h2>
-          </div>
-          <Link to="/blog" className="home-soft-text-link">
-            Voir tout le blog
-          </Link>
+      <section className="home-numerik-proof">
+        <div className="home-numerik-proof-stats">
+          {stats.slice(0, 3).map((item) => (
+            <div key={item.label}>
+              <i className={item.icon}></i>
+              <strong>{item.value}</strong>
+              <span>{item.label}</span>
+            </div>
+          ))}
         </div>
+        <div className="home-numerik-why">
+          <h2>Pourquoi choisir JC Hub ?</h2>
+          <ul>
+            <li>Ressources de qualité et vérifiées</li>
+            <li>Contenu mis à jour régulièrement</li>
+            <li>Accès gratuit à de nombreuses ressources</li>
+            <li>Téléchargements rapides et sécurisés</li>
+          </ul>
+        </div>
+        <div className="home-numerik-target" aria-hidden="true">
+          <i className="fas fa-bullseye"></i>
+        </div>
+      </section>
 
-        <div className="home-soft-more-grid">
-          {articleSet.slice(3, 6).map((article) => (
-            <ArticleCard key={article.slug} article={article} />
+      <section className="home-numerik-section home-numerik-sources">
+        <SectionTitle title="Sources de nos ressources" action="Voir toutes les sources" to="/about" />
+        <div className="home-numerik-source-grid">
+          {contentSourcesPreview.map((source) => (
+            <a
+              className="home-numerik-source"
+              href={source.url}
+              target="_blank"
+              rel="noreferrer"
+              key={source.name}
+            >
+              <span>
+                <i className={source.icon}></i>
+              </span>
+              <div>
+                <strong>{source.name}</strong>
+                <p>{source.label}</p>
+              </div>
+            </a>
           ))}
         </div>
       </section>
 
-      <section className="home-soft-newsletter">
+      <section className="home-numerik-section">
+        <SectionTitle title="Nos partenaires" />
+        <div className="home-numerik-partner-slider" aria-label="Partenaires JC Hub">
+          <div className="home-numerik-partner-grid">
+            {partners.map((partner) => (
+              <article className={`home-numerik-partner is-${partner.tone}`} key={partner.name}>
+                <span className="home-numerik-partner-icon">
+                  <img src={partner.logo} alt={`Logo ${partner.name}`} loading="lazy" decoding="async" />
+                </span>
+                <div>
+                  <strong>{partner.name}</strong>
+                  <p>{partner.role}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="home-numerik-newsletter">
+        <div className="home-numerik-newsletter-icon">
+          <i className="fas fa-envelope"></i>
+        </div>
         <div>
-          <p className="home-soft-kicker">Newsletter JC Hub</p>
-          <h2>Recevoir les meilleurs guides, sans bruit.</h2>
-          <p>
-            Une invitation simple pour recevoir les articles utiles et les conseils pratiques.
-          </p>
+          <h2>Restez à jour avec notre newsletter</h2>
+          <p>Recevez nos derniers articles, guides et ressources directement dans votre boîte mail.</p>
         </div>
-        <Link to="/blog" className="home-soft-button home-soft-button-primary">
-          Commencer par le blog
-        </Link>
+        <form onSubmit={newsletter.handleSubmit}>
+          <input
+            type="email"
+            placeholder="Votre adresse e-mail"
+            value={newsletter.email}
+            onChange={(event) => newsletter.setEmail(event.target.value)}
+            autoComplete="email"
+            required
+          />
+          <button type="submit" disabled={newsletter.isSubmitting}>
+            {newsletter.isSubmitting ? 'Envoi...' : "S'abonner"}
+          </button>
+        </form>
       </section>
-    </div>
+    </main>
   );
 }

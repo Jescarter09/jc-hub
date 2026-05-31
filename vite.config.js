@@ -3,6 +3,13 @@ import react from '@vitejs/plugin-react';
 import contactHandler from './api/contact.js';
 import newsletterHandler from './api/newsletter.js';
 import newsletterStatsHandler from './api/newsletter-stats.js';
+import robotsHandler from './api/robots.js';
+import sitemapHandler from './api/sitemap.js';
+import booksDetailHandler from './api/books/detail.js';
+import booksImportHandler from './api/books/import.js';
+import booksInteractionsHandler from './api/books/interactions.js';
+import booksListHandler from './api/books/list.js';
+import booksSearchHandler from './api/books/search.js';
 
 function jsonReply(res, status, payload) {
   res.statusCode = status;
@@ -43,7 +50,16 @@ function createLocalApiPlugin() {
   const middlewares = [
     createApiMiddleware('/api/contact', contactHandler),
     createApiMiddleware('/api/newsletter', newsletterHandler),
-    createApiMiddleware('/api/newsletter-stats', newsletterStatsHandler)
+    createApiMiddleware('/api/newsletter-stats', newsletterStatsHandler),
+    createApiMiddleware('/api/robots', robotsHandler),
+    createApiMiddleware('/api/sitemap', sitemapHandler),
+    createApiMiddleware('/robots.txt', robotsHandler),
+    createApiMiddleware('/sitemap.xml', sitemapHandler),
+    createApiMiddleware('/api/books/detail', booksDetailHandler),
+    createApiMiddleware('/api/books/import', booksImportHandler),
+    createApiMiddleware('/api/books/interactions', booksInteractionsHandler),
+    createApiMiddleware('/api/books/list', booksListHandler),
+    createApiMiddleware('/api/books/search', booksSearchHandler)
   ];
 
   return {
