@@ -463,10 +463,10 @@ export default function Search() {
             </div>
           </section>
 
-          <section className="search-soft-panel">
+          <section className="search-soft-panel search-soft-categories-panel">
             <h2>Catégories</h2>
             <div className="search-soft-category-list">
-              {PLATFORM_CATEGORIES.map((category) => (
+              {PLATFORM_CATEGORIES.slice(0, 8).map((category) => (
                 <Link key={category.slug} to={`/categories/${category.slug}`}>
                   <span>
                     <i className={category.icon}></i>

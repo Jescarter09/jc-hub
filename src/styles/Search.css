@@ -617,6 +617,57 @@
   margin-top: 20px;
 }
 
+.search-soft-categories-panel {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(91, 61, 255, 0.12);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(91, 61, 255, 0.12), transparent 13rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 255, 0.96));
+  perspective: 1200px;
+}
+
+.search-soft-categories-panel::before {
+  content: "";
+  position: absolute;
+  right: -64px;
+  top: -70px;
+  width: 170px;
+  height: 170px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(91, 61, 255, 0.14), transparent 66%);
+  pointer-events: none;
+}
+
+.search-soft-categories-panel h2 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.08rem;
+}
+
+.search-soft-categories-panel h2::before {
+  content: "\f07b";
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 11px;
+  background: #eeeaff;
+  color: var(--search-primary);
+  font-family: "Font Awesome 6 Free";
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
+.search-soft-categories-panel .search-soft-category-list {
+  position: relative;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
 .search-soft-category-list i {
   width: 16px;
   color: #64708e;
@@ -628,6 +679,68 @@
   border-radius: 10px;
   padding: 8px 9px;
   transition: background 160ms ease, color 160ms ease;
+}
+
+.search-soft-categories-panel .search-soft-category-list a {
+  position: relative;
+  display: grid;
+  min-height: 58px;
+  align-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(91, 61, 255, 0.1);
+  border-radius: 12px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(245, 247, 255, 0.88));
+  padding: 9px 10px;
+  box-shadow:
+    0 12px 24px rgba(17, 23, 46, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  transform-style: preserve-3d;
+  transition: transform 190ms ease, box-shadow 190ms ease, border-color 190ms ease, background 190ms ease;
+}
+
+.search-soft-categories-panel .search-soft-category-list a::after {
+  content: "\f105";
+  position: absolute;
+  right: 9px;
+  bottom: 8px;
+  color: rgba(91, 61, 255, 0.48);
+  font-family: "Font Awesome 6 Free";
+  font-size: 0.72rem;
+  font-weight: 900;
+  transform: translateZ(18px);
+}
+
+.search-soft-categories-panel .search-soft-category-list a:hover {
+  border-color: rgba(91, 61, 255, 0.24);
+  background: #ffffff;
+  box-shadow:
+    0 20px 38px rgba(17, 23, 46, 0.12),
+    0 8px 16px rgba(91, 61, 255, 0.08);
+  transform: translateY(-4px) rotateX(4deg);
+}
+
+.search-soft-categories-panel .search-soft-category-list a span {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  color: var(--search-ink);
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.2;
+  transform: translateZ(16px);
+}
+
+.search-soft-categories-panel .search-soft-category-list i {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 9px;
+  background: rgba(91, 61, 255, 0.09);
+  color: var(--search-primary);
+  font-size: 0.76rem;
 }
 
 .search-soft-category-list a:hover,
@@ -658,6 +771,29 @@
   color: var(--search-primary);
   font-size: 0.86rem;
   font-weight: 950;
+}
+
+.search-soft-categories-panel .search-soft-panel-link {
+  position: relative;
+  width: 100%;
+  min-height: 38px;
+  justify-content: center;
+  border: 1px solid rgba(91, 61, 255, 0.18);
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 12px 24px rgba(91, 61, 255, 0.07);
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.search-soft-categories-panel .search-soft-panel-link:hover {
+  background: var(--search-primary);
+  color: #ffffff;
+  box-shadow: 0 16px 30px rgba(91, 61, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+.search-soft-categories-panel .search-soft-panel-link:hover i {
+  color: #ffffff;
 }
 
 .search-soft-drawer {
@@ -713,6 +849,10 @@
   .search-soft-sidebar {
     grid-column: 1 / -1;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .search-soft-categories-panel .search-soft-category-list {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -838,6 +978,10 @@
   .search-soft-learning-card,
   .search-soft-empty {
     border-radius: 14px;
+  }
+
+  .search-soft-categories-panel .search-soft-category-list {
+    grid-template-columns: 1fr;
   }
 
   .search-soft-learning-card {
