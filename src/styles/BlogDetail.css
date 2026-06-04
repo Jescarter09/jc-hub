@@ -647,27 +647,6 @@
   font-size: 0.9rem;
 }
 
-.article-editorial-comments-box {
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
-  gap: 22px;
-  border: 1px solid var(--article-line);
-  border-radius: 8px;
-  background: #ffffff;
-  padding: 22px;
-  box-shadow: var(--article-shadow);
-}
-
-.article-editorial-comment-form,
-.article-editorial-comment-panel,
-.article-editorial-comment-list {
-  display: grid;
-  gap: 14px;
-}
-
-.article-editorial-comment-form input,
-.article-editorial-comment-form textarea,
-.article-editorial-comment-sort select,
 .article-editorial-newsletter-form input {
   width: 100%;
   border: 1px solid #dfe4ef;
@@ -677,45 +656,21 @@
   padding: 12px 14px;
   font: inherit;
   outline: none;
-}
-
-.article-editorial-comment-form input,
-.article-editorial-newsletter-form input {
   min-height: 44px;
 }
 
-.article-editorial-comment-form textarea {
-  min-height: 132px;
-  resize: vertical;
-}
-
-.article-editorial-comment-form input:focus,
-.article-editorial-comment-form textarea:focus,
-.article-editorial-comment-sort select:focus,
 .article-editorial-newsletter-form input:focus {
   border-color: rgba(91, 61, 255, 0.45);
   box-shadow: 0 0 0 3px rgba(91, 61, 255, 0.1);
 }
 
-.article-editorial-comment-actions,
-.article-editorial-comment-sort {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.article-editorial-comment-actions span,
-.article-editorial-comment-sort span,
 .article-editorial-muted {
   color: var(--article-muted);
   font-size: 0.8rem;
   font-weight: 800;
 }
 
-.article-editorial-comment-form button,
-.article-editorial-newsletter-form button,
-.article-editorial-load-more {
+.article-editorial-newsletter-form button {
   display: inline-flex;
   min-height: 42px;
   align-items: center;
@@ -729,92 +684,6 @@
   font-size: 0.86rem;
   font-weight: 900;
   cursor: pointer;
-}
-
-.article-editorial-comment-form button:disabled,
-.article-editorial-newsletter-form button:disabled {
-  cursor: wait;
-  opacity: 0.7;
-}
-
-.article-editorial-comment-sort select {
-  width: auto;
-  min-width: 150px;
-}
-
-.article-editorial-comment {
-  border: 1px solid var(--article-line);
-  border-radius: 10px;
-  background: #ffffff;
-  padding: 14px;
-}
-
-.article-editorial-comment > div:first-child {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.article-editorial-comment strong {
-  color: var(--article-ink);
-  font-size: 0.88rem;
-  font-weight: 950;
-}
-
-.article-editorial-comment span {
-  color: var(--article-muted);
-  font-size: 0.76rem;
-  font-weight: 800;
-}
-
-.article-editorial-comment p {
-  margin-top: 8px;
-  color: var(--article-text);
-  font-size: 0.88rem;
-  line-height: 1.6;
-}
-
-.article-editorial-comment-tools {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.article-editorial-comment-tools button,
-.article-editorial-load-more {
-  border: 0;
-  background: #f2efff;
-  color: var(--article-primary);
-  padding: 8px 10px;
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.article-editorial-comment-tools button:disabled {
-  opacity: 0.5;
-}
-
-.article-editorial-reply {
-  margin-top: 12px;
-  border-left: 3px solid var(--article-primary);
-  background: #fafbff;
-  padding: 10px 12px;
-}
-
-.article-editorial-comment-empty {
-  border-radius: 8px;
-  background: #fafbff;
-  color: var(--article-muted);
-  padding: 16px;
-  font-weight: 800;
-}
-
-.article-editorial-load-more {
-  justify-self: start;
-  margin-top: 8px;
 }
 
 .article-editorial-feedback {
@@ -947,10 +816,6 @@
     grid-column: 1 / -1;
   }
 
-  .article-editorial-comments-box {
-    grid-template-columns: 1fr;
-  }
-
   .article-editorial-newsletter {
     grid-template-columns: 1fr;
     justify-items: center;
@@ -984,22 +849,17 @@
   }
 
   .article-editorial-aside-note,
-  .article-editorial-comments-box,
   .article-editorial-newsletter,
   .article-editorial-newsletter-form,
   .article-editorial-stats {
     grid-template-columns: 1fr;
   }
 
-  .article-editorial-section-head,
-  .article-editorial-comment-actions,
-  .article-editorial-comment-sort {
+  .article-editorial-section-head {
     align-items: flex-start;
     flex-direction: column;
   }
 
-  .article-editorial-comment-sort select,
-  .article-editorial-comment-form button,
   .article-editorial-newsletter-form button {
     width: 100%;
   }

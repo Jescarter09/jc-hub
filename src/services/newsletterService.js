@@ -62,6 +62,14 @@ const mapToNewsletterError = (error) => {
     );
   }
 
+  if (code === 'newsletter/welcome-email-failed') {
+    return createNewsletterError(
+      'newsletter/welcome-email-failed',
+      "Ton email est sauvegardé, mais l'email de confirmation n'a pas pu partir.",
+      error
+    );
+  }
+
   return createNewsletterError('newsletter/unknown', "L'inscription newsletter a échoué.", error);
 };
 
@@ -77,6 +85,10 @@ export function getNewsletterErrorMessage(error) {
       return details
         ? `Ton email est enregistre, mais Brevo a renvoye: ${details}`
         : 'Ton email est enregistré, mais Brevo ne répond pas. Réessaie dans un instant.';
+    case 'newsletter/welcome-email-failed':
+      return details
+        ? `Ton email est enregistre, mais l'email de confirmation a echoue: ${details}`
+        : "Ton email est enregistré, mais l'email de confirmation n'a pas pu partir.";
     case 'newsletter/unavailable':
       return 'Le service est temporairement indisponible. Réessaie dans un instant.';
     case 'newsletter/rate-limited':

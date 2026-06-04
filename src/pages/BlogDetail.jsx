@@ -10,11 +10,6 @@ import {
   subscribeBlogMetrics,
   toggleBlogInteraction
 } from '../services/blogInteractionsService';
-import {
-  createBlogComment,
-  subscribeBlogComments,
-  toggleBlogCommentLike
-} from '../services/blogCommentsService';
 import '../styles/BlogDetail.css';
 
 const AUTHOR_AVATAR = '/carter.webp';
@@ -29,12 +24,6 @@ const VIEW_COOLDOWN_MS = 30 * 60 * 1000;
 const READ_FLUSH_INTERVAL_MS = 15 * 1000;
 const MIN_READ_SESSION_SECONDS = 10;
 const MIN_ENGAGED_SECONDS_FOR_VIEW = 8;
-const COMMENT_AUTHOR_STORAGE_KEY = 'jchub.blog.commentAuthor';
-const DEFAULT_COMMENT_AUTHOR = 'Lecteur JC Hub';
-const COMMENT_MIN_LENGTH = 12;
-const COMMENT_MAX_LENGTH = 1200;
-const COMMENT_PAGE_SIZE = 4;
-const COMMENT_POST_COOLDOWN_MS = 60 * 1000;
 
 const readStoredSlugSet = (key) => {
   if (typeof window === 'undefined') return new Set();
@@ -72,25 +61,6 @@ const updateStoredSlug = (key, slug, shouldInclude) => {
 };
 
 const getViewStorageKey = (slug) => `jchub.blog.viewedAt.${slug}`;
-const getCommentCooldownStorageKey = (slug) => `jchub.blog.commentPostedAt.${slug}`;
-
-const readLastCommentPostedAt = (slug) => {
-  if (typeof window === 'undefined' || !slug) return 0;
-  try {
-    return Number(window.localStorage.getItem(getCommentCooldownStorageKey(slug)) || 0) || 0;
-  } catch {
-    return 0;
-  }
-};
-
-const markCommentAsPosted = (slug, timestamp) => {
-  if (typeof window === 'undefined' || !slug) return;
-  try {
-    window.localStorage.setItem(getCommentCooldownStorageKey(slug), String(timestamp));
-  } catch {
-    // Ignore storage failures in strict/private contexts.
-  }
-};
 
 const canCountNewView = (slug) => {
   if (typeof window === 'undefined' || !slug) return false;
@@ -215,117 +185,6 @@ const resolveCodeLabel = (language, codeInterface) => {
   return language.toUpperCase();
 };
 
-const hoursAgoToIso = (hoursAgo) => {
-  const safeHours = Math.max(0, Number(hoursAgo) || 0);
-  return new Date(Date.now() - safeHours * 60 * 60 * 1000).toISOString();
-};
-
-const sanitizeCommentAuthor = (value) => {
-  const cleaned = String(value || '')
-    .replace(/\s+/g, ' ')
-    .trim();
-  if (!cleaned) return DEFAULT_COMMENT_AUTHOR;
-  return cleaned.slice(0, 48);
-};
-
-const sanitizeCommentContent = (value) =>
-  String(value || '')
-    .replace(/\r?\n/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-const buildCommentId = () => `cmt-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-
-const toRelativeDateLabel = (inputDate) => {
-  const timestamp = new Date(inputDate || '').getTime();
-  if (!Number.isFinite(timestamp)) return 'à l’instant';
-
-  const diffMs = Math.max(0, Date.now() - timestamp);
-  const diffMinutes = Math.floor(diffMs / (60 * 1000));
-  const diffHours = Math.floor(diffMs / (60 * 60 * 1000));
-  const diffDays = Math.floor(diffMs / (24 * 60 * 60 * 1000));
-
-  if (diffMinutes < 1) return 'à l’instant';
-  if (diffMinutes < 60) return `il y a ${diffMinutes} min`;
-  if (diffHours < 24) return `il y a ${diffHours} heure${diffHours > 1 ? 's' : ''}`;
-  if (diffDays < 30) return `il y a ${diffDays} jour${diffDays > 1 ? 's' : ''}`;
-
-  return new Date(timestamp).toLocaleDateString('fr-FR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  });
-};
-
-const normalizeReply = (reply) => {
-  if (!reply || typeof reply !== 'object') return null;
-
-  const text = sanitizeCommentContent(reply.text);
-  if (!text) return null;
-
-  return {
-    author: sanitizeCommentAuthor(reply.author || 'Équipe JC Hub'),
-    role: String(reply.role || 'Auteur').trim() || 'Auteur',
-    createdAt: String(reply.createdAt || new Date().toISOString()),
-    text
-  };
-};
-
-const normalizeCommentRecord = (rawComment, index = 0) => {
-  const fallbackDate = new Date(Date.now() - index * 1000).toISOString();
-  const content = sanitizeCommentContent(rawComment?.content ?? rawComment?.text);
-
-  return {
-    id: String(rawComment?.id || buildCommentId()),
-    author: sanitizeCommentAuthor(rawComment?.author),
-    content: content || 'Commentaire',
-    likes: Math.max(0, Math.floor(Number(rawComment?.likes) || 0)),
-    likedByViewer: Boolean(rawComment?.likedByViewer),
-    createdAt: String(rawComment?.createdAt || fallbackDate),
-    reply: normalizeReply(rawComment?.reply)
-  };
-};
-
-const readStoredCommentAuthor = () => {
-  if (typeof window === 'undefined') return DEFAULT_COMMENT_AUTHOR;
-  try {
-    return sanitizeCommentAuthor(window.localStorage.getItem(COMMENT_AUTHOR_STORAGE_KEY));
-  } catch {
-    return DEFAULT_COMMENT_AUTHOR;
-  }
-};
-
-const commentsSeed = [
-  {
-    id: 'seed-marc',
-    author: 'Marc L.',
-    createdAt: hoursAgoToIso(2),
-    content: "Excellent article. Le passage sur la validation humaine m'a vraiment parlé.",
-    likes: 18
-  },
-  {
-    id: 'seed-claire',
-    author: 'Claire B.',
-    createdAt: hoursAgoToIso(5),
-    content: "Très clair et concret. J'aimerais voir un prochain article orienté implémentation backend.",
-    likes: 12,
-    reply: {
-      id: 'seed-reply-sophie',
-      author: 'Dr. Sophie Martin',
-      role: 'Auteur',
-      createdAt: hoursAgoToIso(3),
-      text: "Bonne idée, c'est prévu dans la prochaine série."
-    }
-  },
-  {
-    id: 'seed-alex',
-    author: 'Alex T.',
-    createdAt: hoursAgoToIso(8),
-    content: "Merci pour la synthèse. La partie risques réglementaires est particulièrement utile.",
-    likes: 9
-  }
-];
-
 const isListLikeTextLine = (line) => {
   const trimmed = String(line || '').trim();
   return /^[-*]\s+/.test(trimmed) || /^\[[ xX]\]\s+/.test(trimmed) || /^\d+\.\s+/.test(trimmed);
@@ -400,19 +259,6 @@ export default function BlogDetail() {
     saved: false,
     readLater: false
   });
-  const [comments, setComments] = useState(() =>
-    commentsSeed.map((comment, index) => normalizeCommentRecord(comment, index))
-  );
-  const [commentSort, setCommentSort] = useState('recent');
-  const [commentDraft, setCommentDraft] = useState('');
-  const [commentFeedback, setCommentFeedback] = useState({ kind: '', text: '' });
-  const [visibleCommentsCount, setVisibleCommentsCount] = useState(COMMENT_PAGE_SIZE);
-  const [commentAuthor, setCommentAuthor] = useState(DEFAULT_COMMENT_AUTHOR);
-  const [commentsLoading, setCommentsLoading] = useState(true);
-  const [canWriteComments, setCanWriteComments] = useState(true);
-  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
-  const [pendingCommentLikes, setPendingCommentLikes] = useState({});
-  const [replyTargetAuthor, setReplyTargetAuthor] = useState('');
   const readingActiveRef = useRef(false);
   const lastTickAtRef = useRef(0);
   const pendingReadSecondsRef = useRef(0);
@@ -422,9 +268,6 @@ export default function BlogDetail() {
   const shouldRecordViewRef = useRef(false);
   const hasRecordedViewRef = useRef(false);
   const isRecordingViewRef = useRef(false);
-  const commentInputRef = useRef(null);
-  const commentTrapRef = useRef(null);
-  const lastCommentPostedAtRef = useRef(0);
   const shareUrl = useMemo(() => (blog?.slug ? getShareUrl(blog.slug) : ''), [blog?.slug]);
 
   const shareLinks = useMemo(() => {
@@ -449,78 +292,6 @@ export default function BlogDetail() {
     path: blog?.slug ? `/blog/${blog.slug}` : `/blog/${slug || ''}`,
     type: blog ? 'article' : 'website'
   });
-
-  const sortedComments = useMemo(() => {
-    const next = [...comments];
-    if (commentSort === 'popular') {
-      next.sort((a, b) => {
-        const likesDelta = (Number(b.likes) || 0) - (Number(a.likes) || 0);
-        if (likesDelta !== 0) return likesDelta;
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      });
-      return next;
-    }
-
-    next.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    return next;
-  }, [commentSort, comments]);
-
-  const visibleComments = useMemo(
-    () => sortedComments.slice(0, Math.max(COMMENT_PAGE_SIZE, visibleCommentsCount)),
-    [sortedComments, visibleCommentsCount]
-  );
-  const hasMoreComments = visibleComments.length < sortedComments.length;
-  const commentCharactersLeft = Math.max(0, COMMENT_MAX_LENGTH - commentDraft.length);
-  const commentFeedbackClassName =
-    commentFeedback.kind === 'error'
-      ? 'article-editorial-feedback article-editorial-feedback-error'
-      : commentFeedback.kind === 'success'
-        ? 'article-editorial-feedback article-editorial-feedback-success'
-        : 'article-editorial-feedback article-editorial-feedback-info';
-
-  useEffect(() => {
-    if (!commentFeedback.text) return undefined;
-    const timer = setTimeout(() => setCommentFeedback({ kind: '', text: '' }), 3600);
-    return () => clearTimeout(timer);
-  }, [commentFeedback.text]);
-
-  useEffect(() => {
-    if (!blog?.slug) return undefined;
-
-    const seedComments = commentsSeed.map((comment, index) => normalizeCommentRecord(comment, index));
-    setCommentsLoading(true);
-    setCanWriteComments(true);
-    setCommentSort('recent');
-    setVisibleCommentsCount(COMMENT_PAGE_SIZE);
-    setCommentDraft('');
-    setReplyTargetAuthor('');
-    setPendingCommentLikes({});
-    setIsSubmittingComment(false);
-    setCommentAuthor(readStoredCommentAuthor());
-
-    const unsubscribe = subscribeBlogComments(
-      blog.slug,
-      (nextComments) => {
-        const remote = Array.isArray(nextComments) ? nextComments : [];
-        const remoteIds = new Set(remote.map((comment) => comment.id));
-        const merged = [...remote, ...seedComments.filter((seed) => !remoteIds.has(seed.id))];
-        setComments(merged);
-        setCommentsLoading(false);
-      },
-      (error) => {
-        console.error('Chargement commentaires impossible:', error);
-        setCanWriteComments(false);
-        setComments(seedComments);
-        setCommentsLoading(false);
-        setCommentFeedback({
-          kind: 'error',
-          text: 'Commentaires en lecture seule pour le moment (droits Firebase à vérifier).'
-        });
-      }
-    );
-
-    return () => unsubscribe();
-  }, [blog?.slug]);
 
   useEffect(() => {
     if (!blog?.slug) return;
@@ -834,209 +605,6 @@ export default function BlogDetail() {
     }
   }, [blog, notifyAction, shareUrl]);
 
-  const handleSubmitComment = useCallback(
-    async (event) => {
-      event.preventDefault();
-
-      if (!blog?.slug || !canWriteComments || isSubmittingComment) return;
-
-      const now = Date.now();
-      const trapValue = String(commentTrapRef.current?.value || '').trim();
-      if (trapValue) {
-        setCommentFeedback({ kind: 'success', text: 'Merci, commentaire reçu.' });
-        setCommentDraft('');
-        return;
-      }
-
-      const lastPostedAt = Math.max(lastCommentPostedAtRef.current, readLastCommentPostedAt(blog.slug));
-      if (now - lastPostedAt < COMMENT_POST_COOLDOWN_MS) {
-        setCommentFeedback({
-          kind: 'error',
-          text: `Patiente ${Math.ceil((COMMENT_POST_COOLDOWN_MS - (now - lastPostedAt)) / 1000)}s avant de republier.`
-        });
-        return;
-      }
-
-      const content = sanitizeCommentContent(commentDraft);
-      if (content.length < COMMENT_MIN_LENGTH) {
-        setCommentFeedback({
-          kind: 'error',
-          text: `Ton commentaire doit contenir au moins ${COMMENT_MIN_LENGTH} caractères.`
-        });
-        return;
-      }
-
-      const author = sanitizeCommentAuthor(commentAuthor);
-      const alreadyExists = comments.some(
-        (comment) => comment.author === author && comment.content.toLowerCase() === content.toLowerCase()
-      );
-
-      if (alreadyExists) {
-        setCommentFeedback({
-          kind: 'error',
-          text: 'Ce commentaire existe déjà. Modifie légèrement le texte avant de publier.'
-        });
-        return;
-      }
-
-      setIsSubmittingComment(true);
-      try {
-        await createBlogComment(blog.slug, {
-          author,
-          content,
-          replyToAuthor: replyTargetAuthor
-        });
-
-        if (typeof window !== 'undefined') {
-          try {
-            window.localStorage.setItem(COMMENT_AUTHOR_STORAGE_KEY, author);
-          } catch {
-            // Ignore localStorage write failure.
-          }
-        }
-
-        setCommentAuthor(author);
-        setCommentDraft('');
-        setReplyTargetAuthor('');
-        setVisibleCommentsCount(COMMENT_PAGE_SIZE);
-        setCommentFeedback({ kind: 'success', text: 'Commentaire publié en temps réel.' });
-        lastCommentPostedAtRef.current = now;
-        markCommentAsPosted(blog.slug, now);
-      } catch (error) {
-        console.error('Publication commentaire impossible:', error);
-        const permissionDenied =
-          String(error?.code || '')
-            .toLowerCase()
-            .includes('permission') ||
-          String(error?.message || '')
-            .toLowerCase()
-            .includes('permission');
-        if (permissionDenied) {
-          setCanWriteComments(false);
-        }
-        setCommentFeedback({
-          kind: 'error',
-          text: permissionDenied
-            ? 'Écriture des commentaires refusée (règles Firebase).'
-            : 'Impossible de publier le commentaire pour le moment.'
-        });
-      } finally {
-        setIsSubmittingComment(false);
-      }
-    },
-    [
-      blog?.slug,
-      canWriteComments,
-      commentAuthor,
-      commentDraft,
-      comments,
-      isSubmittingComment,
-      replyTargetAuthor
-    ]
-  );
-
-  const handleToggleCommentLike = useCallback(
-    async (commentId) => {
-      if (!blog?.slug || !commentId || !canWriteComments || pendingCommentLikes[commentId]) return;
-
-      const currentComment = comments.find((comment) => comment.id === commentId);
-      if (!currentComment) return;
-      if (String(currentComment.id).startsWith('seed-')) {
-        setCommentFeedback({
-          kind: 'info',
-          text: 'Le like est désactivé sur les commentaires de démonstration.'
-        });
-        return;
-      }
-
-      const optimisticLiked = !currentComment.likedByViewer;
-      const optimisticLikes = Math.max(
-        0,
-        Number(currentComment.likes || 0) + (optimisticLiked ? 1 : -1)
-      );
-
-      setPendingCommentLikes((current) => ({ ...current, [commentId]: true }));
-      setComments((current) =>
-        current.map((comment) =>
-          comment.id === commentId
-            ? { ...comment, likedByViewer: optimisticLiked, likes: optimisticLikes }
-            : comment
-        )
-      );
-
-      try {
-        const result = await toggleBlogCommentLike(
-          blog.slug,
-          commentId,
-          currentComment.likedByViewer,
-          currentComment.likes
-        );
-
-        setComments((current) =>
-          current.map((comment) =>
-            comment.id === commentId
-              ? { ...comment, likedByViewer: result.liked, likes: result.likes }
-              : comment
-          )
-        );
-      } catch (error) {
-        console.error('Like commentaire impossible:', error);
-        const permissionDenied =
-          String(error?.code || '')
-            .toLowerCase()
-            .includes('permission') ||
-          String(error?.message || '')
-            .toLowerCase()
-            .includes('permission');
-        if (permissionDenied) {
-          setCanWriteComments(false);
-        }
-        setComments((current) =>
-          current.map((comment) =>
-            comment.id === commentId
-              ? {
-                  ...comment,
-                  likedByViewer: currentComment.likedByViewer,
-                  likes: currentComment.likes
-                }
-              : comment
-          )
-        );
-        setCommentFeedback({
-          kind: 'error',
-          text: permissionDenied
-            ? 'Like indisponible: écriture Firebase refusée.'
-            : 'Impossible de liker ce commentaire.'
-        });
-      } finally {
-        setPendingCommentLikes((current) => {
-          const next = { ...current };
-          delete next[commentId];
-          return next;
-        });
-      }
-    },
-    [blog?.slug, canWriteComments, comments, pendingCommentLikes]
-  );
-
-  const handleReplyToComment = useCallback((authorName) => {
-    const safeAuthor = sanitizeCommentAuthor(authorName);
-    const mention = `@${safeAuthor} `;
-    setReplyTargetAuthor(safeAuthor);
-    setCommentDraft((current) => {
-      const withoutExistingMention = current.replace(/^@\S+\s/, '');
-      return `${mention}${withoutExistingMention}`.slice(0, COMMENT_MAX_LENGTH);
-    });
-
-    if (commentInputRef.current) {
-      commentInputRef.current.focus();
-    }
-  }, []);
-
-  const handleLoadMoreComments = useCallback(() => {
-    setVisibleCommentsCount((current) => current + COMMENT_PAGE_SIZE);
-  }, []);
-
   useEffect(() => {
     if (!blog && legacyById?.slug) {
       navigate(`/blog/${legacyById.slug}`, { replace: true });
@@ -1257,9 +825,6 @@ export default function BlogDetail() {
           <div className="article-editorial-tool-group">
             <a className="article-editorial-tool article-editorial-tool-primary" href="#article">
               Commencer
-            </a>
-            <a className="article-editorial-tool" href="#comments">
-              Commenter
             </a>
             <a className="article-editorial-tool" href="#related">
               Lire ensuite
@@ -1514,119 +1079,6 @@ export default function BlogDetail() {
                 </div>
               </Link>
             ))}
-          </div>
-        </section>
-
-        <section className="article-editorial-wide-section" id="comments">
-          <div className="article-editorial-section-head">
-            <div>
-              <span className="article-editorial-category">Discussion</span>
-              <h2>Commentaires ({comments.length})</h2>
-            </div>
-            <p>{comments.length} contribution{comments.length > 1 ? 's' : ''} autour de cet article.</p>
-          </div>
-
-          <div className="article-editorial-comments-box">
-            <form className="article-editorial-comment-form" onSubmit={handleSubmitComment}>
-              <label style={{ position: 'absolute', left: '-9999px', opacity: 0 }} aria-hidden="true">
-                Site web
-                <input ref={commentTrapRef} name="website" type="text" tabIndex={-1} autoComplete="off" />
-              </label>
-              <input
-                type="text"
-                value={commentAuthor}
-                onChange={(event) => setCommentAuthor(event.target.value.slice(0, 48))}
-                placeholder="Ton nom"
-                disabled={!canWriteComments || isSubmittingComment}
-              />
-              {replyTargetAuthor && (
-                <p>
-                  Réponse à <strong>@{replyTargetAuthor}</strong>
-                </p>
-              )}
-              <textarea
-                ref={commentInputRef}
-                value={commentDraft}
-                maxLength={COMMENT_MAX_LENGTH}
-                placeholder="Ton commentaire..."
-                onChange={(event) => setCommentDraft(event.target.value)}
-                disabled={!canWriteComments || isSubmittingComment}
-              ></textarea>
-              <div className="article-editorial-comment-actions">
-                <span>{commentCharactersLeft} caractères restants</span>
-                <button type="submit" disabled={!canWriteComments || isSubmittingComment}>
-                  {isSubmittingComment ? 'Publication...' : 'Publier'}
-                </button>
-              </div>
-              {commentFeedback.text && <p className={commentFeedbackClassName}>{commentFeedback.text}</p>}
-              {!canWriteComments && (
-                <p className="article-editorial-muted">
-                  Mode lecture seule actif: vérifie les règles Firebase pour autoriser les écritures.
-                </p>
-              )}
-            </form>
-
-            <div className="article-editorial-comment-panel">
-              <div className="article-editorial-comment-sort">
-                <span>{commentsLoading ? 'Chargement...' : `${comments.length} commentaire${comments.length > 1 ? 's' : ''}`}</span>
-                <select
-                  value={commentSort}
-                  onChange={(event) => setCommentSort(event.target.value)}
-                  disabled={commentsLoading}
-                >
-                  <option value="recent">Plus récents</option>
-                  <option value="popular">Plus populaires</option>
-                </select>
-              </div>
-
-              {commentsLoading ? (
-                <div className="article-editorial-comment-empty">Chargement des commentaires...</div>
-              ) : (
-                <div className="article-editorial-comment-list">
-                  {visibleComments.map((comment) => (
-                    <article key={comment.id} className="article-editorial-comment">
-                      <div>
-                        <strong>{comment.author}</strong>
-                        <span>{toRelativeDateLabel(comment.createdAt)}</span>
-                      </div>
-                      <p>{comment.content}</p>
-                      <div className="article-editorial-comment-tools">
-                        <button
-                          type="button"
-                          onClick={() => handleToggleCommentLike(comment.id)}
-                          aria-pressed={comment.likedByViewer}
-                          disabled={
-                            !canWriteComments ||
-                            Boolean(pendingCommentLikes[comment.id]) ||
-                            String(comment.id).startsWith('seed-')
-                          }
-                        >
-                          <i className={comment.likedByViewer ? 'fas fa-thumbs-up' : 'far fa-thumbs-up'}></i>
-                          <span>{comment.likes}</span>
-                        </button>
-                        <button type="button" onClick={() => handleReplyToComment(comment.author)}>
-                          Répondre
-                        </button>
-                      </div>
-
-                      {comment.reply && (
-                        <div className="article-editorial-reply">
-                          <strong>{comment.reply.author}</strong>
-                          <span>{comment.reply.role} · {toRelativeDateLabel(comment.reply.createdAt)}</span>
-                          <p>{comment.reply.text}</p>
-                        </div>
-                      )}
-                    </article>
-                  ))}
-                </div>
-              )}
-
-              {hasMoreComments && (
-                <button type="button" onClick={handleLoadMoreComments} className="article-editorial-load-more">
-                  Charger plus de commentaires
-                </button>
-              )}
-            </div>
           </div>
         </section>
 

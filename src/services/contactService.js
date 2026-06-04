@@ -28,6 +28,10 @@ export function getContactErrorMessage(error) {
       return details
         ? `Ton message est enregistre, mais Brevo a renvoye: ${details}`
         : 'Ton message est enregistré, mais Brevo ne répond pas. Réessaie dans un instant.';
+    case 'contact/email-send-failed':
+      return details
+        ? `Ton message est enregistre, mais l'email automatique a echoue: ${details}`
+        : "Ton message est enregistré, mais l'email automatique n'a pas pu partir.";
     case 'contact/server-error':
       return 'Le serveur de contact est indisponible pour le moment.';
     case 'contact/rate-limited':

@@ -199,8 +199,6 @@ Le projet contient une protection légère:
 - rate limit par IP sur `/api/newsletter`;
 - champ piège invisible sur le formulaire de contact;
 - détection d'envoi trop rapide côté API;
-- délai local avant de republier un commentaire;
-- champ piège invisible sur les commentaires.
 
 Pour une protection plus forte en production, ajoute ensuite un captcha léger ou une solution comme Turnstile.
 
@@ -251,6 +249,6 @@ Avant de déployer:
 
 - Tester le formulaire de contact en production.
 - Tester l'inscription newsletter en production.
-- Tester les commentaires et les likes sur un article.
+- Tester les likes sur un article.
 - Ouvrir le site sur mobile.
 - Vérifier `robots.txt` et `sitemap.xml`.

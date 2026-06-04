@@ -36,6 +36,7 @@ const checks = [
   ['BREVO_API_KEY', 'required'],
   ['BREVO_SENDER_EMAIL', 'required'],
   ['BREVO_SENDER_NAME', 'recommended'],
+  ['CONTACT_NOTIFICATION_EMAIL', 'recommended'],
   ['NEWSLETTER_COLLECTION', 'required'],
   ['BOOKS_COLLECTION', 'required'],
   ['FIREBASE_SERVICE_ACCOUNT_JSON', 'one-of'],
@@ -65,6 +66,10 @@ if (env.BREVO_API_KEY?.startsWith('xsmtpsib-')) {
 
 if (env.BREVO_SENDER_EMAIL && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(env.BREVO_SENDER_EMAIL)) {
   console.log('WARN    BREVO_SENDER_EMAIL does not look like a valid email.');
+}
+
+if (env.CONTACT_NOTIFICATION_EMAIL && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(env.CONTACT_NOTIFICATION_EMAIL)) {
+  console.log('WARN    CONTACT_NOTIFICATION_EMAIL does not look like a valid email.');
 }
 
 if (env.CRON_SECRET && env.CRON_SECRET.length < 32) {
