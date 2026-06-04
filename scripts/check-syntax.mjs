@@ -14,7 +14,6 @@ const files = [
   'api/books/search.js',
   'api/contact.js',
   'api/newsletter.js',
-  'api/newsletter-stats.js',
   'api/robots.js',
   'api/send-books-newsletter.js',
   'api/sitemap.js',

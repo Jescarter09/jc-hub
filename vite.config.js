@@ -2,7 +2,6 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import contactHandler from './api/contact.js';
 import newsletterHandler from './api/newsletter.js';
-import newsletterStatsHandler from './api/newsletter-stats.js';
 import robotsHandler from './api/robots.js';
 import sitemapHandler from './api/sitemap.js';
 import booksDetailHandler from './api/books/detail.js';
@@ -50,7 +49,6 @@ function createLocalApiPlugin() {
   const middlewares = [
     createApiMiddleware('/api/contact', contactHandler),
     createApiMiddleware('/api/newsletter', newsletterHandler),
-    createApiMiddleware('/api/newsletter-stats', newsletterStatsHandler),
     createApiMiddleware('/api/robots', robotsHandler),
     createApiMiddleware('/api/sitemap', sitemapHandler),
     createApiMiddleware('/robots.txt', robotsHandler),
