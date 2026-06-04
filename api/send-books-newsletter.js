@@ -1,5 +1,6 @@
 import { sendBrevoTransactionalEmail } from './_lib/brevo.js';
 import { BOOKS_COLLECTION, normalizeHostedBook, sanitizeBookText } from './_lib/books.js';
+import { assertCronAuthorized } from './_lib/cronAuth.js';
 import { FieldValue, Timestamp, getAdminDb } from './_lib/firebaseAdmin.js';
 import { sendJson } from './_lib/http.js';
 
@@ -7,36 +8,6 @@ const NEWSLETTER_COLLECTION = String(process.env.NEWSLETTER_COLLECTION || 'newsl
 const MAX_BOOKS_PER_EMAIL = Math.min(Math.max(Number(process.env.BOOKS_NEWSLETTER_LIMIT) || 30, 1), 50);
 const MAX_RECIPIENTS_PER_SEND = Math.min(Math.max(Number(process.env.BREVO_NEWSLETTER_BATCH_SIZE) || 80, 1), 99);
 const DEFAULT_SITE_URL = 'https://jchub.vercel.app';
-
-function getHeader(req, name) {
-  const direct = req.headers?.[name.toLowerCase()];
-  return Array.isArray(direct) ? direct[0] : String(direct || '');
-}
-
-function assertCronAuthorized(req) {
-  const expectedSecret = String(process.env.CRON_SECRET || '').trim();
-
-  if (!expectedSecret) {
-    return {
-      ok: false,
-      status: 503,
-      code: 'books-newsletter/cron-secret-missing',
-      message: 'CRON_SECRET doit etre configure cote serveur.'
-    };
-  }
-
-  const authorization = getHeader(req, 'authorization');
-  if (authorization !== `Bearer ${expectedSecret}`) {
-    return {
-      ok: false,
-      status: 401,
-      code: 'books-newsletter/unauthorized',
-      message: 'Execution non autorisee.'
-    };
-  }
-
-  return { ok: true };
-}
 
 function getSiteUrl() {
   return String(process.env.VITE_SITE_URL || process.env.SITE_URL || DEFAULT_SITE_URL).trim().replace(/\/+$/, '');
@@ -225,7 +196,7 @@ export default async function handler(req, res) {
     return sendJson(res, 405, { success: false, code: 'books-newsletter/method-not-allowed' });
   }
 
-  const authorization = assertCronAuthorized(req);
+  const authorization = assertCronAuthorized(req, { codePrefix: 'books-newsletter' });
   if (!authorization.ok) {
     return sendJson(res, authorization.status, {
       success: false,

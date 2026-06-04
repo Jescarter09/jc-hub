@@ -39,6 +39,11 @@ const checks = [
   ['CONTACT_NOTIFICATION_EMAIL', 'recommended'],
   ['NEWSLETTER_COLLECTION', 'required'],
   ['BOOKS_COLLECTION', 'required'],
+  ['BOOKS_GROWTH_DATE', 'recommended'],
+  ['BOOKS_INITIAL_VISIBLE', 'recommended'],
+  ['BOOKS_WEEKLY_RELEASE', 'recommended'],
+  ['AUTOMATION_REPORT_EMAIL', 'recommended'],
+  ['AUTOMATION_REPORT_FREQUENCY', 'recommended'],
   ['FIREBASE_SERVICE_ACCOUNT_JSON', 'one-of'],
   ['FIREBASE_SERVICE_ACCOUNT_BASE64', 'one-of'],
   ['FIREBASE_SERVICE_ACCOUNT_KEY_PATH', 'one-of'],
@@ -70,6 +75,14 @@ if (env.BREVO_SENDER_EMAIL && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(env.BREVO_S
 
 if (env.CONTACT_NOTIFICATION_EMAIL && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(env.CONTACT_NOTIFICATION_EMAIL)) {
   console.log('WARN    CONTACT_NOTIFICATION_EMAIL does not look like a valid email.');
+}
+
+if (env.AUTOMATION_REPORT_EMAIL && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(env.AUTOMATION_REPORT_EMAIL)) {
+  console.log('WARN    AUTOMATION_REPORT_EMAIL does not look like a valid email.');
+}
+
+if (env.AUTOMATION_REPORT_FREQUENCY && !['daily', 'weekly', 'never', 'off'].includes(env.AUTOMATION_REPORT_FREQUENCY)) {
+  console.log('WARN    AUTOMATION_REPORT_FREQUENCY should be daily, weekly, never, or off.');
 }
 
 if (env.CRON_SECRET && env.CRON_SECRET.length < 32) {

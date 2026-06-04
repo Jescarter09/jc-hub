@@ -169,6 +169,26 @@ La Function:
 - envoie un email Brevo;
 - marque les livres avec `newsletterSent=true`.
 
+## Automatisations quotidiennes
+
+Vercel Cron appelle aussi `/api/automation-daily` tous les jours à `06:30 UTC`.
+
+Cette fonction regroupe les tâches automatiques qui ne nécessitent pas de serveur permanent:
+
+- ajoute `publishAt`, `publishOrder`, `publishWave` et `newsletterSent=false` aux livres incomplets;
+- complète les métadonnées utiles des livres (`slug`, `categorySlug`, `detailPath`, accès lecture/téléchargement);
+- détecte les livres incomplets, les doublons possibles et quelques liens cassés;
+- enregistre un rapport dans Firestore (`automationReports` par défaut);
+- envoie un rapport admin hebdomadaire par email.
+
+Variables utiles:
+
+```env
+AUTOMATION_REPORT_EMAIL=contact@yourdomain.com
+AUTOMATION_REPORT_FREQUENCY=weekly
+AUTOMATION_LINK_CHECK_LIMIT=12
+```
+
 La route est protégée par `CRON_SECRET`. La même valeur doit exister dans `.env` local et dans les variables d'environnement Vercel.
 
 ## Sécurité des secrets

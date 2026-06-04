@@ -3,8 +3,10 @@ import { spawnSync } from 'node:child_process';
 const files = [
   'api/_lib/books.js',
   'api/_lib/brevo.js',
+  'api/_lib/cronAuth.js',
   'api/_lib/firebaseAdmin.js',
   'api/_lib/seo.js',
+  'api/automation-daily.js',
   'api/books/detail.js',
   'api/books/import.js',
   'api/books/interactions.js',
