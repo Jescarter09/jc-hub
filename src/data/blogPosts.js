@@ -89,6 +89,18 @@ const parseDate = (value) => {
   return new Date();
 };
 
+const parseOptionalDate = (value) => {
+  if (value === undefined || value === null || value === '') return null;
+  const date = parseDate(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const isPublishDateReached = (post, now = Date.now()) => {
+  const publishDate = parseOptionalDate(post?.publishAt ?? post?.publish_at);
+  if (!publishDate) return true;
+  return publishDate.getTime() <= now;
+};
+
 const formatDateLabel = (date) =>
   date.toLocaleDateString('fr-FR', {
     day: '2-digit',
@@ -177,7 +189,8 @@ const sectionsFromBlocks = (blocks) => {
       currentSection.blocks.push({
         type: 'image',
         src: content,
-        caption: String(block?.caption || '').trim()
+        caption: String(block?.caption || '').trim(),
+        alt: String(block?.alt || block?.imageAlt || '').trim()
       });
       continue;
     }
@@ -328,7 +341,7 @@ const mapPostToBlogCard = (entry, index) => {
   const slug = String(post.slug || '').trim() || toSlug(title) || key;
   const excerpt = String(post.excerpt || post.description || '').trim();
 
-  const rawDate = post.published_at ?? post.created_at ?? post.updated_at ?? post.publishedAt;
+  const rawDate = post.publishAt ?? post.publish_at ?? post.published_at ?? post.created_at ?? post.updated_at ?? post.publishedAt;
   const date = parseDate(rawDate);
 
   const blocks = Array.isArray(post.contentBlocks) && post.contentBlocks.length > 0 ? post.contentBlocks : post.content;
@@ -379,7 +392,7 @@ const rawPublishedPosts = rawPosts.filter(({ value }) => {
   if (!value || typeof value !== 'object') return false;
   if (!String(value.title || '').trim()) return false;
   const status = String(value.status || 'published').trim().toLowerCase();
-  return status === 'published';
+  return status === 'published' && isPublishDateReached(value);
 });
 
 export const blogPosts = removeDuplicatePostSlugs(

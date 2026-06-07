@@ -9,6 +9,7 @@ import {
 import { assertCronAuthorized } from './_lib/cronAuth.js';
 import { FieldValue, Timestamp, getAdminDb } from './_lib/firebaseAdmin.js';
 import { sendJson } from './_lib/http.js';
+import { submitSitemapToIndexNow } from './_lib/indexNow.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const NEWSLETTER_COLLECTION = String(process.env.NEWSLETTER_COLLECTION || 'newsletterSubscribers').trim();
@@ -512,9 +513,26 @@ export default async function handler(req, res) {
       },
       seo: {
         sitemap: `${getSiteUrl()}/sitemap.xml`,
-        robots: `${getSiteUrl()}/robots.txt`
+        robots: `${getSiteUrl()}/robots.txt`,
+        indexNowKey: `${getSiteUrl()}/indexnow-key.txt`
       }
     };
+
+    let indexNow = { submitted: false, reason: 'disabled' };
+    const indexNowEnabled = String(process.env.INDEXNOW_AUTO_SUBMIT || 'true').trim().toLowerCase() !== 'false';
+    if (!dryRun && indexNowEnabled) {
+      try {
+        indexNow = await submitSitemapToIndexNow({ changedOnly: true });
+      } catch (error) {
+        indexNow = {
+          submitted: false,
+          reason: 'submit-failed',
+          error: sanitizeBookText(error?.message || error, 240)
+        };
+      }
+    }
+
+    report.indexNow = indexNow;
 
     let email = { sent: false, reason: 'not-scheduled-today' };
     if (!dryRun && shouldSendReport(nowDate, forceReport)) {

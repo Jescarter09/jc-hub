@@ -1,4 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Loading from './components/Loading';
 import Navbar from './components/Navbar';
@@ -13,10 +15,12 @@ const Home = lazy(() => import('./pages/Home'));
 const Blog = lazy(() => import('./pages/Blog'));
 const Ebooks = lazy(() => import('./pages/Ebooks'));
 const EbookDetail = lazy(() => import('./pages/EbookDetail'));
+const EbookReader = lazy(() => import('./pages/EbookReader'));
 const Categories = lazy(() => import('./pages/Categories'));
 const Search = lazy(() => import('./pages/Search'));
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
+const Admin = lazy(() => import('./pages/Admin'));
 const BlogDetail = lazy(() => import('./pages/BlogDetail'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const MentionsLegales = lazy(() => import('./res/MentionsLegales'));
@@ -48,25 +52,33 @@ function RouteLoadingOverlay() {
 }
 
 function AppShell() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  const isReaderRoute = /^\/(ebooks|bibliotheque)\/[^/]+\/[^/]+\/read\/?$/.test(location.pathname);
+  const hideChrome = isAdminRoute || isReaderRoute;
+
   return (
     <>
-      <Navbar />
-      <RouteLoadingOverlay />
-      <main className="app-main">
+      {!hideChrome && <Navbar />}
+      {!hideChrome && <RouteLoadingOverlay />}
+      <main className={hideChrome ? 'app-main app-main-admin' : 'app-main'}>
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/ebooks" element={<Ebooks />} />
+            <Route path="/ebooks/:category/:slug/read" element={<EbookReader />} />
             <Route path="/ebooks/:category/:slug" element={<EbookDetail />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/categories/:slug" element={<Categories />} />
             <Route path="/bibliotheque" element={<Ebooks />} />
+            <Route path="/bibliotheque/:category/:slug/read" element={<EbookReader />} />
             <Route path="/bibliotheque/:category/:slug" element={<EbookDetail />} />
             <Route path="/search" element={<Search />} />
             <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="/500" element={<ServerError />} />
             <Route path="/res/mentions-legales" element={<MentionsLegales />} />
             <Route path="/res/confidentialite" element={<Confidentialite />} />
@@ -76,10 +88,12 @@ function AppShell() {
           </Routes>
         </Suspense>
       </main>
-      <Suspense fallback={null}>
-        <Footer />
-      </Suspense>
-      <CookieConsent />
+      {!hideChrome && (
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
+      )}
+      {!hideChrome && <CookieConsent />}
     </>
   );
 }
@@ -101,6 +115,8 @@ function App() {
   return (
     <Router>
       <AppContent />
+      <Analytics />
+      <SpeedInsights />
     </Router>
   );
 }

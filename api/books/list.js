@@ -5,10 +5,46 @@ import { checkRateLimit } from '../_lib/rateLimit.js';
 
 const DEFAULT_BOOKS_LIMIT = 500;
 const MAX_BOOKS_LIMIT = 500;
+const DEFAULT_CACHE_TTL_MS = 5 * 60 * 1000;
+const booksListCache = new Map();
+
+function getCacheTtlMs() {
+  const seconds = Number(process.env.BOOKS_LIST_CACHE_TTL_SECONDS);
+  if (!Number.isFinite(seconds) || seconds < 0) return DEFAULT_CACHE_TTL_MS;
+  return Math.floor(seconds * 1000);
+}
 
 function getDefaultBooksLimit() {
   const configured = Number(process.env.BOOKS_VISIBLE_LIMIT);
   return Number.isFinite(configured) ? Math.min(Math.max(configured, 1), MAX_BOOKS_LIMIT) : DEFAULT_BOOKS_LIMIT;
+}
+
+function getCachedPayload(cacheKey) {
+  const cached = booksListCache.get(cacheKey);
+  if (!cached) return null;
+
+  const now = Date.now();
+  const isFresh = cached.expiresAt > now;
+  return {
+    ...cached.payload,
+    cache: {
+      status: isFresh ? 'hit' : 'stale',
+      cachedAt: cached.cachedAt,
+      expiresAt: cached.expiresAt
+    }
+  };
+}
+
+function setCachedPayload(cacheKey, payload) {
+  const ttlMs = getCacheTtlMs();
+  if (ttlMs <= 0) return;
+
+  const cachedAt = new Date().toISOString();
+  booksListCache.set(cacheKey, {
+    payload,
+    cachedAt,
+    expiresAt: Date.now() + ttlMs
+  });
 }
 
 export default async function handler(req, res) {
@@ -32,6 +68,12 @@ export default async function handler(req, res) {
 
   const params = new URL(req.url || '/', `https://${req.headers?.host || 'localhost'}`).searchParams;
   const limit = Math.min(Math.max(Number(params.get('limit')) || getDefaultBooksLimit(), 1), MAX_BOOKS_LIMIT);
+  const cacheKey = `limit:${limit}`;
+  const cachedPayload = getCachedPayload(cacheKey);
+
+  if (cachedPayload?.cache?.status === 'hit') {
+    return sendJson(res, 200, cachedPayload);
+  }
 
   try {
     const db = getAdminDb();
@@ -42,14 +84,30 @@ export default async function handler(req, res) {
       .limit(limit)
       .get();
     const books = snapshot.docs.map((doc) => normalizeHostedBook(doc.id, doc.data()));
-
-    return sendJson(res, 200, {
+    const payload = {
       success: true,
       count: books.length,
       books
+    };
+
+    setCachedPayload(cacheKey, payload);
+
+    return sendJson(res, 200, {
+      ...payload,
+      cache: {
+        status: 'miss'
+      }
     });
   } catch (error) {
     console.error('books-list/firestore-read-error', error);
+
+    if (cachedPayload) {
+      return sendJson(res, 200, {
+        ...cachedPayload,
+        warning: 'books-list/firestore-unavailable-stale-cache'
+      });
+    }
+
     return sendJson(res, 200, {
       success: true,
       count: 0,

@@ -21,6 +21,8 @@ function toBookInteractionPayload(book = {}) {
     externalLink: book.externalLink || '',
     previewLink: book.previewLink || '',
     readerUrl: book.readerUrl || '',
+    localReaderUrl: book.localReaderUrl || '',
+    localDownloadUrl: book.localDownloadUrl || '',
     downloadUrl: book.downloadUrl || '',
     fileUrl: book.fileUrl || '',
     pdfUrl: book.pdfUrl || '',

@@ -737,3 +737,135 @@
     width: 100%;
   }
 }
+
+.ebook-reader-page {
+  padding-top: 0;
+  background: #0f172a;
+}
+
+.ebook-reader-shell {
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: auto minmax(420px, 1fr) auto;
+  gap: 14px;
+  width: min(calc(100% - 28px), 1500px);
+  margin: 0 auto;
+  padding: 14px 0;
+}
+
+.ebook-reader-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #ffffff;
+  padding: 14px 16px;
+  box-shadow: 0 18px 45px rgba(2, 6, 23, 0.28);
+}
+
+.ebook-reader-topbar .ebook-detail-kicker {
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #c7d2fe;
+}
+
+.ebook-reader-topbar h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(1.05rem, 2.2vw, 1.55rem);
+  line-height: 1.15;
+}
+
+.ebook-reader-topbar span {
+  display: block;
+  margin-top: 4px;
+  color: #cbd5e1;
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.ebook-reader-topbar nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.ebook-reader-topbar nav a {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  padding: 0 13px;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.ebook-reader-frame-wrap {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: #020617;
+  box-shadow: 0 22px 70px rgba(2, 6, 23, 0.38);
+}
+
+.ebook-reader-frame-wrap iframe {
+  display: block;
+  width: 100%;
+  height: min(78vh, 920px);
+  min-height: 560px;
+  border: 0;
+  background: #ffffff;
+}
+
+.ebook-reader-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  background: #020617;
+  color: #e2e8f0;
+  font-weight: 850;
+}
+
+.ebook-reader-note {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  padding: 12px 14px;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 720px) {
+  .ebook-reader-shell {
+    width: min(calc(100% - 18px), 1500px);
+    padding: 9px 0;
+  }
+
+  .ebook-reader-topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .ebook-reader-topbar nav {
+    justify-content: flex-start;
+  }
+
+  .ebook-reader-frame-wrap iframe {
+    height: 72vh;
+    min-height: 440px;
+  }
+}

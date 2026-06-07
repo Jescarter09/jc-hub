@@ -33,8 +33,8 @@ const contactDetails = [
   {
     icon: 'fas fa-phone',
     title: 'Téléphone',
-    text: 'Réponse via formulaire',
-    href: '#contact-form'
+    text: '+242 04 479 38 00',
+    href: 'tel:+242044793800'
   },
   {
     icon: 'fas fa-location-dot',

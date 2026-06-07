@@ -36,11 +36,19 @@
   "rewrites": [
     {
       "source": "/robots.txt",
-      "destination": "/api/robots"
+      "destination": "/api/seo?type=robots"
     },
     {
       "source": "/sitemap.xml",
-      "destination": "/api/sitemap"
+      "destination": "/api/seo?type=sitemap"
+    },
+    {
+      "source": "/indexnow-key.txt",
+      "destination": "/api/seo?type=indexnow-key"
+    },
+    {
+      "source": "/api/indexnow",
+      "destination": "/api/seo?type=indexnow"
     },
     {
       "source": "/",

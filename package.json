@@ -28,6 +28,10 @@
     "categories:counts:sync": "node scripts/sync-category-counts.mjs",
     "books:schedule:dry-run": "node scripts/schedule-books-publish-at.mjs",
     "books:schedule": "node scripts/schedule-books-publish-at.mjs --apply",
+    "articles:images": "node scripts/generate-content-article-images.mjs",
+    "articles:schedule:dry-run": "node scripts/schedule-content-articles.mjs",
+    "articles:schedule": "node scripts/schedule-content-articles.mjs --apply",
+    "articles:preview": "node scripts/preview-content-articles.mjs",
     "env:check": "node scripts/check-env-config.mjs",
     "secret:cron": "node scripts/generate-cron-secret.mjs",
     "clean:artifacts": "node scripts/clean-artifacts.mjs"
@@ -43,6 +47,8 @@
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.0",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "firebase": "^12.13.0",
     "firebase-admin": "13.10.0",
     "react": "^19.2.6",

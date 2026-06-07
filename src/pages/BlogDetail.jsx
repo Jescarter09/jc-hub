@@ -669,7 +669,7 @@ export default function BlogDetail() {
         <figure key={blockKey} className="article-editorial-inline-image">
           <img
             src={block.src}
-            alt={block.caption || section.title}
+            alt={block.alt || `JC Hub - ${section.title}`}
             loading="lazy"
             decoding="async"
             onError={(event) => {

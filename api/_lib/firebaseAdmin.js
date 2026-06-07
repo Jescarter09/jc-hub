@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { applicationDefault, cert, getApps, initializeApp } from 'firebase-admin/app';
+import { getDatabase } from 'firebase-admin/database';
 import { FieldValue, Timestamp, getFirestore } from 'firebase-admin/firestore';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -63,22 +64,29 @@ function initializeAdminApp() {
 
   const serviceAccount = parseServiceAccountFromEnv() || parseServiceAccountFromFile();
   const projectId = String(process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || '').trim() || undefined;
+  const databaseURL = String(process.env.FIREBASE_DATABASE_URL || process.env.VITE_FIREBASE_DATABASE_URL || '').trim() || undefined;
 
   if (serviceAccount) {
     return initializeApp({
       credential: cert(serviceAccount),
-      projectId: projectId || serviceAccount.project_id || serviceAccount.projectId
+      projectId: projectId || serviceAccount.project_id || serviceAccount.projectId,
+      databaseURL
     });
   }
 
   return initializeApp({
     credential: applicationDefault(),
-    projectId
+    projectId,
+    databaseURL
   });
 }
 
 export function getAdminDb() {
   return getFirestore(initializeAdminApp());
+}
+
+export function getAdminRtdb() {
+  return getDatabase(initializeAdminApp());
 }
 
 export { FieldValue, Timestamp };

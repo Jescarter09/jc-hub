@@ -189,6 +189,23 @@ AUTOMATION_REPORT_FREQUENCY=weekly
 AUTOMATION_LINK_CHECK_LIMIT=12
 ```
 
+## Admin
+
+La page privée `/admin` permet de consulter rapidement:
+
+- les derniers messages contact;
+- les abonnés newsletter;
+- les livres visibles, programmés ou incomplets;
+- les derniers rapports d'automatisation.
+
+L'authentification utilise `ADMIN_EMAIL` / `ADMIN_PASSWORD`.
+Si ces variables sont vides, l'admin utilise `FIREBASE_IMPORT_EMAIL` / `FIREBASE_IMPORT_PASSWORD`.
+
+```env
+ADMIN_EMAIL=admin@yourdomain.com
+ADMIN_PASSWORD=change_me
+```
+
 La route est protégée par `CRON_SECRET`. La même valeur doit exister dans `.env` local et dans les variables d'environnement Vercel.
 
 ## Sécurité des secrets
@@ -238,12 +255,26 @@ Un hook `usePageSeo` met à jour dynamiquement:
 
 - `/robots.txt` -> `/api/robots`;
 - `/sitemap.xml` -> `/api/sitemap`.
+- `/indexnow-key.txt` -> `/api/indexnow-key`.
 
 Le sitemap lit Firestore en temps réel et inclut uniquement:
 
 - les livres avec `publishAt <= maintenant`;
 - les articles publiés;
 - les pages principales du site.
+
+IndexNow est aussi disponible pour accélérer la découverte par Bing et les moteurs compatibles:
+
+- `/api/indexnow` soumet les URLs publiées récemment;
+- `/api/automation-daily` le déclenche automatiquement si `INDEXNOW_AUTO_SUBMIT=true`;
+- `INDEXNOW_KEY` doit être configuré dans `.env` et dans les variables Vercel.
+
+```env
+INDEXNOW_KEY=generated_hex_key
+INDEXNOW_AUTO_SUBMIT=true
+INDEXNOW_LOOKBACK_DAYS=2
+INDEXNOW_SUBMIT_LIMIT=100
+```
 
 Note importante: comme le projet est une SPA Vite, les balises dynamiques sont mises à jour côté navigateur. Pour des aperçus sociaux parfaits sur tous les robots, une étape future serait le prerendering ou SSR.
 

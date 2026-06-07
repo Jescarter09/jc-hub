@@ -128,6 +128,23 @@ function numberField(value, fallback = 0) {
   return Number.isFinite(numeric) ? numeric : fallback;
 }
 
+function sanitizeContentBlocksForFirestore(blocks) {
+  if (!Array.isArray(blocks)) return [];
+
+  return blocks.map((block) => {
+    if (!block || typeof block !== 'object') return block;
+    const nextBlock = { ...block };
+
+    if (Array.isArray(nextBlock.rows)) {
+      nextBlock.rows = nextBlock.rows.map((row) => ({
+        cells: Array.isArray(row) ? row : [row]
+      }));
+    }
+
+    return nextBlock;
+  });
+}
+
 function toFirestoreValue(value) {
   if (value === null) return { nullValue: null };
   if (value === undefined) return { nullValue: null };
@@ -220,12 +237,15 @@ function buildPostPayload({
     Date.now();
   const updatedMs = toMillis(post?.updated_at) ?? toMillis(post?.updatedAt) ?? createdMs;
   const publishedMs = toMillis(post?.published_at) ?? createdMs;
+  const publishMs = toMillis(post?.publishAt) ?? toMillis(post?.publish_at) ?? publishedMs;
+  const publishAtDate = new Date(publishMs);
 
-  const contentBlocks = Array.isArray(post?.contentBlocks)
+  const rawContentBlocks = Array.isArray(post?.contentBlocks)
     ? post.contentBlocks
     : Array.isArray(post?.content)
       ? post.content
       : [];
+  const contentBlocks = sanitizeContentBlocksForFirestore(rawContentBlocks);
 
   const markdownContent = typeof post?.content === 'string' ? post.content : '';
   const excerpt = String(post?.excerpt || post?.description || '').trim();
@@ -251,6 +271,7 @@ function buildPostPayload({
       category: String(post?.category || 'technologie').trim(),
       tags: normalizeTags(post?.tags),
       image: String(post?.image || '').trim(),
+      imageAlt: String(post?.imageAlt || post?.image_alt || '').trim(),
       status,
       views: numberField(post?.views, 0),
       likes: numberField(post?.likes, 0),
@@ -262,6 +283,10 @@ function buildPostPayload({
       sourceFile: 'src/data/database.json',
       importSource: 'database-json-cli',
       importedAt: importedAtIso,
+      publishAt: publishAtDate,
+      publish_at: publishMs,
+      publishOrder: numberField(post?.publishOrder, 0),
+      sourceDraftFile: String(post?.sourceFile || '').trim(),
       created_at: createdMs,
       updated_at: updatedMs,
       published_at: publishedMs,

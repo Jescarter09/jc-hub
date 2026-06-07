@@ -573,8 +573,10 @@ export function normalizeArchiveBook(item) {
 
 export function normalizeHostedBook(docId, data) {
   const decision = getBookAccessDecision(data);
-  const fileUrl = sanitizeBookText(data?.fileUrl || data?.pdfUrl, 500);
-  const readerUrl = sanitizeBookText(data?.readerUrl || decision.readerUrl || fileUrl || data?.previewLink, 500);
+  const hostedFileUrl = sanitizeBookText(data?.fileUrl || data?.pdfUrl, 500);
+  const internalReaderUrl = data?.isHosted === true && hostedFileUrl ? `/api/books/read?id=${encodeURIComponent(docId)}` : '';
+  const internalDownloadUrl = internalReaderUrl ? `${internalReaderUrl}&download=1` : '';
+  const readerUrl = internalReaderUrl || sanitizeBookText(data?.readerUrl || decision.readerUrl || hostedFileUrl || data?.previewLink, 500);
   const publishAtMillis = toBookPublishAtMillis(data?.publishAt);
 
   return withBookRouting({
@@ -594,16 +596,18 @@ export function normalizeHostedBook(docId, data) {
     externalLink: sanitizeBookText(data?.externalLink, 500),
     previewLink: sanitizeBookText(data?.previewLink, 500),
     readerUrl,
-    fileUrl,
-    downloadUrl: sanitizeBookText(data?.downloadUrl, 500),
+    localReaderUrl: internalReaderUrl,
+    localDownloadUrl: internalDownloadUrl,
+    fileUrl: data?.isHosted === true ? '' : hostedFileUrl,
+    downloadUrl: internalDownloadUrl || sanitizeBookText(data?.downloadUrl, 500),
     preferredFormat: sanitizeBookText(data?.preferredFormat, 40),
     license: normalizeLicense(data?.license),
     publicDomain: data?.publicDomain === true,
     canRedistribute: data?.canRedistribute === true || decision.canRedistribute === true,
     canReadOnline: data?.canReadOnline === true || decision.canReadOnline === true || Boolean(readerUrl),
-    canDownload: data?.canDownload === true || decision.canDownload === true || Boolean(data?.isHosted === true && fileUrl),
+    canDownload: data?.canDownload === true || decision.canDownload === true || Boolean(data?.isHosted === true && hostedFileUrl),
     isHosted: data?.isHosted === true,
-    pdfUrl: sanitizeBookText(data?.pdfUrl, 500),
+    pdfUrl: data?.isHosted === true ? '' : sanitizeBookText(data?.pdfUrl, 500),
     requiresReview: data?.requiresReview === true,
     accessAction: sanitizeBookText(data?.accessAction, 80),
     accessReason: sanitizeBookText(data?.accessReason, 120),

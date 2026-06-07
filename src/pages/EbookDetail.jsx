@@ -64,18 +64,25 @@ function getOfficialAction(book) {
 }
 
 function getReaderAction(book) {
-  const href = book?.readerUrl || (book?.isHosted ? book?.fileUrl || book?.pdfUrl : '') || book?.previewLink || '';
+  const href = book?.localReaderUrl || book?.readerUrl || (book?.isHosted ? book?.fileUrl || book?.pdfUrl : '') || book?.previewLink || '';
   if (!href || book?.canReadOnline === false) return null;
 
   return {
-    href,
-    label: book?.readerType === 'official' || book?.sourceType === 'preview' ? 'Lire un aperçu' : 'Lire sur le site',
+    href: `${book?.detailPath || `/ebooks/${book?.categorySlug || 'general'}/${book?.slug || 'livre'}`}/read`,
+    label: book?.readerType === 'official' || book?.sourceType === 'preview' ? 'Lire chez JC Hub' : 'Lire sur JC Hub',
     icon: book?.readerType === 'official' || book?.sourceType === 'preview' ? 'fas fa-eye' : 'fas fa-book-open-reader'
   };
 }
 
 function getDownloadAction(book) {
   if (book?.canDownload === false) return null;
+
+  if (book?.localDownloadUrl) {
+    return {
+      href: book.localDownloadUrl,
+      label: 'Télécharger'
+    };
+  }
 
   if (book?.isHosted && book?.fileUrl) {
     return {
@@ -382,10 +389,10 @@ export default function EbookDetail() {
 
             <div className="ebook-detail-actions">
               {readerAction && (
-                <a className="ebook-detail-action is-primary" href={readerAction.href} target="_blank" rel="noopener noreferrer">
+                <Link className="ebook-detail-action is-primary" to={readerAction.href} state={{ book }}>
                   <i className={readerAction.icon}></i>
                   {readerAction.label}
-                </a>
+                </Link>
               )}
               {downloadAction && (
                 <a

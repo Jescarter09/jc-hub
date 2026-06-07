@@ -44,6 +44,10 @@ const checks = [
   ['BOOKS_WEEKLY_RELEASE', 'recommended'],
   ['AUTOMATION_REPORT_EMAIL', 'recommended'],
   ['AUTOMATION_REPORT_FREQUENCY', 'recommended'],
+  ['INDEXNOW_KEY', 'recommended'],
+  ['INDEXNOW_AUTO_SUBMIT', 'recommended'],
+  ['ADMIN_EMAIL', 'recommended'],
+  ['ADMIN_PASSWORD', 'recommended'],
   ['FIREBASE_SERVICE_ACCOUNT_JSON', 'one-of'],
   ['FIREBASE_SERVICE_ACCOUNT_BASE64', 'one-of'],
   ['FIREBASE_SERVICE_ACCOUNT_KEY_PATH', 'one-of'],
@@ -84,6 +88,17 @@ if (env.AUTOMATION_REPORT_EMAIL && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(env.AU
 if (env.AUTOMATION_REPORT_FREQUENCY && !['daily', 'weekly', 'never', 'off'].includes(env.AUTOMATION_REPORT_FREQUENCY)) {
   console.log('WARN    AUTOMATION_REPORT_FREQUENCY should be daily, weekly, never, or off.');
 }
+
+if (env.INDEXNOW_AUTO_SUBMIT && !['true', 'false', '1', '0'].includes(env.INDEXNOW_AUTO_SUBMIT.toLowerCase())) {
+  console.log('WARN    INDEXNOW_AUTO_SUBMIT should be true or false.');
+}
+
+const hasAdminLogin = Boolean(
+  (String(env.ADMIN_EMAIL || env.FIREBASE_IMPORT_EMAIL || '').trim()) &&
+    (String(env.ADMIN_PASSWORD || env.FIREBASE_IMPORT_PASSWORD || '').trim())
+);
+
+console.log(`Admin dashboard credentials: ${hasAdminLogin || env.ADMIN_TOKEN ? 'OK' : 'MISSING'}`);
 
 if (env.CRON_SECRET && env.CRON_SECRET.length < 32) {
   console.log('WARN    CRON_SECRET is present but short. Prefer at least 32 random characters.');

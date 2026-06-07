@@ -27,6 +27,12 @@
   padding-top: var(--app-nav-offset);
 }
 
+.app-main-admin {
+  display: block;
+  min-height: 100vh;
+  padding-top: 0;
+}
+
 @media (min-width: 768px) and (max-width: 1023px) {
   .app-main :is(p, li, label, input, select, textarea) {
     font-size: max(1rem, 1em) !important;
